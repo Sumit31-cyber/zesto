@@ -10,12 +10,13 @@ import {
 import React, { useState } from "react";
 import { COLORS, FONTS, screenHeight, screenWidth } from "utils/constants";
 import { Image } from "expo-image";
-import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
+import { RFValue } from "react-native-responsive-fontsize";
 import CustomText from "components/customText";
 import Animated, {
   useAnimatedStyle,
   withTiming,
 } from "react-native-reanimated";
+import { router } from "expo-router";
 
 const topContainerHeight = screenHeight * 0.4;
 const bottomContainerHeight = screenHeight * 0.6;
@@ -156,6 +157,9 @@ const signIn = () => {
             />
           </View>
           <TouchableOpacity
+            onPress={() => {
+              router.replace("/(protected)/homeScreen");
+            }}
             activeOpacity={0.8}
             style={{
               backgroundColor: COLORS.primary,
