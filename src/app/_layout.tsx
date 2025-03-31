@@ -1,9 +1,10 @@
-import { Slot, Stack } from "expo-router";
+import { Redirect, Slot, Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
 import { useEffect } from "react";
-
+import { AuthProvider, useAuth } from "src/providers/AuthProvider";
 export default function RootLayout() {
+  const { isAuthenticated } = useAuth();
   const [loaded] = useFonts({
     aeonikRegular: require("assets/fonts/AeonikRegular.otf"),
     aeonikBold: require("assets/fonts/AeonikBold.otf"),
@@ -20,10 +21,13 @@ export default function RootLayout() {
     return null;
   }
 
+  if (isAuthenticated === undefined) {
+    return <Redirect href="/(protected)" />;
+  }
+
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="(auth)" />
-      <Stack.Screen name="(protected)" />
-    </Stack>
+    <AuthProvider>
+      <Slot />
+    </AuthProvider>
   );
 }

@@ -6,6 +6,7 @@ import {
   Pressable,
   Keyboard,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
 import { COLORS, FONTS, screenHeight, screenWidth } from "utils/constants";
@@ -17,14 +18,15 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { router } from "expo-router";
+import { useAuth } from "@/providers/AuthProvider";
 
 const topContainerHeight = screenHeight * 0.4;
 const bottomContainerHeight = screenHeight * 0.6;
 const backgroundImageOpacity = 0.5;
-const signIn = () => {
+const signInScreen = () => {
   const [isPhoneInputActive, setIsPhoneInputActive] = useState(false);
+  const { signIn, isLoading } = useAuth();
 
-  console.log(isPhoneInputActive);
   const rStyle = useAnimatedStyle(() => {
     return {
       transform: [
@@ -39,6 +41,11 @@ const signIn = () => {
       ],
     };
   });
+
+  const handleSignIn = async () => {
+    console.log("signing in");
+    await signIn();
+  };
   return (
     <Pressable
       onPress={() => {
@@ -157,9 +164,7 @@ const signIn = () => {
             />
           </View>
           <TouchableOpacity
-            onPress={() => {
-              router.replace("/(protected)/homeScreen");
-            }}
+            onPress={handleSignIn}
             activeOpacity={0.8}
             style={{
               backgroundColor: COLORS.primary,
@@ -170,14 +175,18 @@ const signIn = () => {
               borderRadius: 8,
             }}
           >
-            <CustomText
-              variant="h6"
-              fontFamily="aeonikBold"
-              color="white"
-              style={{ letterSpacing: 0.8 }}
-            >
-              CONTINUE
-            </CustomText>
+            {isLoading ? (
+              <ActivityIndicator color={"white"} />
+            ) : (
+              <CustomText
+                variant="h6"
+                fontFamily="aeonikBold"
+                color="white"
+                style={{ letterSpacing: 0.8 }}
+              >
+                CONTINUE
+              </CustomText>
+            )}
           </TouchableOpacity>
 
           <Text
@@ -216,7 +225,7 @@ const signIn = () => {
   );
 };
 
-export default signIn;
+export default signInScreen;
 
 const SocialMediaButtons = () => {
   return (
