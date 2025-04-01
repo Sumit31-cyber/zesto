@@ -1,4 +1,4 @@
-import { Dimensions } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 
 export const BOTTOM_TAB_HEIGHT = 90
 export const screenHeight = Dimensions.get('screen').height
@@ -11,6 +11,8 @@ export const COLORS = {
     gray:"#adb5bd",
     darkGray:"#6c757d"
 }
+
+export const BORDER_WIDTH = StyleSheet.hairlineWidth * 2
 
 
 export enum FONTS {

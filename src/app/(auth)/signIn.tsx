@@ -19,6 +19,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { router } from "expo-router";
 import { useAuth } from "@/providers/AuthProvider";
+import CustomButton from "components/CustomButton";
 
 const topContainerHeight = screenHeight * 0.4;
 const bottomContainerHeight = screenHeight * 0.6;
@@ -42,9 +43,9 @@ const signInScreen = () => {
     };
   });
 
-  const handleSignIn = async () => {
-    console.log("signing in");
-    await signIn();
+  const handleSignIn = () => {
+    Keyboard.dismiss();
+    router.navigate("/(auth)/verification");
   };
   return (
     <Pressable
@@ -163,7 +164,15 @@ const signInScreen = () => {
               }}
             />
           </View>
-          <TouchableOpacity
+          <CustomButton
+            title="CONTINUE"
+            onPress={handleSignIn}
+            showLoader={isLoading}
+            style={{
+              marginVertical: 20,
+            }}
+          />
+          {/* <TouchableOpacity
             onPress={handleSignIn}
             activeOpacity={0.8}
             style={{
@@ -187,7 +196,7 @@ const signInScreen = () => {
                 CONTINUE
               </CustomText>
             )}
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           <Text
             style={{

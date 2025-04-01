@@ -19,7 +19,7 @@ const AuthContext = createContext({
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | undefined>(
-    undefined
+    false
   );
   const [isLoading, setIsLoading] = useState(false);
 
@@ -38,35 +38,35 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     setIsLoading(false);
   };
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      setIsLoading(true);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setIsAuthenticated(false);
-      setIsLoading(false);
-    };
-    checkAuth();
-  }, []);
+  // useEffect(() => {
+  //   const checkAuth = async () => {
+  //     setIsLoading(true);
+  //     await new Promise((resolve) => setTimeout(resolve, 1000));
+  //     setIsAuthenticated(false);
+  //     setIsLoading(false);
+  //   };
+  //   checkAuth();
+  // }, []);
 
-  if (isAuthenticated === undefined) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: COLORS.primary,
-        }}
-      >
-        <ActivityIndicator color={"white"} size={"large"} />
-      </View>
-    );
-  }
+  // if (isAuthenticated === undefined) {
+  //   return (
+  //     <View
+  //       style={{
+  //         flex: 1,
+  //         justifyContent: "center",
+  //         alignItems: "center",
+  //         backgroundColor: COLORS.primary,
+  //       }}
+  //     >
+  //       <ActivityIndicator color={"white"} size={"large"} />
+  //     </View>
+  //   );
+  // }
 
   return (
     <AuthContext.Provider
       value={{
-        isAuthenticated,
+        isAuthenticated: isAuthenticated || false,
         isLoading,
         signIn,
         signOut,
