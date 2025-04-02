@@ -1,4 +1,5 @@
 import {
+  Alert,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -15,13 +16,45 @@ import { COLORS, screenHeight, screenWidth } from "utils/constants";
 import CustomText from "components/customText";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { goBack } from "expo-router/build/global-state/routing";
-import { router } from "expo-router";
+import { Redirect, router, useLocalSearchParams } from "expo-router";
 import { Image } from "expo-image";
 import OTPInput from "components/otpInput";
 import CustomButton from "components/CustomButton";
+import { useAuth, useSignIn, useSignUp } from "@clerk/clerk-expo";
 const padding = screenWidth * 0.05;
 const VerificationScreen = () => {
-  const [otp, setOtp] = useState<string[]>(Array(4).fill(""));
+  const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
+  const { signUp, setActive, isLoaded } = useSignUp();
+  const { phoneNumber } = useLocalSearchParams();
+  const { isSignedIn } = useAuth();
+  console.log(isSignedIn);
+
+  const handleVerification = async () => {
+    if (!isLoaded) return;
+    try {
+      const code = String(otp.join(""));
+      console.log(typeof code);
+      if (code) {
+        const response = await signUp.attemptVerification({
+          code,
+          strategy: "phone_code",
+        });
+
+        if (response.status != "complete") {
+          Alert.alert("Verification failed please try again");
+          return;
+        } else {
+          router.replace("/(protected)");
+        }
+        console.log(JSON.stringify(response, null, 2));
+      } else {
+        Alert.alert("Please enter correct otp");
+      }
+    } catch (error) {
+      Alert.alert(error instanceof Error ? error.message : String(error));
+    }
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <View
@@ -48,19 +81,14 @@ const VerificationScreen = () => {
       >
         <CustomText variant="h4">Verify Phone</CustomText>
         <CustomText variant="h7">
-          Code has been sent to +91-1234567890
+          Code has been sent to +91-{phoneNumber}
         </CustomText>
         <OTPInput otp={otp} setOtp={setOtp} />
         <CustomText variant="h7">Didn't get OTP code?</CustomText>
         <CustomText variant="h7" color={COLORS.primary}>
           Resend Code
         </CustomText>
-        <CustomButton
-          title="VERIFY"
-          onPress={() => {
-            console.log(otp.join(""));
-          }}
-        />
+        <CustomButton title="VERIFY" onPress={handleVerification} />
       </View>
     </SafeAreaView>
   );

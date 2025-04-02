@@ -45,12 +45,13 @@ const CustomButton = ({
         style,
       ]}
     >
-      {showLoader && (
+      {showLoader ? (
         <ActivityIndicator color={loaderColor} size={loaderSize} />
+      ) : (
+        <CustomText variant="h6" color={"white"} style={{ letterSpacing: 0.8 }}>
+          {title}
+        </CustomText>
       )}
-      <CustomText variant="h6" color={"white"} style={{ letterSpacing: 0.8 }}>
-        {title}
-      </CustomText>
     </TouchableOpacity>
   );
 };

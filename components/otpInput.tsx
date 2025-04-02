@@ -3,7 +3,7 @@ import React, { useRef, useState } from "react";
 import { BORDER_WIDTH, COLORS, FONTS } from "utils/constants";
 import Animated from "react-native-reanimated";
 
-const numberOfInput = 4;
+const numberOfInput = 6;
 type props = {
   otp: string[];
   setOtp: (value: string[]) => void;

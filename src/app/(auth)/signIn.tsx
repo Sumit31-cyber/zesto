@@ -5,8 +5,7 @@ import {
   TextInput,
   Pressable,
   Keyboard,
-  TouchableOpacity,
-  ActivityIndicator,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import { COLORS, FONTS, screenHeight, screenWidth } from "utils/constants";
@@ -18,15 +17,18 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { router } from "expo-router";
-import { useAuth } from "@/providers/AuthProvider";
 import CustomButton from "components/CustomButton";
+import { useSignUp } from "@clerk/clerk-expo";
 
 const topContainerHeight = screenHeight * 0.4;
 const bottomContainerHeight = screenHeight * 0.6;
 const backgroundImageOpacity = 0.5;
 const signInScreen = () => {
   const [isPhoneInputActive, setIsPhoneInputActive] = useState(false);
-  const { signIn, isLoading } = useAuth();
+  const [phoneNumber, setPhoneNumber] = useState<string>("+917903723216");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { signUp, setActive, isLoaded } = useSignUp();
 
   const rStyle = useAnimatedStyle(() => {
     return {
@@ -43,9 +45,39 @@ const signInScreen = () => {
     };
   });
 
-  const handleSignIn = () => {
-    Keyboard.dismiss();
-    router.navigate("/(auth)/verification");
+  const handleSignIn = async () => {
+    try {
+      Keyboard.dismiss();
+      setIsLoading(true);
+      console.log(isLoaded);
+      if (!isLoaded) return;
+      if (phoneNumber != undefined) {
+        const res = await signUp.create({
+          phoneNumber: phoneNumber,
+        });
+
+        // console.log(res);
+        const verification = await signUp.preparePhoneNumberVerification({
+          strategy: "phone_code",
+        });
+
+        setIsLoading(false);
+        console.log(JSON.stringify(verification, null, 2));
+        router.navigate({
+          pathname: "/(auth)/verification",
+          params: {
+            phoneNumber,
+          },
+        });
+        // Alert.alert("OTP Sent!");
+      } else {
+        Alert.alert("Please enter correct phone number to continue");
+      }
+    } catch (error) {
+      Alert.alert(error instanceof Error ? error.message : String(error));
+      setIsLoading(false);
+      console.log(error);
+    }
   };
   return (
     <Pressable
@@ -146,6 +178,10 @@ const signInScreen = () => {
 
             <TextInput
               placeholder="Mobile number"
+              value={phoneNumber}
+              onChangeText={(value) => {
+                setPhoneNumber(value);
+              }}
               onFocus={() => {
                 setIsPhoneInputActive(true);
               }}
@@ -168,35 +204,11 @@ const signInScreen = () => {
             title="CONTINUE"
             onPress={handleSignIn}
             showLoader={isLoading}
+            loaderColor="white"
             style={{
               marginVertical: 20,
             }}
           />
-          {/* <TouchableOpacity
-            onPress={handleSignIn}
-            activeOpacity={0.8}
-            style={{
-              backgroundColor: COLORS.primary,
-              paddingVertical: 14,
-              alignItems: "center",
-              justifyContent: "center",
-              marginVertical: 20,
-              borderRadius: 8,
-            }}
-          >
-            {isLoading ? (
-              <ActivityIndicator color={"white"} />
-            ) : (
-              <CustomText
-                variant="h6"
-                fontFamily="aeonikBold"
-                color="white"
-                style={{ letterSpacing: 0.8 }}
-              >
-                CONTINUE
-              </CustomText>
-            )}
-          </TouchableOpacity> */}
 
           <Text
             style={{

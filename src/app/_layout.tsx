@@ -1,10 +1,10 @@
-import { Redirect, Slot, Stack } from "expo-router";
+import { Slot } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
 import { useEffect } from "react";
-import { AuthProvider, useAuth } from "src/providers/AuthProvider";
+import { tokenCache } from "@clerk/clerk-expo/token-cache";
+import { ClerkProvider } from "@clerk/clerk-expo";
 export default function RootLayout() {
-  const { isAuthenticated } = useAuth();
   const [loaded] = useFonts({
     aeonikRegular: require("assets/fonts/AeonikRegular.otf"),
     aeonikBold: require("assets/fonts/AeonikBold.otf"),
@@ -21,13 +21,9 @@ export default function RootLayout() {
     return null;
   }
 
-  if (isAuthenticated === undefined) {
-    return <Redirect href="/(protected)" />;
-  }
-
   return (
-    <AuthProvider>
+    <ClerkProvider tokenCache={tokenCache}>
       <Slot />
-    </AuthProvider>
+    </ClerkProvider>
   );
 }
