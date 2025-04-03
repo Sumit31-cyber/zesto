@@ -7,30 +7,13 @@ import {
   FoodIcon,
   ReorderIcon,
 } from "assets/svgs/svgs";
+import LocationHeader from "components/LocationHeader";
 
 const Food = () => {
   const { signOut } = useAuth();
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: "white",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text
-        style={{ fontSize: 40 }}
-        onPress={async () => {
-          await signOut();
-        }}
-      >
-        SignOut
-      </Text>
-      <FoodIcon size={30} />
-      <FavoriteIcon size={30} />
-      <DineoutIcon size={30} />
-      <ReorderIcon size={30} />
+    <View style={{ flex: 1, backgroundColor: "white" }}>
+      <LocationHeader />
     </View>
   );
 };
