@@ -6,8 +6,9 @@ import {
   Pressable,
   Keyboard,
   Alert,
+  StatusBar,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { COLORS, FONTS, screenHeight, screenWidth } from "utils/constants";
 import { Image } from "expo-image";
 import { RFValue } from "react-native-responsive-fontsize";
@@ -16,19 +17,20 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
 } from "react-native-reanimated";
-import { router } from "expo-router";
+import { Redirect, router } from "expo-router";
 import CustomButton from "components/CustomButton";
-import { useSignUp } from "@clerk/clerk-expo";
+import { useAuth, useSignUp } from "@clerk/clerk-expo";
 
 const topContainerHeight = screenHeight * 0.4;
 const bottomContainerHeight = screenHeight * 0.6;
 const backgroundImageOpacity = 0.5;
-const signInScreen = () => {
+const SignInScreen = () => {
   const [isPhoneInputActive, setIsPhoneInputActive] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState<string>("+917903723216");
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
 
   const { signUp, setActive, isLoaded } = useSignUp();
+  const { isSignedIn } = useAuth();
 
   const rStyle = useAnimatedStyle(() => {
     return {
@@ -46,30 +48,32 @@ const signInScreen = () => {
   });
 
   const handleSignIn = async () => {
+    let phoneNumberWithCOuntryCode = `+91${phoneNumber}`;
     try {
       Keyboard.dismiss();
       setIsLoading(true);
       console.log(isLoaded);
       if (!isLoaded) return;
       if (phoneNumber != undefined) {
-        const res = await signUp.create({
-          phoneNumber: phoneNumber,
+        const response = await signUp.create({
+          phoneNumber: phoneNumberWithCOuntryCode,
         });
 
-        // console.log(res);
-        const verification = await signUp.preparePhoneNumberVerification({
-          strategy: "phone_code",
-        });
+        // const verification = await signUp.preparePhoneNumberVerification({
+        //   strategy: "phone_code",
+        // });
 
         setIsLoading(false);
-        console.log(JSON.stringify(verification, null, 2));
-        router.navigate({
-          pathname: "/(auth)/verification",
-          params: {
-            phoneNumber,
-          },
-        });
-        // Alert.alert("OTP Sent!");
+        console.log(JSON.stringify(response, null, 2));
+        if (response.status === "complete") {
+          router.replace("/(protected)");
+        }
+        // router.navigate({
+        //   pathname: "/(auth)/verification",
+        //   params: {
+        //     phoneNumber: phoneNumberWithCOuntryCode,
+        //   },
+        // });
       } else {
         Alert.alert("Please enter correct phone number to continue");
       }
@@ -79,6 +83,10 @@ const signInScreen = () => {
       console.log(error);
     }
   };
+
+  if (isSignedIn) {
+    return <Redirect href={"/(protected)"} />;
+  }
   return (
     <Pressable
       onPress={() => {
@@ -86,6 +94,7 @@ const signInScreen = () => {
       }}
       style={{ flex: 1 }}
     >
+      <StatusBar barStyle={"light-content"} />
       <View
         style={{
           height: screenHeight,
@@ -116,6 +125,7 @@ const signInScreen = () => {
                   aspectRatio: 1,
                   borderRadius: RFValue(40),
                 }}
+                transition={300}
                 source={require("assets/images/icon.png")}
               />
               <CustomText
@@ -171,9 +181,7 @@ const signInScreen = () => {
                 borderColor: COLORS.gray,
               }}
             >
-              <CustomText variant="h5" fontFamily="aeonikRegular">
-                🇮🇳{"  "}+91
-              </CustomText>
+              <CustomText variant="h4">🇮🇳{"  "}+91</CustomText>
             </View>
 
             <TextInput
@@ -246,7 +254,7 @@ const signInScreen = () => {
   );
 };
 
-export default signInScreen;
+export default SignInScreen;
 
 const SocialMediaButtons = () => {
   return (
@@ -260,18 +268,21 @@ const SocialMediaButtons = () => {
     >
       <View style={styles.socialMediaButtonContainer}>
         <Image
+          transition={300}
           source={require("assets/images/google.png")}
           style={{ height: RFValue(20), aspectRatio: 1 }}
         />
       </View>
       <View style={styles.socialMediaButtonContainer}>
         <Image
+          transition={300}
           source={require("assets/images/facebook.png")}
           style={{ height: RFValue(20), aspectRatio: 1 }}
         />
       </View>
       <View style={styles.socialMediaButtonContainer}>
         <Image
+          transition={300}
           source={require("assets/images/apple.png")}
           style={{ height: RFValue(20), aspectRatio: 1 }}
         />
@@ -311,6 +322,7 @@ const Backdrop = ({ children }: { children: React.ReactNode }) => {
           opacity: backgroundImageOpacity,
           position: "absolute",
         }}
+        transition={300}
         source={require("assets/images/burgerPng.png")}
       />
       <Image
@@ -322,6 +334,7 @@ const Backdrop = ({ children }: { children: React.ReactNode }) => {
           bottom: 0,
           right: -RFValue(200) / 2,
         }}
+        transition={300}
         source={require("assets/images/bowlPng.png")}
       />
       <View style={{ flex: 1 }}>{children}</View>

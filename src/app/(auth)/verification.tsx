@@ -1,13 +1,7 @@
 import {
   Alert,
-  Keyboard,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
   SafeAreaView,
-  ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -15,19 +9,16 @@ import React, { useState } from "react";
 import { COLORS, screenHeight, screenWidth } from "utils/constants";
 import CustomText from "components/customText";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { goBack } from "expo-router/build/global-state/routing";
 import { Redirect, router, useLocalSearchParams } from "expo-router";
-import { Image } from "expo-image";
-import OTPInput from "components/otpInput";
 import CustomButton from "components/CustomButton";
-import { useAuth, useSignIn, useSignUp } from "@clerk/clerk-expo";
+import OTPInput from "components/otpInput";
+import { useAuth, useSignUp } from "@clerk/clerk-expo";
 const padding = screenWidth * 0.05;
 const VerificationScreen = () => {
   const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
   const { signUp, setActive, isLoaded } = useSignUp();
   const { phoneNumber } = useLocalSearchParams();
   const { isSignedIn } = useAuth();
-  console.log(isSignedIn);
 
   const handleVerification = async () => {
     if (!isLoaded) return;
@@ -44,7 +35,8 @@ const VerificationScreen = () => {
           Alert.alert("Verification failed please try again");
           return;
         } else {
-          router.replace("/(protected)");
+          console.log("Authentication completed");
+          router.navigate("/(protected)");
         }
         console.log(JSON.stringify(response, null, 2));
       } else {
@@ -54,6 +46,10 @@ const VerificationScreen = () => {
       Alert.alert(error instanceof Error ? error.message : String(error));
     }
   };
+
+  if (isSignedIn) {
+    return <Redirect href={"/(protected)"} />;
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>

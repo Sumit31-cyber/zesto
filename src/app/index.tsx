@@ -1,15 +1,38 @@
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "@clerk/clerk-expo";
 import { Redirect } from "expo-router";
-import { COLORS } from "utils/constants";
+import { COLORS, FONTS } from "utils/constants";
+import { Image } from "expo-image";
+import CustomText from "components/customText";
+import Animated, {
+  FadeIn,
+  FadeInDown,
+  SlideInDown,
+  SlideInUp,
+} from "react-native-reanimated";
+import AnimatedSplashScreen from "components/AnimatedSplashScreen";
 
 const Main = () => {
   const { isSignedIn, isLoaded } = useAuth();
+  const [isLoading, setIsLoading] = useState(true);
 
-  if (!isLoaded) {
+  useEffect(() => {
+    console.log("Is SignedIn ", isSignedIn);
+  }, [isSignedIn]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (isLoaded) {
+        setIsLoading(false);
+      }
+    }, 2000);
+  }, [isLoaded]);
+
+  if (!isLoaded || isLoading) {
     return (
-      <View
+      <Animated.View
+        exiting={FadeInDown}
         style={{
           flex: 1,
           backgroundColor: COLORS.primary,
@@ -17,25 +40,44 @@ const Main = () => {
           justifyContent: "center",
         }}
       >
-        <ActivityIndicator size={"large"} color={"white"} />
-      </View>
+        <Image
+          source={require("assets/images/adaptive-icon.png")}
+          style={{ height: 300, aspectRatio: 1 }}
+          transition={1000}
+        />
+        <View
+          style={{
+            gap: 10,
+            alignItems: "center",
+            justifyContent: "center",
+            overflow: "hidden",
+          }}
+        >
+          <Animated.View entering={SlideInDown.duration(1000)}>
+            <CustomText variant="h1" fontFamily={FONTS.Bold} color="white">
+              Hungry?
+            </CustomText>
+          </Animated.View>
+          <Animated.View entering={SlideInDown.duration(1000).delay(300)}>
+            <CustomText variant="h5" fontFamily={FONTS.Regular} color="white">
+              Let Grabby handle it
+            </CustomText>
+          </Animated.View>
+        </View>
+      </Animated.View>
     );
   }
 
-  if (isSignedIn) {
-    return <Redirect href={"/(protected)"} />;
-  }
-  if (!isSignedIn) {
-    return <Redirect href={"/signIn"} />;
-  }
-
-  return (
-    <View>
-      <Text>Main</Text>
-    </View>
-  );
+  return <Redirect href={isSignedIn ? "/(protected)" : "/signIn"} />;
 };
 
 export default Main;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.primary,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});

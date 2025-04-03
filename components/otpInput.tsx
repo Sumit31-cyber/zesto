@@ -8,7 +8,7 @@ type props = {
   otp: string[];
   setOtp: (value: string[]) => void;
 };
-const otpInput = ({ otp, setOtp }: props) => {
+const OtpInput = ({ otp, setOtp }: props) => {
   // const [otp, setOtp] = useState(Array(numberOfInput).fill(""));
   const textInputRef = useRef<TextInput[]>([]);
   const [focusedIndex, setFocusedIndex] = useState(0);
@@ -98,7 +98,7 @@ const otpInput = ({ otp, setOtp }: props) => {
   );
 };
 
-export default otpInput;
+export default OtpInput;
 
 const styles = StyleSheet.create({});
 
