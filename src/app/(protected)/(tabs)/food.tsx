@@ -1,8 +1,14 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { useAuth } from "@clerk/clerk-expo";
+import {
+  DineoutIcon,
+  FavoriteIcon,
+  FoodIcon,
+  ReorderIcon,
+} from "assets/svgs/svgs";
 
-const HomeScreen = () => {
+const Food = () => {
   const { signOut } = useAuth();
   return (
     <View
@@ -21,10 +27,14 @@ const HomeScreen = () => {
       >
         SignOut
       </Text>
+      <FoodIcon size={30} />
+      <FavoriteIcon size={30} />
+      <DineoutIcon size={30} />
+      <ReorderIcon size={30} />
     </View>
   );
 };
 
-export default HomeScreen;
+export default Food;
 
 const styles = StyleSheet.create({});

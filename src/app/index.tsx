@@ -68,7 +68,7 @@ const Main = () => {
     );
   }
 
-  return <Redirect href={isSignedIn ? "/(protected)" : "/signIn"} />;
+  return <Redirect href={isSignedIn ? "/food" : "/signIn"} />;
 };
 
 export default Main;
