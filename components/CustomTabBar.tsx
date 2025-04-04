@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import {
   DineoutIcon,
   FavoriteIcon,
@@ -9,11 +9,13 @@ import {
 import { COLORS, screenWidth } from "utils/constants";
 import Animated, {
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
+import { useSharedState } from "context/sharedContext";
 
 const CustomTabBar: FC<BottomTabBarProps> = ({
   state,
@@ -22,6 +24,8 @@ const CustomTabBar: FC<BottomTabBarProps> = ({
 }) => {
   const { bottom } = useSafeAreaInsets();
   const activeIndex = useSharedValue(0);
+  const { scrollY } = useSharedState();
+  // const clampedValue = useSharedValue(0);
 
   const rStyle = useAnimatedStyle(() => {
     return {
@@ -31,15 +35,32 @@ const CustomTabBar: FC<BottomTabBarProps> = ({
     };
   });
 
+  const transitionStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        { translateY: scrollY.value === 1 ? withTiming(0) : withTiming(100) },
+      ],
+    };
+  });
+
+  useEffect(() => {
+    activeIndex.value = state.index;
+    console.log(state.index);
+  }, [state.index]);
   return (
-    <View
-      style={{
-        width: "100%",
-        backgroundColor: "white",
-        flexDirection: "row",
-        paddingBottom: bottom + 10,
-        paddingTop: bottom - 10,
-      }}
+    <Animated.View
+      style={[
+        transitionStyle,
+        {
+          width: "100%",
+          backgroundColor: "white",
+          flexDirection: "row",
+          paddingBottom: bottom + 10,
+          paddingTop: bottom - 10,
+          position: "absolute",
+          bottom: 0,
+        },
+      ]}
     >
       <Animated.View
         style={[
@@ -63,7 +84,6 @@ const CustomTabBar: FC<BottomTabBarProps> = ({
             canPreventDefault: true,
           });
           if (!isFocused && !event.defaultPrevented) {
-            activeIndex.value = index;
             navigation.navigate(route.name);
           }
         };
@@ -102,7 +122,7 @@ const CustomTabBar: FC<BottomTabBarProps> = ({
           </Pressable>
         );
       })}
-    </View>
+    </Animated.View>
   );
 };
 

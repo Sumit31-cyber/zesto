@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet } from "react-native";
+import { Dimensions, Platform, StyleSheet } from "react-native";
 
 export const BOTTOM_TAB_HEIGHT = 90
 export const screenHeight = Dimensions.get('screen').height
@@ -42,3 +42,14 @@ export const darkWeatherColors = [
     'rgba(54, 67, 92, 0.2)',
     'rgba(54, 67, 92, 0.0)',
 ];
+
+
+export const FONT_SIZE = {
+    h1: Platform.OS === 'ios' ? 22 : 24 ,
+    h2:  Platform.OS === 'ios' ? 20 :  22 ,
+    h3:  Platform.OS === 'ios' ? 18 : 20,
+    h4:  Platform.OS === 'ios' ? 16: 18 ,
+    h5:  Platform.OS === 'ios' ? 14: 16 ,
+    h6:  Platform.OS === 'ios' ? 12 : 14 ,
+    h7: Platform.OS === 'ios' ? 10 : 12 ,
+  };

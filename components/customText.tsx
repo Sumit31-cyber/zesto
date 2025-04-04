@@ -15,7 +15,7 @@ interface CustomTextProps {
 type Variant = "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "h7";
 type PlatformType = "ios" | "android";
 
-const fontSizeMap: Record<Variant, Record<PlatformType, number>> = {
+export const fontSizeMap: Record<Variant, Record<PlatformType, number>> = {
   h1: { ios: 22, android: 24 },
   h2: { ios: 20, android: 22 },
   h3: { ios: 18, android: 20 },

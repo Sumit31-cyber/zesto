@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { tokenCache } from "@clerk/clerk-expo/token-cache";
 import { ClerkProvider } from "@clerk/clerk-expo";
 import { View } from "react-native";
+import { SharedStateProvider } from "context/sharedContext";
 export default function RootLayout() {
   const [loaded] = useFonts({
     aeonikRegular: require("assets/fonts/AeonikRegular.otf"),
@@ -24,7 +25,9 @@ export default function RootLayout() {
 
   return (
     <ClerkProvider tokenCache={tokenCache}>
-      <Slot />
+      <SharedStateProvider>
+        <Slot />
+      </SharedStateProvider>
     </ClerkProvider>
   );
 }

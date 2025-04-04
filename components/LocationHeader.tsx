@@ -11,16 +11,16 @@ const LocationHeader = () => {
   return (
     <View
       style={{
-        paddingTop: top,
+        // paddingTop: top,
         backgroundColor: COLORS.primary,
-        paddingHorizontal: 14,
+
         gap: 2,
         paddingBottom: 6,
         flexDirection: "row",
         alignItems: "center",
       }}
     >
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, gap: 5 }}>
         <View
           style={{
             flexDirection: "row",
@@ -42,7 +42,7 @@ const LocationHeader = () => {
             }}
           >
             <CustomText variant="h3" fontFamily="aeonikBold" color="white">
-              Patna
+              Phulwari Sharif
             </CustomText>
             <AntDesign name="down" size={18} color="white" />
           </View>
