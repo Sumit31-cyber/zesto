@@ -18,6 +18,7 @@ import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import RollingBar from "react-native-rolling-bar";
 import RollingContent from "react-native-rolling-bar";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import LottieView from "lottie-react-native";
 
 type PropsType = {
   onClosePress?: () => void;
@@ -30,7 +31,7 @@ const SearchBar = ({ value, onClosePress, ...props }: PropsType) => {
   const showCloseButton = value.length > 0;
 
   return (
-    <View style={{ backgroundColor: COLORS.primary, paddingVertical: 10 }}>
+    <View style={{ paddingTop: 10 }}>
       <View
         style={{
           height: screenHeight * 0.06,
@@ -39,6 +40,8 @@ const SearchBar = ({ value, onClosePress, ...props }: PropsType) => {
           borderRadius: 14,
           alignItems: "center",
           paddingHorizontal: 14,
+          borderWidth: BORDER_WIDTH,
+          borderColor: COLORS.darkGray,
           // marginVertical: 14,
         }}
       >

@@ -16,102 +16,238 @@ import {
 } from "assets/svgs/svgs";
 import LocationHeader from "components/LocationHeader";
 import SearchBar from "components/SearchBar";
-import { COLORS } from "utils/constants";
+import {
+  BORDER_WIDTH,
+  COLORS,
+  screenHeight,
+  screenWidth,
+} from "utils/constants";
 import Animated, {
+  Extrapolation,
+  interpolate,
   useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
   withTiming,
 } from "react-native-reanimated";
 import { useSharedState } from "context/sharedContext";
+import { Image, ImageBackground } from "expo-image";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import LottieView from "lottie-react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import CustomText from "components/customText";
 
 const Food = () => {
   const { signOut } = useAuth();
   const [searchText, setSearchText] = useState<string>("");
   const fakeData = new Array(100).fill(0).map((_, index) => ({ id: index }));
+  const [headerHeight, setHeaderHeight] = useState(0);
   const { scrollY, scrollYGlobal } = useSharedState();
+  const { top } = useSafeAreaInsets();
+  const clampedValue = useSharedValue(0);
 
-  const onScroll = useAnimatedScrollHandler((event) => {
-    const currentScrollY = event.contentOffset.y;
-    const isScrollingDown = currentScrollY > scrollYGlobal.value;
-    if (currentScrollY < 200) return;
-    scrollY.value = isScrollingDown ? withTiming(0) : withTiming(1);
-    scrollYGlobal.value = currentScrollY;
+  // const onScroll = useAnimatedScrollHandler((event) => {
+  //   const currentScrollY = event.contentOffset.y;
+  //   const diff = currentScrollY - scrollYGlobal.value;
+
+  //   clampedValue.value = Math.min(Math.max(clampedValue.value + diff, 0), 50);
+  //   console.log(clampedValue.value);
+
+  //   const isScrollingDown = currentScrollY > scrollYGlobal.value;
+  //   if (currentScrollY < 200) {
+  //     scrollYGlobal.value = currentScrollY;
+  //     return;
+  //   }
+  //   scrollY.value = isScrollingDown ? withTiming(0) : withTiming(1);
+  //   scrollYGlobal.value = currentScrollY;
+  // });
+
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: (event) => {
+      const currentScrollY = event.contentOffset.y;
+      const diff = currentScrollY - scrollYGlobal.value;
+      scrollYGlobal.value = currentScrollY;
+
+      clampedValue.value = Math.min(
+        Math.max(clampedValue.value + diff, 0),
+        headerHeight + top
+      );
+
+      console.log(clampedValue.value);
+    },
   });
 
-  const sectionListData = [
-    {
-      title: "Header",
-      data: [{}],
-      renderItem: () => {
-        return (
-          <View
-            style={{
-              height: 500,
-              width: "100%",
-              marginVertical: 10,
-              backgroundColor: "red",
-            }}
-          ></View>
-        );
-      },
-    },
-    {
-      title: "Second Header",
-      data: [{}],
-      renderItem: () => {
-        return (
-          <View
-            style={{
-              height: 500,
-              width: "100%",
-              marginVertical: 10,
-              backgroundColor: "yellow",
-            }}
-          ></View>
-        );
-      },
-    },
-  ];
+  const absoluteHeaderStyle = useAnimatedStyle(() => {
+    const bg = interpolate(
+      scrollYGlobal.value,
+      [0, (headerHeight + top) / 2],
+      [0, 1]
+    );
+
+    return {
+      transform: [{ translateY: -clampedValue.value }],
+      backgroundColor: `rgba(252,252,252,${bg})`,
+    };
+  });
+
+  // const sectionListData = [
+  //   {
+  //     title: "Header",
+  //     data: [{}],
+  //     renderItem: () => {
+  //       return (
+  //         <View
+  //           style={{
+  //             height: 500,
+  //             width: "100%",
+  //             marginVertical: 10,
+  //             backgroundColor: "red",
+  //           }}
+  //         ></View>
+  //       );
+  //     },
+  //   },
+  //   {
+  //     title: "Second Header",
+  //     data: [{}],
+  //     renderItem: () => {
+  //       return (
+  //         <View
+  //           style={{
+  //             height: 500,
+  //             width: "100%",
+  //             marginVertical: 10,
+  //             backgroundColor: "yellow",
+  //           }}
+  //         ></View>
+  //       );
+  //     },
+  //   },
+  // ];
 
   return (
-    <View style={{ backgroundColor: COLORS.primary, paddingHorizontal: 14 }}>
-      <StatusBar barStyle={"light-content"} />
-      <SafeAreaView>
-        <Animated.ScrollView
-          onScroll={onScroll}
-          showsVerticalScrollIndicator={false}
-          stickyHeaderIndices={[1]}
-          bounces={false}
-          scrollEventThrottle={16}
-          style={{ backgroundColor: COLORS.primary }}
+    <View style={{ backgroundColor: "white" }}>
+      <StatusBar barStyle={"dark-content"} />
+      <Animated.View
+        onLayout={(event) => {
+          setHeaderHeight(event.nativeEvent.layout.height);
+        }}
+        style={[
+          absoluteHeaderStyle,
+          {
+            position: "absolute",
+            width: "100%",
+            paddingTop: top,
+            paddingHorizontal: 14,
+            zIndex: 100,
+          },
+        ]}
+      >
+        <LocationHeader />
+        <SearchBar
+          value={searchText}
+          onChangeText={(value) => {
+            setSearchText(value);
+          }}
+          onClosePress={() => {
+            setSearchText("");
+          }}
+        />
+      </Animated.View>
+      <Animated.ScrollView
+        onScroll={scrollHandler}
+        showsVerticalScrollIndicator={false}
+        bounces={false}
+        scrollEventThrottle={16}
+      >
+        <LinearGradient
+          colors={["#fdf9ed", "#faedcd", "#f4d893"]}
+          style={{
+            width: "100%",
+            paddingTop: headerHeight,
+          }}
         >
-          <LocationHeader />
-
-          <SearchBar
-            value={searchText}
-            onChangeText={(value) => {
-              setSearchText(value);
+          <View
+            style={{
+              flexDirection: "row",
+              marginTop: "auto",
+              alignItems: "flex-end",
+              justifyContent: "space-between",
             }}
-            onClosePress={() => {
-              setSearchText("");
-            }}
-          />
-
-          <View style={{ gap: 10 }}>
-            {fakeData.map((item, index) => {
-              return (
-                <View
-                  key={index}
-                  style={{
-                    height: 100,
-                    width: "100%",
-                    backgroundColor: COLORS.black,
-                  }}
-                ></View>
-              );
-            })}
+          >
+            <LottieView
+              autoPlay
+              resizeMode="cover"
+              speed={0.3}
+              style={{
+                width: 180,
+                height: 100,
+                marginTop: "auto",
+              }}
+              source={require("assets/diwaliText.json")}
+            />
+            <LottieView
+              autoPlay
+              resizeMode="cover"
+              speed={0.3}
+              style={{
+                width: 150,
+                aspectRatio: 1,
+                marginTop: "auto",
+              }}
+              source={require("assets/diwaliAnimation.json")}
+            />
           </View>
-        </Animated.ScrollView>
-      </SafeAreaView>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+              paddingVertical: 10,
+            }}
+          >
+            <View
+              style={{
+                // width: "100%",
+                height: BORDER_WIDTH,
+                backgroundColor: "#e3871d",
+                flex: 1,
+              }}
+            ></View>
+            <CustomText
+              variant="h7"
+              color={"#e3871d"}
+              style={{ marginHorizontal: 10 }}
+            >
+              Up To 60% OFF
+            </CustomText>
+            <View
+              style={{
+                // width: "100%",
+                height: BORDER_WIDTH,
+                backgroundColor: "#e3871d",
+                flex: 1,
+              }}
+            ></View>
+          </View>
+        </LinearGradient>
+
+        <View style={{ gap: 10, paddingTop: headerHeight + top }}>
+          {fakeData.map((item, index) => {
+            return (
+              <View
+                key={index}
+                style={{
+                  height: 100,
+                  width: "100%",
+                  marginBottom: 10,
+                }}
+              ></View>
+            );
+          })}
+        </View>
+      </Animated.ScrollView>
+      <SafeAreaView />
     </View>
   );
 };

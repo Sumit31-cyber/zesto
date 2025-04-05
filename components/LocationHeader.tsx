@@ -11,9 +11,6 @@ const LocationHeader = () => {
   return (
     <View
       style={{
-        // paddingTop: top,
-        backgroundColor: COLORS.primary,
-
         gap: 2,
         paddingBottom: 6,
         flexDirection: "row",
@@ -32,7 +29,7 @@ const LocationHeader = () => {
               alignSelf: "flex-start",
             }}
           >
-            <SendIcon size={40} tint="white" />
+            <SendIcon size={40} tint="black" />
           </View>
           <View
             style={{
@@ -41,15 +38,15 @@ const LocationHeader = () => {
               gap: 5,
             }}
           >
-            <CustomText variant="h3" fontFamily="aeonikBold" color="white">
+            <CustomText variant="h3" fontFamily="aeonikBold" color="black">
               Phulwari Sharif
             </CustomText>
-            <AntDesign name="down" size={18} color="white" />
+            <AntDesign name="down" size={18} color="black" />
           </View>
         </View>
         <CustomText
           variant="h6"
-          color="white"
+          color="black"
           numberOfLines={1}
           style={{ opacity: 0.8 }}
         >
