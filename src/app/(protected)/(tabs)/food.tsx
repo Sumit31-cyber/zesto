@@ -41,6 +41,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import CustomText from "components/customText";
 import { OfferItem } from "types/types";
 import OfferCarousel from "components/OfferCarousal";
+import HeaderSection from "components/HeaderSection";
 
 const Food = () => {
   const { signOut } = useAuth();
@@ -86,7 +87,7 @@ const Food = () => {
   const sectionListData = [
     {
       title: "Header",
-      data: [{ id: "1" }], // Add minimal data with unique IDs
+      data: [{ id: "1" }],
       renderItem: () => <HeaderSection headerHeight={headerHeight} />,
     },
     {
@@ -136,99 +137,6 @@ const Food = () => {
         // )}
       />
 
-      {/* <Animated.ScrollView
-        onScroll={scrollHandler}
-        showsVerticalScrollIndicator={false}
-        bounces={false}
-        scrollEventThrottle={16}
-      >
-        <LinearGradient
-          colors={["#fdf9ed", "#faedcd", "#f4d893"]}
-          style={{
-            width: "100%",
-            paddingTop: headerHeight,
-          }}
-        >
-          <View
-            style={{
-              flexDirection: "row",
-              marginTop: "auto",
-              alignItems: "flex-end",
-              justifyContent: "space-between",
-            }}
-          >
-            <LottieView
-              autoPlay
-              resizeMode="cover"
-              speed={0.3}
-              style={{
-                width: 180,
-                height: 100,
-                marginTop: "auto",
-              }}
-              source={require("assets/diwaliText.json")}
-            />
-            <LottieView
-              autoPlay
-              resizeMode="cover"
-              speed={0.3}
-              style={{
-                width: 150,
-                aspectRatio: 1,
-                marginTop: "auto",
-              }}
-              source={require("assets/diwaliAnimation.json")}
-            />
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              paddingVertical: 10,
-            }}
-          >
-            <View
-              style={{
-                // width: "100%",
-                height: BORDER_WIDTH,
-                backgroundColor: "#e3871d",
-                flex: 1,
-              }}
-            ></View>
-            <CustomText
-              variant="h7"
-              color={"#e3871d"}
-              style={{ marginHorizontal: 10 }}
-            >
-              Up To 60% OFF
-            </CustomText>
-            <View
-              style={{
-                // width: "100%",
-                height: BORDER_WIDTH,
-                backgroundColor: "#e3871d",
-                flex: 1,
-              }}
-            ></View>
-          </View>
-        </LinearGradient>
-
-        <View style={{ gap: 10, paddingTop: headerHeight + top }}>
-          {fakeData.map((item, index) => {
-            return (
-              <View
-                key={index}
-                style={{
-                  height: 100,
-                  width: "100%",
-                  marginBottom: 10,
-                }}
-              ></View>
-            );
-          })}
-        </View>
-      </Animated.ScrollView> */}
       <SafeAreaView />
     </View>
   );
@@ -237,79 +145,3 @@ const Food = () => {
 export default Food;
 
 const styles = StyleSheet.create({});
-
-const HeaderSection = ({ headerHeight }: { headerHeight: number }) => {
-  return (
-    <LinearGradient
-      colors={["#fdf9ed", "#faedcd", "#f4d893"]}
-      style={{
-        width: "100%",
-        paddingTop: headerHeight,
-        borderBottomLeftRadius: 30,
-        borderBottomRightRadius: 30,
-      }}
-    >
-      <View
-        style={{
-          flexDirection: "row",
-          marginTop: "auto",
-          alignItems: "flex-end",
-          justifyContent: "space-between",
-        }}
-      >
-        <LottieView
-          autoPlay
-          resizeMode="cover"
-          speed={0.3}
-          style={{
-            width: 180,
-            height: 100,
-            marginTop: "auto",
-          }}
-          source={require("assets/diwaliText.json")}
-        />
-        <LottieView
-          autoPlay
-          resizeMode="cover"
-          speed={0.3}
-          style={{
-            width: 150,
-            aspectRatio: 1,
-            marginTop: "auto",
-          }}
-          source={require("assets/diwaliAnimation.json")}
-        />
-      </View>
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "center",
-          paddingVertical: 10,
-        }}
-      >
-        <View
-          style={{
-            // width: "100%",
-            height: BORDER_WIDTH,
-            backgroundColor: "#e3871d",
-            flex: 1,
-            marginHorizontal: 20,
-          }}
-        ></View>
-        <CustomText variant="h7" color={"#e3871d"}>
-          Up To 60% OFF
-        </CustomText>
-        <View
-          style={{
-            // width: "100%",
-            height: BORDER_WIDTH,
-            backgroundColor: "#e3871d",
-            flex: 1,
-            marginHorizontal: 20,
-          }}
-        ></View>
-      </View>
-    </LinearGradient>
-  );
-};

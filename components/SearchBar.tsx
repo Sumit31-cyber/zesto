@@ -42,7 +42,7 @@ const SearchBar = ({ value, onClosePress, ...props }: PropsType) => {
           paddingHorizontal: 14,
           borderWidth: BORDER_WIDTH,
           borderColor: COLORS.darkGray,
-          // marginVertical: 14,
+          marginVertical: 10,
         }}
       >
         <View
