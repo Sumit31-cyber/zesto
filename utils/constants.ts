@@ -15,6 +15,7 @@ export const COLORS = {
 }
 
 export const BORDER_WIDTH = StyleSheet.hairlineWidth * 2
+export const PADDING_HORIZONTAL =  14;
 
 
 export enum FONTS {

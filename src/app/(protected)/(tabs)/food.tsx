@@ -1,6 +1,8 @@
 import {
+  Pressable,
   SafeAreaView,
   ScrollView,
+  SectionList,
   StatusBar,
   StyleSheet,
   Text,
@@ -25,6 +27,7 @@ import {
 import Animated, {
   Extrapolation,
   interpolate,
+  SharedValue,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
@@ -36,44 +39,34 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import LottieView from "lottie-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import CustomText from "components/customText";
+import { OfferItem } from "types/types";
+import OfferCarousel from "components/OfferCarousal";
 
 const Food = () => {
   const { signOut } = useAuth();
   const [searchText, setSearchText] = useState<string>("");
-  const fakeData = new Array(100).fill(0).map((_, index) => ({ id: index }));
   const [headerHeight, setHeaderHeight] = useState(0);
   const { scrollY, scrollYGlobal } = useSharedState();
   const { top } = useSafeAreaInsets();
   const clampedValue = useSharedValue(0);
 
-  // const onScroll = useAnimatedScrollHandler((event) => {
-  //   const currentScrollY = event.contentOffset.y;
-  //   const diff = currentScrollY - scrollYGlobal.value;
-
-  //   clampedValue.value = Math.min(Math.max(clampedValue.value + diff, 0), 50);
-  //   console.log(clampedValue.value);
-
-  //   const isScrollingDown = currentScrollY > scrollYGlobal.value;
-  //   if (currentScrollY < 200) {
-  //     scrollYGlobal.value = currentScrollY;
-  //     return;
-  //   }
-  //   scrollY.value = isScrollingDown ? withTiming(0) : withTiming(1);
-  //   scrollYGlobal.value = currentScrollY;
-  // });
-
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
       const currentScrollY = event.contentOffset.y;
       const diff = currentScrollY - scrollYGlobal.value;
-      scrollYGlobal.value = currentScrollY;
 
       clampedValue.value = Math.min(
         Math.max(clampedValue.value + diff, 0),
-        headerHeight + top
+        headerHeight
       );
 
-      console.log(clampedValue.value);
+      const isScrollingDown = currentScrollY > scrollYGlobal.value;
+      if (currentScrollY < 200) {
+        scrollYGlobal.value = currentScrollY;
+        return;
+      }
+      scrollY.value = isScrollingDown ? withTiming(0) : withTiming(1);
+      scrollYGlobal.value = currentScrollY;
     },
   });
 
@@ -90,41 +83,19 @@ const Food = () => {
     };
   });
 
-  // const sectionListData = [
-  //   {
-  //     title: "Header",
-  //     data: [{}],
-  //     renderItem: () => {
-  //       return (
-  //         <View
-  //           style={{
-  //             height: 500,
-  //             width: "100%",
-  //             marginVertical: 10,
-  //             backgroundColor: "red",
-  //           }}
-  //         ></View>
-  //       );
-  //     },
-  //   },
-  //   {
-  //     title: "Second Header",
-  //     data: [{}],
-  //     renderItem: () => {
-  //       return (
-  //         <View
-  //           style={{
-  //             height: 500,
-  //             width: "100%",
-  //             marginVertical: 10,
-  //             backgroundColor: "yellow",
-  //           }}
-  //         ></View>
-  //       );
-  //     },
-  //   },
-  // ];
-
+  const sectionListData = [
+    {
+      title: "Header",
+      data: [{ id: "1" }], // Add minimal data with unique IDs
+      renderItem: () => <HeaderSection headerHeight={headerHeight} />,
+    },
+    {
+      title: "Second Header",
+      data: [{ id: "2" }],
+      renderItem: () => <OfferCarousel />,
+    },
+  ];
+  const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
   return (
     <View style={{ backgroundColor: "white" }}>
       <StatusBar barStyle={"dark-content"} />
@@ -154,7 +125,18 @@ const Food = () => {
           }}
         />
       </Animated.View>
-      <Animated.ScrollView
+      <AnimatedSectionList
+        bounces={false}
+        showsVerticalScrollIndicator={false}
+        onScroll={scrollHandler}
+        sections={sectionListData}
+        keyExtractor={(item, index) => String(index)}
+        // renderSectionHeader={({ section: { title } }) => (
+        //   <Text style={{}}>{title}</Text>
+        // )}
+      />
+
+      {/* <Animated.ScrollView
         onScroll={scrollHandler}
         showsVerticalScrollIndicator={false}
         bounces={false}
@@ -246,7 +228,7 @@ const Food = () => {
             );
           })}
         </View>
-      </Animated.ScrollView>
+      </Animated.ScrollView> */}
       <SafeAreaView />
     </View>
   );
@@ -255,3 +237,79 @@ const Food = () => {
 export default Food;
 
 const styles = StyleSheet.create({});
+
+const HeaderSection = ({ headerHeight }: { headerHeight: number }) => {
+  return (
+    <LinearGradient
+      colors={["#fdf9ed", "#faedcd", "#f4d893"]}
+      style={{
+        width: "100%",
+        paddingTop: headerHeight,
+        borderBottomLeftRadius: 30,
+        borderBottomRightRadius: 30,
+      }}
+    >
+      <View
+        style={{
+          flexDirection: "row",
+          marginTop: "auto",
+          alignItems: "flex-end",
+          justifyContent: "space-between",
+        }}
+      >
+        <LottieView
+          autoPlay
+          resizeMode="cover"
+          speed={0.3}
+          style={{
+            width: 180,
+            height: 100,
+            marginTop: "auto",
+          }}
+          source={require("assets/diwaliText.json")}
+        />
+        <LottieView
+          autoPlay
+          resizeMode="cover"
+          speed={0.3}
+          style={{
+            width: 150,
+            aspectRatio: 1,
+            marginTop: "auto",
+          }}
+          source={require("assets/diwaliAnimation.json")}
+        />
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+          paddingVertical: 10,
+        }}
+      >
+        <View
+          style={{
+            // width: "100%",
+            height: BORDER_WIDTH,
+            backgroundColor: "#e3871d",
+            flex: 1,
+            marginHorizontal: 20,
+          }}
+        ></View>
+        <CustomText variant="h7" color={"#e3871d"}>
+          Up To 60% OFF
+        </CustomText>
+        <View
+          style={{
+            // width: "100%",
+            height: BORDER_WIDTH,
+            backgroundColor: "#e3871d",
+            flex: 1,
+            marginHorizontal: 20,
+          }}
+        ></View>
+      </View>
+    </LinearGradient>
+  );
+};
