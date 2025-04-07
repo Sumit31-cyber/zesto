@@ -1,0 +1,94 @@
+export const foodType  = [
+{
+    id:0,
+    name:"Dosa",
+    image:require('assets/dosa.png')
+},
+{
+    id:1,
+    name:"Burger",
+    image:require('assets/burger.png')
+},
+{
+    id:2,
+    name:"Cakes",
+    image:require('assets/cake.png')
+},
+
+{
+    id:4,
+    name:"Gulab Jamun",
+    image:require('assets/gulabJamun.png')
+},
+{
+    id:5,
+    name:"patatha",
+    image:require('assets/paratha.png')
+},
+{
+    id:6,
+    name:"Noodles",
+    image:require('assets/noodles.png')
+},
+{
+    id:7,
+    name:"Momos",
+    image:require('assets/momos.png')
+},
+{
+    id:8,
+    name:"Chinese",
+    image:require('assets/chinese.png')
+},
+{
+    id:10,
+    name:"Rolls",
+    image:require('assets/rolls.png')
+},
+{
+    id:11,
+    name:"North Indian",
+    image:require('assets/northIndian.png')
+},
+{
+    id:12,
+    name:"Sandwich",
+    image:require('assets/snadwich.png')
+},
+{
+    id:13,
+    name:"Chole Bhature",
+    image:require('assets/choleBhature.png')
+},
+
+{
+    id:14,
+    name:"Ice Cream",
+    image:require('assets/iceCream.png')
+},
+{
+    id:15,
+    name:"Pasta",
+    image:require('assets/pasta.png')
+},
+{
+    id:16,
+    name:"Pure Veg",
+    image:require('assets/vegFood.png')
+},
+{
+    id:17,
+    name:"Salad",
+    image:require('assets/salad.png')
+},
+{
+    id:18,
+    name:"Idli",
+    image:require('assets/idli.png')
+},
+{
+    id:3,
+    name:"Shakes",
+    image:require('assets/shakes.png')
+},
+]

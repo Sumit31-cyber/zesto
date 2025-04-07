@@ -20,6 +20,7 @@ import LocationHeader from "components/LocationHeader";
 import SearchBar from "components/SearchBar";
 import {
   BORDER_WIDTH,
+  BOTTOM_TAB_HEIGHT,
   COLORS,
   screenHeight,
   screenWidth,
@@ -39,10 +40,12 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import LottieView from "lottie-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import CustomText from "components/customText";
-import { OfferItem } from "types/types";
+import { OfferItem, SectionListData, SectionListDataProps } from "types/types";
 import OfferCarousel from "components/OfferCarousal";
 import HeaderSection from "components/HeaderSection";
+import FoodTypeSection from "components/FoodTypeSection";
 
+const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
 const Food = () => {
   const { signOut } = useAuth();
   const [searchText, setSearchText] = useState<string>("");
@@ -84,19 +87,27 @@ const Food = () => {
     };
   });
 
-  const sectionListData = [
+  const sectionListData: SectionListDataProps[] = [
     {
+      id: 0,
       title: "Header",
-      data: [{ id: "1" }],
+      data: [{}],
       renderItem: () => <HeaderSection headerHeight={headerHeight} />,
     },
     {
-      title: "Second Header",
-      data: [{ id: "2" }],
+      id: 1,
+      title: "Offers",
+      data: [{}],
       renderItem: () => <OfferCarousel />,
     },
+    {
+      id: 3,
+      title: "Sumit, What's on your mind?",
+      data: [{}],
+      renderItem: () => <FoodTypeSection />,
+    },
   ];
-  const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
+
   return (
     <View style={{ backgroundColor: "white" }}>
       <StatusBar barStyle={"dark-content"} />
@@ -127,14 +138,15 @@ const Food = () => {
         />
       </Animated.View>
       <AnimatedSectionList
-        bounces={false}
-        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: BOTTOM_TAB_HEIGHT + 20 }}
+        overScrollMode={"always"}
         onScroll={scrollHandler}
+        scrollEventThrottle={16}
         sections={sectionListData}
-        keyExtractor={(item, index) => String(index)}
-        // renderSectionHeader={({ section: { title } }) => (
-        //   <Text style={{}}>{title}</Text>
-        // )}
+        bounces={false}
+        nestedScrollEnabled
+        showsVerticalScrollIndicator={false}
+        keyExtractor={(item) => item.id}
       />
 
       <SafeAreaView />
@@ -145,3 +157,7 @@ const Food = () => {
 export default Food;
 
 const styles = StyleSheet.create({});
+
+const FoodTypeGrid = () => {
+  return <View></View>;
+};
