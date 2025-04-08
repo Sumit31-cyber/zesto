@@ -28,6 +28,7 @@ import {
 import Animated, {
   Extrapolation,
   interpolate,
+  interpolateColor,
   SharedValue,
   useAnimatedScrollHandler,
   useAnimatedStyle,
@@ -40,12 +41,15 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import LottieView from "lottie-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import CustomText from "components/customText";
-import { OfferItem, SectionListData, SectionListDataProps } from "types/types";
+import { OfferItem, SectionListDataProps } from "types/types";
 import OfferCarousel from "components/OfferCarousal";
 import HeaderSection from "components/HeaderSection";
 import FoodTypeSection from "components/FoodTypeSection";
+import FilterBar from "components/FilterBar";
+import RecommendedRestaurantSection from "components/RecommendedRestaurantSection";
 
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
+const AnimatedSafeAreaView = Animated.createAnimatedComponent(SafeAreaView);
 const Food = () => {
   const { signOut } = useAuth();
   const [searchText, setSearchText] = useState<string>("");
@@ -83,7 +87,17 @@ const Food = () => {
 
     return {
       transform: [{ translateY: -clampedValue.value }],
-      backgroundColor: `rgba(252,252,252,${bg})`,
+      backgroundColor: `rgba(252, 252, 252,${bg})`,
+    };
+  });
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      backgroundColor: interpolateColor(
+        scrollYGlobal.value,
+        [0, (headerHeight + top) / 2],
+        ["#fdf9ed", "#ffff"]
+      ),
     };
   });
 
@@ -106,11 +120,18 @@ const Food = () => {
       data: [{}],
       renderItem: () => <FoodTypeSection />,
     },
+    {
+      id: 4,
+      title: "Restaurant",
+      data: [{}],
+      renderItem: () => <RecommendedRestaurantSection />,
+    },
   ];
 
   return (
-    <View style={{ backgroundColor: "white" }}>
+    <AnimatedSafeAreaView style={[animatedStyle, { flex: 1 }]}>
       <StatusBar barStyle={"dark-content"} />
+
       <Animated.View
         onLayout={(event) => {
           setHeaderHeight(event.nativeEvent.layout.height);
@@ -123,6 +144,15 @@ const Food = () => {
             paddingTop: top,
             paddingHorizontal: 14,
             zIndex: 100,
+            shadowColor: COLORS.black,
+            shadowOffset: {
+              width: 0,
+              height: 1,
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+
+            elevation: 5,
           },
         ]}
       >
@@ -137,8 +167,12 @@ const Food = () => {
           }}
         />
       </Animated.View>
+
       <AnimatedSectionList
-        contentContainerStyle={{ paddingBottom: BOTTOM_TAB_HEIGHT + 20 }}
+        contentContainerStyle={{
+          paddingBottom: BOTTOM_TAB_HEIGHT + 20,
+          backgroundColor: "white",
+        }}
         overScrollMode={"always"}
         onScroll={scrollHandler}
         scrollEventThrottle={16}
@@ -147,17 +181,17 @@ const Food = () => {
         nestedScrollEnabled
         showsVerticalScrollIndicator={false}
         keyExtractor={(item) => item.id}
+        renderSectionHeader={({ section }) => {
+          if (section.title != "Restaurant") {
+            return null;
+          }
+          return <FilterBar />;
+        }}
       />
-
-      <SafeAreaView />
-    </View>
+    </AnimatedSafeAreaView>
   );
 };
 
 export default Food;
 
 const styles = StyleSheet.create({});
-
-const FoodTypeGrid = () => {
-  return <View></View>;
-};

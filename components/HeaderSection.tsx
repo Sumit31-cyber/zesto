@@ -3,14 +3,16 @@ import LottieView from "lottie-react-native";
 import { View } from "react-native";
 import { BORDER_WIDTH } from "utils/constants";
 import CustomText from "./customText";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const HeaderSection = ({ headerHeight }: { headerHeight: number }) => {
+  const { top } = useSafeAreaInsets();
   return (
     <LinearGradient
       colors={["#fdf9ed", "#faedcd", "#f4d893"]}
       style={{
         width: "100%",
-        paddingTop: headerHeight,
+        paddingTop: headerHeight - top,
         borderBottomLeftRadius: 30,
         borderBottomRightRadius: 30,
       }}
