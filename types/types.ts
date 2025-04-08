@@ -33,14 +33,15 @@ export interface OfferItem {
     image:ImageRequireSource
   }
 
-  export interface RecommendedFoodDataTypes {
+  export interface RecommendedRestaurantDataTypes {
       id: number,
       name: string,
       discount:string,
       discountAmount: string,
       time: string,
       distance: string
-      rating:number
+      rating?:number
       imageUrl:string
+      address:string
   }
 

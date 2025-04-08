@@ -9,48 +9,46 @@ import { filtersOption } from "utils/dataObject";
 
 const FilterBar = () => {
   return (
-    <SafeAreaView>
-      <ScrollView
-        contentContainerStyle={{
-          paddingHorizontal: PADDING_HORIZONTAL,
-          paddingVertical: RFValue(10),
-          backgroundColor: "white",
+    <ScrollView
+      contentContainerStyle={{
+        paddingHorizontal: PADDING_HORIZONTAL,
+        paddingVertical: RFValue(10),
+        backgroundColor: "white",
+      }}
+      horizontal
+      showsHorizontalScrollIndicator={false}
+    >
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          gap: RFValue(8),
         }}
-        horizontal
-        showsHorizontalScrollIndicator={false}
       >
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            gap: RFValue(8),
-          }}
-        >
-          <View style={styles.itemContainer}>
-            <CustomText variant="h6" color={COLORS.black}>
-              Filter
-            </CustomText>
-            <FilterIcon size={RFValue(14)} tint={COLORS.black} />
-          </View>
-          <View style={styles.itemContainer}>
-            <CustomText variant="h6" color={COLORS.black}>
-              Sort by
-            </CustomText>
-            <AntDesign name="down" size={RFValue(12)} color="black" />
-          </View>
-
-          {filtersOption.map((item, index) => {
-            return (
-              <View key={index.toString()} style={styles.itemContainer}>
-                <CustomText variant="h6" color={COLORS.black}>
-                  {item}
-                </CustomText>
-              </View>
-            );
-          })}
+        <View style={styles.itemContainer}>
+          <CustomText variant="h6" color={COLORS.black}>
+            Filter
+          </CustomText>
+          <FilterIcon size={RFValue(14)} tint={COLORS.black} />
         </View>
-      </ScrollView>
-    </SafeAreaView>
+        <View style={styles.itemContainer}>
+          <CustomText variant="h6" color={COLORS.black}>
+            Sort by
+          </CustomText>
+          <AntDesign name="down" size={RFValue(12)} color="black" />
+        </View>
+
+        {filtersOption.map((item, index) => {
+          return (
+            <View key={index.toString()} style={styles.itemContainer}>
+              <CustomText variant="h6" color={COLORS.black}>
+                {item}
+              </CustomText>
+            </View>
+          );
+        })}
+      </View>
+    </ScrollView>
   );
 };
 

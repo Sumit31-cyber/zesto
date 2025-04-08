@@ -1,3 +1,5 @@
+import { RecommendedRestaurantDataTypes } from "types/types";
+
 export const foodType  = [
 {
     id:0,
@@ -93,7 +95,7 @@ export const foodType  = [
 },
 ]
 
-export const recommendedListData = [
+export const recommendedListData : RecommendedRestaurantDataTypes[] = [
     {
         "id": 1,
         "name": "Punjabi Dhaba - Ali...",
@@ -102,6 +104,7 @@ export const recommendedListData = [
         "time": "25 mins",
         "distance": "5.5 km",
         "rating": 4.2,
+        "address" : "Nutan Plaza, 7Th Floor, Bander Bagicha, Off Fraser Road, Fraser Road Area Near Modern Electronics, North Patna 800001",
         "imageUrl": "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/RX_THUMBNAIL/IMAGES/VENDOR/2024/9/26/adac4b96-5dea-4cd7-93f1-c654f9227a7f_82387%20(1).jpg"
     },
     {
@@ -112,6 +115,7 @@ export const recommendedListData = [
         "time": "33 mins",
         "rating": 4.5,
         "distance": "8.5 km",
+        "address" : "1st Floor, S.S Tower, Lohia Nagar, Kankarbagh Near Idbi Bank, Near Panchshiv Mandir,  Central Patna 800020",
         "imageUrl": "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/RX_THUMBNAIL/IMAGES/VENDOR/2024/6/11/a5cee281-c25f-494a-8cab-ba7f49acfb03_803172.JPG"
     },
     {
@@ -122,6 +126,7 @@ export const recommendedListData = [
         "time": "36 mins",
         "rating": 3.2,
         "distance": "7.5 km",
+        "address" : "Nutan Plaza, 7Th Floor, Bander Bagicha, Off Fraser Road, Fraser Road Area Near Modern Electronics, North Patna 800001",
         "imageUrl": "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/e0839ff574213e6f35b3899ebf1fc597"
     },
     {
@@ -132,6 +137,7 @@ export const recommendedListData = [
         "discountAmount": "up to ₹70",
         "time": "19 mins",
         "distance": "1 km",
+        "address" : "1st Floor, S.S Tower, Lohia Nagar, Kankarbagh Near Idbi Bank, Near Panchshiv Mandir,  Central Patna 800020",
         "imageUrl": "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/yq7lqeehl9dsjjsogv5g"
     },
     {
@@ -142,6 +148,7 @@ export const recommendedListData = [
         "time": "15 mins",
         "distance": "1 km",
         "rating": 2.2,
+        "address" : "Nutan Plaza, 7Th Floor, Bander Bagicha, Off Fraser Road, Fraser Road Area Near Modern Electronics, North Patna 800001",
         "imageUrl": "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/5116a385bac0548e06c33c08350fbf11"
     },
     {
@@ -152,6 +159,7 @@ export const recommendedListData = [
         "time": "24 mins",
         "rating": 4.2,
         "distance": "5 km",
+        "address" : "1st Floor, S.S Tower, Lohia Nagar, Kankarbagh Near Idbi Bank, Near Panchshiv Mandir,  Central Patna 800020",
         "imageUrl": "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/2c469b5d88f84b7495b9825d06e4bb9b"
     },
     {
@@ -162,6 +170,7 @@ export const recommendedListData = [
         "time": "22 mins",
         "rating": 4.2,
         "distance": "6.5 km",
+        "address" : "Nutan Plaza, 7Th Floor, Bander Bagicha, Off Fraser Road, Fraser Road Area Near Modern Electronics, North Patna 800001",
         "imageUrl": "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/RX_THUMBNAIL/IMAGES/VENDOR/2024/10/22/e114a4a9-c14b-4666-8ad5-fbe4a6a44af8_532693.JPG"
     },
     {
@@ -171,6 +180,7 @@ export const recommendedListData = [
         "discountAmount": "up to ₹30",
         "time": "18 mins",
         "distance": "4.2 km",
+        "address" : "1st Floor, S.S Tower, Lohia Nagar, Kankarbagh Near Idbi Bank, Near Panchshiv Mandir,  Central Patna 800020",
         "imageUrl": "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/RX_THUMBNAIL/IMAGES/VENDOR/2024/4/1/e6705d31-3941-4fb8-a198-fc6e24cdcc36_861682.JPG"
     },
     {
@@ -180,6 +190,7 @@ export const recommendedListData = [
         "discountAmount": "up to ₹40",
         "time": "28 mins",
         "distance": "9 km",
+        "address" : "Nutan Plaza, 7Th Floor, Bander Bagicha, Off Fraser Road, Fraser Road Area Near Modern Electronics, North Patna 800001",
         "imageUrl": "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/64fd45fd9f44c1737bc446e470bed666"
     },
     {
@@ -189,6 +200,7 @@ export const recommendedListData = [
         "discountAmount": "up to ₹60",
         "time": "35 mins",
         "distance": "7.8 km",
+        "address" : "Nutan Plaza, 7Th Floor, Bander Bagicha, Off Fraser Road, Fraser Road Area Near Modern Electronics, North Patna 800001",
         "imageUrl": "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/c583ca6ce40b426797a78ae2ac91f2ec"
     },
     {
@@ -199,6 +211,7 @@ export const recommendedListData = [
         "discountAmount": "up to ₹70",
         "time": "20 mins",
         "distance": "3.5 km",
+        "address" : "1st Floor, S.S Tower, Lohia Nagar, Kankarbagh Near Idbi Bank, Near Panchshiv Mandir,  Central Patna 800020",
         "imageUrl": "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/df3122a3d49482073a839f47d0ae4281"
     },
     {
@@ -209,6 +222,7 @@ export const recommendedListData = [
         "rating": 4.9,
         "time": "40 mins",
         "distance": "11 km",
+        "address" : "Nutan Plaza, 7Th Floor, Bander Bagicha, Off Fraser Road, Fraser Road Area Near Modern Electronics, North Patna 800001",
         "imageUrl": "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/RX_THUMBNAIL/IMAGES/VENDOR/2024/7/28/1a55b465-5808-4201-a939-49540abae3d7_322633.JPG"
     },
 ];
