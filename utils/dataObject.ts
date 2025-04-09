@@ -98,7 +98,7 @@ export const foodType  = [
 export const recommendedListData : RecommendedRestaurantDataTypes[] = [
     {
         "id": 1,
-        "name": "Punjabi Dhaba - Ali...",
+        "name": "Moti Mahal Delux Tandoori Trail",
         "discount": "40% OFF",
         "discountAmount": "up to ₹80",
         "time": "25 mins",

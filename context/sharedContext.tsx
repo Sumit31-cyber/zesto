@@ -16,7 +16,12 @@ export const SharedStateProvider: FC<{ children: React.ReactNode }> = ({
   const scrollY = useSharedValue(1);
   const scrollYGlobal = useSharedValue(0);
   return (
-    <SharedStateContext.Provider value={{ scrollY, scrollYGlobal }}>
+    <SharedStateContext.Provider
+      value={{
+        scrollY,
+        scrollYGlobal,
+      }}
+    >
       {children}
     </SharedStateContext.Provider>
   );

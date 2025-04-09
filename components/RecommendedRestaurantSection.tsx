@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { COLORS, PADDING_HORIZONTAL } from "utils/constants";
 import CustomText from "./customText";
@@ -7,6 +7,7 @@ import { RecommendedRestaurantDataTypes } from "types/types";
 import { Image } from "expo-image";
 import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
 import { RFValue } from "react-native-responsive-fontsize";
+import { router } from "expo-router";
 
 const RecommendedRestaurantSection = () => {
   return (
@@ -18,11 +19,35 @@ const RecommendedRestaurantSection = () => {
       >
         Top {recommendedListData.length} restaurants to explore
       </CustomText>
-      <View style={{ gap: RFValue(20), marginTop: 10 }}>
-        {recommendedListData.map((item, index) => {
-          return <ListItems key={index} item={item} index={index} />;
-        })}
-      </View>
+
+      <FlatList
+        keyExtractor={(_, index) => `${index}-restaurant`}
+        data={recommendedListData}
+        style={{ marginTop: RFValue(10), gap: RFValue(18) }}
+        scrollEnabled={false}
+        showsVerticalScrollIndicator={false}
+        renderItem={({
+          item,
+          index,
+        }: {
+          item: RecommendedRestaurantDataTypes;
+          index: number;
+        }) => {
+          return (
+            <ListItems
+              key={index}
+              item={item}
+              index={index}
+              onPress={() => {
+                router.navigate({
+                  pathname: "/(protected)/restaurant",
+                  params: { restaurant: JSON.stringify(item) },
+                });
+              }}
+            />
+          );
+        }}
+      />
     </View>
   );
 };
@@ -34,12 +59,14 @@ const styles = StyleSheet.create({});
 const ListItems = ({
   item,
   index,
+  onPress,
 }: {
   item: RecommendedRestaurantDataTypes;
   index: number;
+  onPress: () => void;
 }) => {
   return (
-    <View style={{ flexDirection: "row", gap: 10 }}>
+    <Pressable onPress={onPress} style={{ flexDirection: "row", gap: 10 }}>
       <View
         style={{
           width: RFValue(100),
@@ -99,6 +126,6 @@ const ListItems = ({
           {item.address}
         </CustomText>
       </View>
-    </View>
+    </Pressable>
   );
 };
