@@ -7,8 +7,9 @@ import {
   Text,
   TouchableOpacity,
   View,
+  ViewStyle,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import {
   BOTTOM_TAB_HEIGHT,
   COLORS,
@@ -25,6 +26,8 @@ import CustomText from "components/customText";
 import { Image } from "expo-image";
 import { restaurantItemsData } from "utils/dataObject";
 import Animated, {
+  Extrapolation,
+  interpolate,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
@@ -35,7 +38,7 @@ import { useSafeArea, useSafeAreaInsets } from "react-native-safe-area-context";
 import { RFValue } from "react-native-responsive-fontsize";
 
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
-
+const _imageHeaderHeight = RFValue(220);
 const RestaurantScreen = () => {
   const { restaurant } = useLocalSearchParams() as {
     restaurant: string; // Expo Router params can be string or string[]
@@ -61,7 +64,7 @@ const RestaurantScreen = () => {
     rating,
   } = restaurantData;
 
-  console.log(restaurant);
+  const [headerHeight, setHeaderHeight] = useState(0);
 
   const rStyle = useAnimatedStyle(() => {
     return {
@@ -74,6 +77,27 @@ const RestaurantScreen = () => {
       const currentScrollY = event.contentOffset.y;
       restaurantScreenGlobalScrollY.value = currentScrollY;
     },
+  });
+
+  const filterStyle = useAnimatedStyle(() => {
+    return {
+      opacity: withTiming(
+        restaurantScreenGlobalScrollY.value > headerHeight + top / 2 ? 1 : 0,
+        { duration: 100 }
+      ),
+    };
+  });
+  const rFilter = useAnimatedStyle(() => {
+    const ty = interpolate(
+      restaurantScreenGlobalScrollY.value,
+      [0, _imageHeaderHeight - headerHeight],
+      [0, -(_imageHeaderHeight - headerHeight)],
+      Extrapolation.CLAMP
+    );
+
+    return {
+      transform: [{ translateY: ty }],
+    };
   });
 
   const sectionListData: SectionListDataProps[] = [
@@ -108,12 +132,14 @@ const RestaurantScreen = () => {
   return (
     <View style={{ flex: 1 }}>
       <Animated.View
+        onLayout={(event) => {
+          setHeaderHeight(event.nativeEvent.layout.height);
+        }}
         style={[
           rStyle,
           {
             top: 0,
             position: "absolute",
-            // height: 50 + top,
             width: "100%",
             backgroundColor: "white",
             zIndex: 100,
@@ -171,7 +197,42 @@ const RestaurantScreen = () => {
           />
         </View>
       </Animated.View>
-      <AnimatedSectionList
+      <Animated.View
+        style={[
+          rFilter,
+          {
+            height: 60,
+            width: "100%",
+            backgroundColor: "yellow",
+            position: "absolute",
+            top: _imageHeaderHeight,
+            zIndex: 999,
+          },
+        ]}
+      ></Animated.View>
+      <Animated.ScrollView
+        onScroll={scrollHandler}
+        scrollEventThrottle={16}
+        bounces={false}
+      >
+        <HeaderSection restaurantData={restaurantData} />
+
+        <View style={{ paddingTop: 60 }}>
+          {restaurantItemsData.map(() => {
+            return (
+              <View
+                style={{
+                  height: 200,
+                  width: "100%",
+                  backgroundColor: "green",
+                  marginBottom: 10,
+                }}
+              />
+            );
+          })}
+        </View>
+      </Animated.ScrollView>
+      {/* <AnimatedSectionList
         contentContainerStyle={{
           paddingBottom: BOTTOM_TAB_HEIGHT + 20,
           backgroundColor: "white",
@@ -199,7 +260,7 @@ const RestaurantScreen = () => {
             />
           );
         }}
-      />
+      /> */}
     </View>
   );
 };
@@ -207,6 +268,22 @@ const RestaurantScreen = () => {
 export default RestaurantScreen;
 
 const styles = StyleSheet.create({});
+
+// const FilterSection = ({ style }: { style?: ViewStyle }) => {
+//   return (
+//     <Animated.View
+//       style={[
+//         style,
+//         {
+//           height: 60,
+//           width: "100%",
+//           backgroundColor: "red",
+//           zIndex: 100,
+//         },
+//       ]}
+//     ></Animated.View>
+//   );
+// };
 
 const HeaderSection = ({
   restaurantData,
@@ -225,7 +302,7 @@ const HeaderSection = ({
       <Image
         source={{ uri: restaurantData.imageUrl }}
         style={{
-          height: RFValue(200),
+          height: _imageHeaderHeight,
           width: "100%",
         }}
       />
@@ -268,7 +345,11 @@ const HeaderSection = ({
         >
           <View style={{ flex: 1 }}>
             <View style={{ gap: 10 }}>
-              <CustomText variant="h4" fontFamily="aeonikBold">
+              <CustomText
+                variant="h4"
+                numberOfLines={1}
+                fontFamily="aeonikBold"
+              >
                 {restaurantData.name}
               </CustomText>
               <View

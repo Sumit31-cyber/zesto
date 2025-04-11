@@ -45,7 +45,7 @@ const FoodTypeSection = () => {
           </View>
           <View style={{ flexDirection: "row" }}>
             {foodType.slice(9, 18).map((item, index) => {
-              return <RenderItem item={item} index={index} />;
+              return <RenderItem key={index} item={item} index={index} />;
             })}
           </View>
         </View>
