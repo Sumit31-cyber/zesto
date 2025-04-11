@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import {
+  BORDER_WIDTH,
   BOTTOM_TAB_HEIGHT,
   COLORS,
   PADDING_HORIZONTAL,
@@ -36,6 +37,8 @@ import Animated, {
 import { useSharedState } from "context/sharedContext";
 import { useSafeArea, useSafeAreaInsets } from "react-native-safe-area-context";
 import { RFValue } from "react-native-responsive-fontsize";
+import RestaurantFoodItem from "components/RestaurantFoodItem";
+import FilterBar from "components/FilterBar";
 
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
 const _imageHeaderHeight = RFValue(220);
@@ -100,35 +103,6 @@ const RestaurantScreen = () => {
     };
   });
 
-  const sectionListData: SectionListDataProps[] = [
-    {
-      id: 0,
-      title: "Header",
-      data: [{}],
-      renderItem: () => <HeaderSection restaurantData={restaurantData} />,
-    },
-    {
-      id: 2,
-      title: "Main",
-      data: [{}],
-      renderItem: () => (
-        <View>
-          {restaurantItemsData.map(() => {
-            return (
-              <View
-                style={{
-                  height: 200,
-                  width: "100%",
-                  backgroundColor: "green",
-                  marginBottom: 10,
-                }}
-              />
-            );
-          })}
-        </View>
-      ),
-    },
-  ];
   return (
     <View style={{ flex: 1 }}>
       <Animated.View
@@ -201,66 +175,44 @@ const RestaurantScreen = () => {
         style={[
           rFilter,
           {
-            height: 60,
             width: "100%",
-            backgroundColor: "yellow",
+            // backgroundColor: "yellow",
             position: "absolute",
             top: _imageHeaderHeight,
             zIndex: 999,
           },
         ]}
-      ></Animated.View>
+      >
+        <FilterBar />
+        <View
+          style={{
+            height: BORDER_WIDTH * 2,
+            width: "100%",
+            backgroundColor: COLORS.liteGray,
+            opacity: 0.3,
+          }}
+        ></View>
+      </Animated.View>
       <Animated.ScrollView
         onScroll={scrollHandler}
         scrollEventThrottle={16}
         bounces={false}
+        contentContainerStyle={{ backgroundColor: "white" }}
       >
         <HeaderSection restaurantData={restaurantData} />
 
-        <View style={{ paddingTop: 60 }}>
-          {restaurantItemsData.map(() => {
-            return (
-              <View
-                style={{
-                  height: 200,
-                  width: "100%",
-                  backgroundColor: "green",
-                  marginBottom: 10,
-                }}
-              />
-            );
+        <View
+          style={{
+            marginTop: 60,
+            gap: 5,
+            paddingHorizontal: PADDING_HORIZONTAL,
+          }}
+        >
+          {restaurantItemsData.map((item, index) => {
+            return <RestaurantFoodItem item={item} index={index} />;
           })}
         </View>
       </Animated.ScrollView>
-      {/* <AnimatedSectionList
-        contentContainerStyle={{
-          paddingBottom: BOTTOM_TAB_HEIGHT + 20,
-          backgroundColor: "white",
-        }}
-        overScrollMode={"always"}
-        onScroll={scrollHandler}
-        scrollEventThrottle={16}
-        sections={sectionListData}
-        bounces={false}
-        nestedScrollEnabled
-        showsVerticalScrollIndicator={false}
-        keyExtractor={(item) => String(item.id)}
-        renderSectionHeader={({ section }) => {
-          if (section.title != "Main") {
-            return null;
-          }
-          return (
-            <View
-              style={{
-                height: 50,
-                width: "100%",
-                backgroundColor: "yellow",
-                paddingTop: 200,
-              }}
-            />
-          );
-        }}
-      /> */}
     </View>
   );
 };
@@ -268,22 +220,6 @@ const RestaurantScreen = () => {
 export default RestaurantScreen;
 
 const styles = StyleSheet.create({});
-
-// const FilterSection = ({ style }: { style?: ViewStyle }) => {
-//   return (
-//     <Animated.View
-//       style={[
-//         style,
-//         {
-//           height: 60,
-//           width: "100%",
-//           backgroundColor: "red",
-//           zIndex: 100,
-//         },
-//       ]}
-//     ></Animated.View>
-//   );
-// };
 
 const HeaderSection = ({
   restaurantData,

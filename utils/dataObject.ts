@@ -292,7 +292,7 @@ export const regularFoodData = [
 ]
 
 
-export const restaurantItemsData = [
+export const restaurantItemsData : MenuItemList = [
     {
         "id": "1",
         "name": "Margherita Pizza",
@@ -301,6 +301,7 @@ export const restaurantItemsData = [
         "image": "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,h_600/dpventcrozvfni0lqb10",
         "isCustomizable": true,
         "isVeg": true,
+        "isBestSeller":true,
         "customizationOptions": [
             {
                 "type": "Extra Toppings",
@@ -327,6 +328,7 @@ export const restaurantItemsData = [
         "image": "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,h_600/FOOD_CATALOG/IMAGES/CMS/2024/9/19/e1e9ebad-6ef4-45d2-abf2-136048e5092e_05ab7e4a-ffa5-48c9-9c2e-8bd177206d55.jpeg",
         "isCustomizable": true,
         "isVeg": false,
+        "isBestSeller":true,
         "customizationOptions": [
             {
                 "type": "Size",
@@ -509,3 +511,30 @@ export const restaurantsItemFiltersOption = [
     'Sweets'
 ]
 
+
+type CustomizationOption = {
+    name: string;
+    price: number;
+   
+  };
+  
+  type CustomizationGroup = {
+    type: string;
+    options: CustomizationOption[];
+    required?:boolean
+  };
+  
+  export type MenuItem = {
+    id: string;
+    name: string;
+    description: string;
+    price: number;
+    image: string;
+    isCustomizable: boolean;
+    isVeg: boolean;
+    isBestSeller:boolean;
+    customizationOptions?: CustomizationGroup[];
+  };
+  
+  // Example usage for an array of items:
+  type MenuItemList = MenuItem[];

@@ -15,7 +15,9 @@ import Svg, {
   RadialGradient,
   Polygon,
   Ellipse,
+  Line,
 } from "react-native-svg";
+import { screenWidth } from "utils/constants";
 
 export const FoodIcon = ({ size, tint = "#111" }) => {
   return (
