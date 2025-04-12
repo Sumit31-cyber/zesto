@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View } from "react-native";
-import React, { FC } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { FC, useRef } from "react";
 import { MenuItem } from "utils/dataObject";
 import { Image } from "expo-image";
 import { RFValue } from "react-native-responsive-fontsize";
@@ -7,6 +7,9 @@ import DashedLine from "./DashedLine";
 import { BORDER_WIDTH, COLORS } from "utils/constants";
 import CustomText from "./customText";
 import { Feather } from "@expo/vector-icons";
+import { useSharedState } from "context/sharedContext";
+import CustomizableModal from "./CustomizableModal";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 
 interface Props {
   item: MenuItem;
@@ -16,8 +19,10 @@ interface Props {
 const _imageSize = RFValue(120);
 const _addButtonHeight = RFValue(30);
 const RestaurantFoodItem: FC<Props> = ({ item, index }) => {
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   return (
     <View style={{}}>
+      <CustomizableModal modalRef={bottomSheetModalRef} item={item} />
       <View
         style={{
           flexDirection: "row",
@@ -91,7 +96,12 @@ const RestaurantFoodItem: FC<Props> = ({ item, index }) => {
             style={{ width: _imageSize, aspectRatio: 1, borderRadius: 20 }}
           />
           <View style={{ width: _imageSize, paddingHorizontal: RFValue(15) }}>
-            <View
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => {
+                if (item.customizationOptions)
+                  bottomSheetModalRef.current?.present();
+              }}
               style={{
                 width: "100%",
                 height: _addButtonHeight,
@@ -108,7 +118,7 @@ const RestaurantFoodItem: FC<Props> = ({ item, index }) => {
               <CustomText variant="h4" fontFamily="aeonikBold" color="#e63946">
                 ADD
               </CustomText>
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
         {/* <View style={{ flex: 1, backgroundColor: "green" }}></View>

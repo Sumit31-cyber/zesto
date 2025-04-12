@@ -513,13 +513,13 @@ export const restaurantsItemFiltersOption = [
 ]
 
 
-type CustomizationOption = {
+export type CustomizationOption = {
     name: string;
     price: number;
    
   };
   
-  type CustomizationGroup = {
+ export type CustomizationGroup = {
     type: string;
     options: CustomizationOption[];
     required?:boolean

@@ -25,6 +25,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { RFValue } from "react-native-responsive-fontsize";
 import RestaurantFoodItem from "components/RestaurantFoodItem";
 import FilterBar from "components/FilterBar";
+import CustomizableModal from "components/CustomizableModal";
 
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
 const _imageHeaderHeight = RFValue(220);

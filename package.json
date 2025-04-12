@@ -15,12 +15,14 @@
   "dependencies": {
     "@clerk/clerk-expo": "^2.9.6",
     "@expo/vector-icons": "^14.0.2",
+    "@gorhom/bottom-sheet": "^5.1.2",
     "@react-navigation/native": "^7.0.14",
     "@reduxjs/toolkit": "^2.6.1",
     "axios": "^1.8.4",
     "expo": "~52.0.41",
     "expo-font": "~13.0.4",
     "expo-image": "~2.0.7",
+    "expo-linear-gradient": "~14.0.2",
     "expo-linking": "~7.0.5",
     "expo-router": "~4.0.19",
     "expo-secure-store": "^14.0.1",
@@ -43,8 +45,7 @@
     "react-native-web": "~0.19.13",
     "react-redux": "^9.2.0",
     "redux-persist": "^6.0.0",
-    "uuid": "^11.1.0",
-    "expo-linear-gradient": "~14.0.2"
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

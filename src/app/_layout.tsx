@@ -6,6 +6,8 @@ import { tokenCache } from "@clerk/clerk-expo/token-cache";
 import { ClerkProvider } from "@clerk/clerk-expo";
 import { View } from "react-native";
 import { SharedStateProvider } from "context/sharedContext";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 export default function RootLayout() {
   const [loaded] = useFonts({
     aeonikRegular: require("assets/fonts/AeonikRegular.otf"),
@@ -26,7 +28,11 @@ export default function RootLayout() {
   return (
     <ClerkProvider tokenCache={tokenCache}>
       <SharedStateProvider>
-        <Slot />
+        <GestureHandlerRootView>
+          <BottomSheetModalProvider>
+            <Slot />
+          </BottomSheetModalProvider>
+        </GestureHandlerRootView>
       </SharedStateProvider>
     </ClerkProvider>
   );

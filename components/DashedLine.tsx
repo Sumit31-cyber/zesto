@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View, ViewStyle } from "react-native";
 import React from "react";
+import { COLORS } from "utils/constants";
 
 const DashedLine = ({ style }: { style?: ViewStyle }) => {
   return (
@@ -10,7 +11,7 @@ const DashedLine = ({ style }: { style?: ViewStyle }) => {
           width: "100%",
           borderRadius: 1,
           borderWidth: 1,
-          borderColor: "red",
+          borderColor: COLORS.liteGray,
           borderStyle: "dashed",
           zIndex: 0,
         },
