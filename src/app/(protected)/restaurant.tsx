@@ -1,28 +1,15 @@
 import {
-  SafeAreaView,
-  ScrollView,
   SectionList,
-  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  ViewStyle,
 } from "react-native";
 import React, { useState } from "react";
-import {
-  BORDER_WIDTH,
-  BOTTOM_TAB_HEIGHT,
-  COLORS,
-  PADDING_HORIZONTAL,
-  screenHeight,
-} from "utils/constants";
+import { BORDER_WIDTH, COLORS, PADDING_HORIZONTAL } from "utils/constants";
 import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
-import {
-  RecommendedRestaurantDataTypes,
-  SectionListDataProps,
-} from "types/types";
+import { RecommendedRestaurantDataTypes } from "types/types";
 import CustomText from "components/customText";
 import { Image } from "expo-image";
 import { restaurantItemsData } from "utils/dataObject";
@@ -34,8 +21,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { useSharedState } from "context/sharedContext";
-import { useSafeArea, useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { RFValue } from "react-native-responsive-fontsize";
 import RestaurantFoodItem from "components/RestaurantFoodItem";
 import FilterBar from "components/FilterBar";
@@ -44,12 +30,9 @@ const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
 const _imageHeaderHeight = RFValue(220);
 const RestaurantScreen = () => {
   const { restaurant } = useLocalSearchParams() as {
-    restaurant: string; // Expo Router params can be string or string[]
+    restaurant: string;
   };
 
-  //   const { restaurantScreenScrollY, restaurantScreenGlobalScrollY } =
-  //     useSharedState();
-  const restaurantScreenScrollY = useSharedValue(1);
   const restaurantScreenGlobalScrollY = useSharedValue(0);
   const { top } = useSafeAreaInsets();
   const restaurantData = JSON.parse(
@@ -82,14 +65,6 @@ const RestaurantScreen = () => {
     },
   });
 
-  const filterStyle = useAnimatedStyle(() => {
-    return {
-      opacity: withTiming(
-        restaurantScreenGlobalScrollY.value > headerHeight + top / 2 ? 1 : 0,
-        { duration: 100 }
-      ),
-    };
-  });
   const rFilter = useAnimatedStyle(() => {
     const ty = interpolate(
       restaurantScreenGlobalScrollY.value,
@@ -209,7 +184,7 @@ const RestaurantScreen = () => {
           }}
         >
           {restaurantItemsData.map((item, index) => {
-            return <RestaurantFoodItem item={item} index={index} />;
+            return <RestaurantFoodItem key={index} item={item} index={index} />;
           })}
         </View>
       </Animated.ScrollView>

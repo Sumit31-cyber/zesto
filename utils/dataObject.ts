@@ -493,10 +493,11 @@ export const restaurantItemsData : MenuItemList = [
 
 
 export const filtersOption = [
+    'veg',
+    'Non-veg',
     'Nearest',
     'Great Offers',
     'Rating 4.0',
-    'Pure Veg',
     'Less Than Rs. 300',
     'Grater Than Rs. 600'
 ]
@@ -532,7 +533,7 @@ type CustomizationOption = {
     image: string;
     isCustomizable: boolean;
     isVeg: boolean;
-    isBestSeller:boolean;
+    isBestSeller?:boolean;
     customizationOptions?: CustomizationGroup[];
   };
   
