@@ -299,7 +299,7 @@ export const restaurantItemsData : MenuItemList = [
         "description": "Classic pizza with fresh mozzarella and basil.",
         "price": 109,
         "image": "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,h_600/dpventcrozvfni0lqb10",
-        "isCustomizable": true,
+        "isCustomisable": true,
         "isVeg": true,
         "isBestSeller":true,
         "customizationOptions": [
@@ -317,7 +317,8 @@ export const restaurantItemsData : MenuItemList = [
                     { "name": "Thin Crust", "price": 30 },
                     { "name": "Cheese Burst", "price": 45 }
                 ]
-            }
+            },
+
         ]
     },
     {
@@ -326,7 +327,7 @@ export const restaurantItemsData : MenuItemList = [
         "description": "Loaded with pepperoni slices and cheese.",
         "price": 229,
         "image": "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,h_600/FOOD_CATALOG/IMAGES/CMS/2024/9/19/e1e9ebad-6ef4-45d2-abf2-136048e5092e_05ab7e4a-ffa5-48c9-9c2e-8bd177206d55.jpeg",
-        "isCustomizable": true,
+        "isCustomisable": true,
         "isVeg": false,
         "isBestSeller":true,
         "customizationOptions": [
@@ -356,7 +357,7 @@ export const restaurantItemsData : MenuItemList = [
         "description": "Aromatic biryani with tender butter chicken.",
         "price": 250,
         "image": "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,h_600/b461d252b9bfa267e5faa89a5284853f",
-        "isCustomizable": true,
+        "isCustomisable": true,
         "isVeg": false,
         "customizationOptions": [
             {
@@ -376,7 +377,7 @@ export const restaurantItemsData : MenuItemList = [
         "description": "A vegetarian biryani with marinated paneer.",
         "price": 170,
         "image": "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,h_600/286ebc9e01804994376af9feb5474d03",
-        "isCustomizable": false,
+        "isCustomisable": false,
         "isVeg": true
     },
     {
@@ -385,7 +386,7 @@ export const restaurantItemsData : MenuItemList = [
         "description": "Rich and creamy New York-style cheesecake.",
         "price": 179,
         "image": "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,h_600/FOOD_CATALOG/IMAGES/CMS/2024/8/30/cf9f870b-ebc5-42cf-8067-7a21018e5513_115d452e-f1bc-4d0a-902a-31d4e134a3bd.jpeg",
-        "isCustomizable": true,
+        "isCustomisable": true,
         "isVeg": true,
         "customizationOptions": [
             {
@@ -404,7 +405,7 @@ export const restaurantItemsData : MenuItemList = [
         "description": "Warm, gooey chocolate brownie.",
         "price": 45,
         "image": "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,h_600/Swiggy-Dash/jmin882krukbjqi5qcjk",
-        "isCustomizable": false,
+        "isCustomisable": false,
         "isVeg": true
     },
     {
@@ -413,7 +414,7 @@ export const restaurantItemsData : MenuItemList = [
         "description": "Potato patty, cheese, lettuce, and tomato on a bun.",
         "price": 90,
         "image": "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,h_600/f7390f87e5b2abb968715dc59f2bf8f3",
-        "isCustomizable": true,
+        "isCustomisable": true,
         "isVeg": true,
         "customizationOptions": [
             {
@@ -432,7 +433,7 @@ export const restaurantItemsData : MenuItemList = [
         "description": "Fresh greens with a variety of veggies.",
         "price": 120,
         "image": "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,h_600/72d1b879f7df5f9aa6cec68a05b8d63f",
-        "isCustomizable": false,
+        "isCustomisable": false,
         "isVeg": true
     },
     {
@@ -441,7 +442,7 @@ export const restaurantItemsData : MenuItemList = [
         "description": "Grilled chicken marinated in spices.",
         "price": 120,
         "image": "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,h_600/c00bd9cd2bf28b999771d66bd836aace",
-        "isCustomizable": false,
+        "isCustomisable": false,
         "isVeg": false
     },
     {
@@ -450,7 +451,7 @@ export const restaurantItemsData : MenuItemList = [
         "description": "Healthy wrap with fresh vegetables.",
         "price": 70,
         "image": "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,h_600/FOOD_CATALOG/IMAGES/CMS/2024/9/27/82512e55-bdec-4717-bf93-d432aa55cc65_c6c23d67-6dc9-4b33-adbe-a0d99be38131.jpg",
-        "isCustomizable": true,
+        "isCustomisable": true,
         "isVeg": true,
         "customizationOptions": [
             {
@@ -468,7 +469,7 @@ export const restaurantItemsData : MenuItemList = [
         "description": "Pasta with fresh vegetables in a light sauce.",
         "price": 120,
         "image": "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,h_600/FOOD_CATALOG/IMAGES/CMS/2024/7/26/1b3413ac-2014-4c68-bdaa-11b98df74625_b2e062fc-75b8-4e8e-bbd8-794f9396c768.jpg",
-        "isCustomizable": false,
+        "isCustomisable": false,
         "isVeg": true
     },
     {
@@ -477,7 +478,7 @@ export const restaurantItemsData : MenuItemList = [
         "description": "Romaine lettuce with Caesar dressing and chicken.",
         "price": 200,
         "image": "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,h_600/FOOD_CATALOG/IMAGES/CMS/2024/10/15/84c3a8bd-4e6f-40ea-810a-b0a3adfefa56_2f3299b6-12aa-444b-b47f-e0e5821083de.jpg_compressed",
-        "isCustomizable": true,
+        "isCustomisable": true,
         "isVeg": false,
         "customizationOptions": [
             {
@@ -531,7 +532,7 @@ export type CustomizationOption = {
     description: string;
     price: number;
     image: string;
-    isCustomizable: boolean;
+    isCustomisable: boolean;
     isVeg: boolean;
     isBestSeller?:boolean;
     customizationOptions?: CustomizationGroup[];
@@ -539,3 +540,38 @@ export type CustomizationOption = {
   
   // Example usage for an array of items:
   type MenuItemList = MenuItem[];
+
+  export interface CartItem {
+    isVeg: boolean;
+    id: string;
+    name: string;
+    price: number;
+    quantity: number;
+    cartPrice?: number;
+    isCustomisable: boolean;
+    isBestSeller?:boolean;
+    customisations?: CustomizationOption[];
+  }
+  
+  export interface RestaurantDetails {
+    id: number;
+    name: string;
+    discount?: string; // Optional since not all items might have discounts
+    discountAmount?: string;
+    time: string;
+    distance: string;
+    rating: number;
+    address: string;
+    imageUrl: string;
+    price?: number; // Added since your OptionItems component uses item.price
+  }
+  
+  export interface RestaurantCart {
+    restaurant: RecommendedRestaurantDataTypes;
+    items: CartItem[];
+  }
+  export interface CartState {
+    carts: RestaurantCart[];
+  }
+  
+  

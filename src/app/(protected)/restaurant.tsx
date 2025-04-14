@@ -185,7 +185,14 @@ const RestaurantScreen = () => {
           }}
         >
           {restaurantItemsData.map((item, index) => {
-            return <RestaurantFoodItem key={index} item={item} index={index} />;
+            return (
+              <RestaurantFoodItem
+                key={index}
+                item={item}
+                index={index}
+                restaurant={restaurantData}
+              />
+            );
           })}
         </View>
       </Animated.ScrollView>

@@ -1,19 +1,31 @@
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import {
   createContext,
+  Dispatch,
   FC,
   PropsWithChildren,
   Ref,
   RefObject,
+  SetStateAction,
   useContext,
   useRef,
+  useState,
 } from "react";
 import Animated, { useSharedValue } from "react-native-reanimated";
+import { CustomizationOption } from "utils/dataObject";
+
+interface CurrentCartItem {
+  quantity: number;
+  price: number;
+  selectedOptions: CustomizationOption[];
+}
 
 interface SharedContextType {
   scrollY: Animated.SharedValue<number>;
   scrollYGlobal: Animated.SharedValue<number>;
   bottomSheetModalRef: RefObject<BottomSheetModal>;
+  selectedCustomisableItem: CurrentCartItem;
+  setSelectedCustomisableItem: Dispatch<SetStateAction<CurrentCartItem>>;
   //   scrollToTop: () => void;
 }
 
@@ -26,6 +38,12 @@ export const SharedStateProvider: FC<{ children: React.ReactNode }> = ({
   const scrollY = useSharedValue(1);
   const scrollYGlobal = useSharedValue(0);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const [selectedCustomisableItem, setSelectedCustomisableItem] =
+    useState<CurrentCartItem>({
+      quantity: 1,
+      price: 0,
+      selectedOptions: [],
+    });
 
   return (
     <SharedStateContext.Provider
@@ -33,6 +51,8 @@ export const SharedStateProvider: FC<{ children: React.ReactNode }> = ({
         scrollY,
         scrollYGlobal,
         bottomSheetModalRef,
+        selectedCustomisableItem,
+        setSelectedCustomisableItem,
       }}
     >
       {children}

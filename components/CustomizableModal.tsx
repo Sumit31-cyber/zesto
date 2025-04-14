@@ -1,6 +1,16 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { RefObject, useState } from "react";
-import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import React, { memo, RefObject, useMemo, useState } from "react";
+import {
+  BottomSheetModal,
+  BottomSheetScrollView,
+  BottomSheetView,
+} from "@gorhom/bottom-sheet";
 import { useSharedState } from "context/sharedContext";
 import ModalBackdrop from "./ModalBackdrop";
 import { RFValue } from "react-native-responsive-fontsize";
@@ -21,20 +31,31 @@ import Animated, {
   ZoomIn,
   ZoomOut,
 } from "react-native-reanimated";
+import { useDispatch } from "react-redux";
+import { addItemToCart } from "redux/slice/cartSlice";
 
 const CustomizableModal = ({
   item,
   modalRef,
+  onAddToCartPress,
 }: {
   item: MenuItem;
   modalRef: RefObject<BottomSheetModal>;
+  onAddToCartPress: () => void;
 }) => {
   const { bottomSheetModalRef } = useSharedState();
   const { bottom } = useSafeAreaInsets();
+  const { setSelectedCustomisableItem } = useSharedState();
+
+  // const snapPoints = useMemo(() => ["60%"], []);
   return (
     <BottomSheetModal
       ref={modalRef}
-      // snapPoints={["100%"]}
+      onChange={(value) => {
+        if (value === -1) {
+          // setSelectedCustomisableItem({});
+        }
+      }}
       backdropComponent={ModalBackdrop}
     >
       <BottomSheetView
@@ -43,66 +64,77 @@ const CustomizableModal = ({
           paddingHorizontal: 0,
           // backgroundColor: "#e9e8ee",
           backgroundColor: "#f8f9fa",
+          maxHeight: RFValue(500),
         }}
       >
         <Header item={item} />
-
-        {item.customizationOptions?.map((item, index) => {
-          return (
-            <View
-              style={{
-                marginHorizontal: PADDING_HORIZONTAL,
-                marginVertical: PADDING_HORIZONTAL,
-                backgroundColor: "white",
-                borderRadius: 10,
-                shadowColor: "#fff",
-                shadowOffset: {
-                  width: 0,
-                  height: 1,
-                },
-                shadowOpacity: 0.07,
-                shadowRadius: 1,
-
-                elevation: 5,
-              }}
-            >
+        <FlatList
+          data={item.customizationOptions}
+          keyExtractor={(item, index) => index.toString()}
+          bounces={false}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: RFValue(50) }}
+          renderItem={({ item, index }) => {
+            return (
               <View
                 style={{
-                  paddingVertical: PADDING_HORIZONTAL,
-                  paddingHorizontal: PADDING_HORIZONTAL,
-                  gap: 4,
+                  marginHorizontal: PADDING_HORIZONTAL,
+                  marginVertical: PADDING_HORIZONTAL,
+                  backgroundColor: "white",
+                  borderRadius: 10,
+                  shadowColor: "#fff",
+                  shadowOffset: {
+                    width: 0,
+                    height: 1,
+                  },
+                  shadowOpacity: 0.07,
+                  shadowRadius: 1,
+                  elevation: 5,
                 }}
               >
-                <CustomText
-                  variant="h6"
-                  fontFamily="aeonikBold"
-                  color={COLORS.black}
+                <View
+                  style={{
+                    paddingVertical: PADDING_HORIZONTAL,
+                    paddingHorizontal: PADDING_HORIZONTAL,
+                    gap: 4,
+                  }}
                 >
-                  {item.type}
-                </CustomText>
-                <CustomText
-                  variant="h7"
-                  color={COLORS.black}
-                  style={{ textTransform: "capitalize" }}
-                >
-                  select your {item.type}
-                </CustomText>
-              </View>
+                  <CustomText
+                    variant="h6"
+                    fontFamily="aeonikBold"
+                    color={COLORS.black}
+                  >
+                    {item.type}
+                  </CustomText>
+                  <CustomText
+                    variant="h7"
+                    color={COLORS.black}
+                    style={{ textTransform: "capitalize" }}
+                  >
+                    select your {item.type}
+                  </CustomText>
+                </View>
 
-              <DashedLine />
-              <View style={{ gap: 10, paddingVertical: 10 }}>
-                {item.options.map((item, index) => {
-                  return <OptionItems item={item} />;
-                })}
+                <DashedLine />
+                <View style={{ gap: 10, paddingVertical: 10 }}>
+                  {item.options.map((item, index) => {
+                    return <OptionItems key={index} item={item} />;
+                  })}
+                </View>
               </View>
-            </View>
-          );
-        })}
+            );
+          }}
+        />
+
         <View
           style={{
             flexDirection: "row",
             gap: 10,
             paddingHorizontal: PADDING_HORIZONTAL,
+            position: "absolute",
+            bottom: bottom,
+            width: "100%",
+            zIndex: 100,
           }}
         >
           <View
@@ -117,7 +149,8 @@ const CustomizableModal = ({
               backgroundColor: "#effef5",
             }}
           ></View>
-          <View
+          <TouchableOpacity
+            onPress={onAddToCartPress}
             style={{
               height: RFValue(40),
               flex: 0.7,
@@ -130,7 +163,7 @@ const CustomizableModal = ({
             <CustomText variant="h5" color={"white"}>
               Add item to cart
             </CustomText>
-          </View>
+          </TouchableOpacity>
         </View>
       </BottomSheetView>
     </BottomSheetModal>
@@ -141,9 +174,30 @@ export default CustomizableModal;
 
 const styles = StyleSheet.create({});
 
-const OptionItems = ({ item }: { item: CustomizationOption }) => {
-  const [selected, setSelected] = useState(false);
+const OptionItems = memo(({ item }: { item: CustomizationOption }) => {
+  const { selectedCustomisableItem, setSelectedCustomisableItem } =
+    useSharedState();
 
+  // const exists = useMemo(() => {
+  //   const itemExists = selectedCustomisableItem.find(
+  //     (itm) => itm.name === item.name
+  //   );
+
+  //   return itemExists;
+  // }, [selectedCustomisableItem]);
+
+  // const handleSelection = () => {
+  //   if (!exists) {
+  //     console.log("Adding Item");
+  //     setSelectedCustomisableItem((prev) => [...prev, item]);
+  //   } else {
+  //     console.log("Removing Item");
+  //     const filteredItem = selectedCustomisableItem.filter(
+  //       (itm) => itm.name != item.name
+  //     );
+  //     setSelectedCustomisableItem(filteredItem);
+  //   }
+  // };
   return (
     <View
       style={{
@@ -159,9 +213,7 @@ const OptionItems = ({ item }: { item: CustomizationOption }) => {
         <CustomText variant="h6">₹{item.price}</CustomText>
         <TouchableOpacity
           activeOpacity={0.8}
-          onPress={() => {
-            setSelected(!selected);
-          }}
+          // onPress={handleSelection}
           style={{
             height: 18,
             aspectRatio: 1,
@@ -170,7 +222,7 @@ const OptionItems = ({ item }: { item: CustomizationOption }) => {
             borderColor: COLORS.primary,
           }}
         >
-          {selected && (
+          {false && (
             <Animated.View
               entering={ZoomIn}
               exiting={ZoomOut}
@@ -185,7 +237,7 @@ const OptionItems = ({ item }: { item: CustomizationOption }) => {
       </View>
     </View>
   );
-};
+});
 
 const Header = ({ item }: { item: MenuItem }) => {
   return (

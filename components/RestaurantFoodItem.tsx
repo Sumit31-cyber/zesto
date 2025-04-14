@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { FC, useRef } from "react";
-import { MenuItem } from "utils/dataObject";
+import React, { FC, useCallback, useRef, useState } from "react";
+import { MenuItem, RestaurantDetails } from "utils/dataObject";
 import { Image } from "expo-image";
 import { RFValue } from "react-native-responsive-fontsize";
 import DashedLine from "./DashedLine";
@@ -10,19 +10,46 @@ import { Feather } from "@expo/vector-icons";
 import { useSharedState } from "context/sharedContext";
 import CustomizableModal from "./CustomizableModal";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { useDispatch } from "react-redux";
+import { RecommendedRestaurantDataTypes } from "types/types";
+import { addItemToCart } from "redux/slice/cartSlice";
 
 interface Props {
   item: MenuItem;
   index: number;
+  restaurant: RecommendedRestaurantDataTypes;
 }
 
 const _imageSize = RFValue(120);
 const _addButtonHeight = RFValue(30);
-const RestaurantFoodItem: FC<Props> = ({ item, index }) => {
+const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const dispatch = useDispatch();
+  const { selectedCustomisableItem } = useSharedState();
+  const handleAddToCardButtonPress = useCallback(() => {
+    if (item.isCustomisable) {
+      bottomSheetModalRef.current?.present();
+    } else {
+    }
+  }, [item]);
   return (
     <View style={{}}>
-      <CustomizableModal modalRef={bottomSheetModalRef} item={item} />
+      <CustomizableModal
+        modalRef={bottomSheetModalRef}
+        item={item}
+        onAddToCartPress={() => {
+          dispatch(
+            addItemToCart({
+              item: {
+                ...item,
+                quantity: selectedCustomisableItem.quantity,
+                customisations: [],
+              },
+              restaurant: restaurant,
+            })
+          );
+        }}
+      />
       <View
         style={{
           flexDirection: "row",
@@ -95,13 +122,18 @@ const RestaurantFoodItem: FC<Props> = ({ item, index }) => {
             source={{ uri: item.image }}
             style={{ width: _imageSize, aspectRatio: 1, borderRadius: 20 }}
           />
-          <View style={{ width: _imageSize, paddingHorizontal: RFValue(15) }}>
+          <View
+            style={{
+              width: _imageSize,
+              paddingHorizontal: RFValue(15),
+              top: -_addButtonHeight / 2,
+              alignItems: "center",
+              gap: RFValue(6),
+            }}
+          >
             <TouchableOpacity
               activeOpacity={0.8}
-              onPress={() => {
-                if (item.customizationOptions)
-                  bottomSheetModalRef.current?.present();
-              }}
+              onPress={handleAddToCardButtonPress}
               style={{
                 width: "100%",
                 height: _addButtonHeight,
@@ -111,7 +143,7 @@ const RestaurantFoodItem: FC<Props> = ({ item, index }) => {
                 alignItems: "center",
                 justifyContent: "center",
                 borderRadius: 10,
-                top: -_addButtonHeight / 2,
+
                 zIndex: 111,
               }}
             >
@@ -119,6 +151,11 @@ const RestaurantFoodItem: FC<Props> = ({ item, index }) => {
                 ADD
               </CustomText>
             </TouchableOpacity>
+            {item.isCustomisable && (
+              <CustomText variant="h7" color={COLORS.liteGray}>
+                customisable
+              </CustomText>
+            )}
           </View>
         </View>
         {/* <View style={{ flex: 1, backgroundColor: "green" }}></View>

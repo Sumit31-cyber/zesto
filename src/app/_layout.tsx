@@ -8,6 +8,8 @@ import { View } from "react-native";
 import { SharedStateProvider } from "context/sharedContext";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { Provider } from "react-redux";
+import { store } from "redux/store";
 export default function RootLayout() {
   const [loaded] = useFonts({
     aeonikRegular: require("assets/fonts/AeonikRegular.otf"),
@@ -26,14 +28,16 @@ export default function RootLayout() {
   }
 
   return (
-    <ClerkProvider tokenCache={tokenCache}>
-      <SharedStateProvider>
-        <GestureHandlerRootView>
-          <BottomSheetModalProvider>
-            <Slot />
-          </BottomSheetModalProvider>
-        </GestureHandlerRootView>
-      </SharedStateProvider>
-    </ClerkProvider>
+    <Provider store={store}>
+      <ClerkProvider tokenCache={tokenCache}>
+        <SharedStateProvider>
+          <GestureHandlerRootView>
+            <BottomSheetModalProvider>
+              <Slot />
+            </BottomSheetModalProvider>
+          </GestureHandlerRootView>
+        </SharedStateProvider>
+      </ClerkProvider>
+    </Provider>
   );
 }
