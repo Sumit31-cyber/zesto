@@ -20,7 +20,6 @@ const cartSlice = createSlice({
 
       if(restaurantExists){
         console.log('Item Exists in cart')
-        //Check if item exists
         const existingFoodItem = restaurantExists?.items.find(cartItem => cartItem.id === item.id)
 
         if(existingFoodItem){
@@ -43,12 +42,14 @@ const cartSlice = createSlice({
       }
     },
     removeItemFromCart: (state, action) => {},
-    clearAllCart: (state, action) => {},
+    clearAllCart: (state, action) => {
+      state.carts = []
+    },
     clearRestaurantCart: (state, action) => {},
   },
 });
 
-export const {addItemToCart} = cartSlice.actions;
+export const {addItemToCart,clearAllCart} = cartSlice.actions;
 
 // Export the reducer
 export default cartSlice.reducer;

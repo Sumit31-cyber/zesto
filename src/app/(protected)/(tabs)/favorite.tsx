@@ -1,18 +1,30 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "redux/store";
 import CustomText from "components/customText";
+import { clearAllCart } from "redux/slice/cartSlice";
 
 const Favorite = () => {
   const { carts } = useSelector((state: RootState) => state.cart);
+  const dispatch = useDispatch();
   return (
     <View
       onTouchStart={() => {
-        console.log(JSON.stringify(carts, null, 2));
+        // console.log(JSON.stringify(carts, null, 2));
       }}
       style={{ flex: 1, justifyContent: "center" }}
     >
+      <TouchableOpacity
+        onPress={() => {
+          dispatch(clearAllCart());
+          // console.log(JSON.stringify(carts, null, 2));
+        }}
+      >
+        <CustomText variant="h1" color="red">
+          Clear Cart
+        </CustomText>
+      </TouchableOpacity>
       {carts.map((item, index) => {
         return (
           <View style={{ marginBottom: 50 }}>

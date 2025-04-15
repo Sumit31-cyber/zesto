@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { memo, RefObject, useMemo, useState } from "react";
+import React, { memo, RefObject, useCallback, useMemo, useState } from "react";
 import {
   BottomSheetModal,
   BottomSheetScrollView,
@@ -31,29 +31,67 @@ import Animated, {
   ZoomIn,
   ZoomOut,
 } from "react-native-reanimated";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addItemToCart } from "redux/slice/cartSlice";
+import { RootState } from "redux/store";
+import { RecommendedRestaurantDataTypes } from "types/types";
 
 const CustomizableModal = ({
   item,
   modalRef,
+  restaurant,
   onAddToCartPress,
 }: {
   item: MenuItem;
   modalRef: RefObject<BottomSheetModal>;
   onAddToCartPress: () => void;
+  restaurant: RecommendedRestaurantDataTypes;
 }) => {
   const { bottomSheetModalRef } = useSharedState();
   const { bottom } = useSafeAreaInsets();
   const { setSelectedCustomisableItem } = useSharedState();
+  const { carts } = useSelector((state: RootState) => state.cart);
 
+  const prePopulateValues = useCallback(() => {
+    // Find the cart for the current restaurant
+    const restaurantCart = carts.find(
+      (cart) => cart.restaurant.name === restaurant.name
+    );
+
+    if (!restaurantCart) {
+      // Reset to defaults if no cart exists for this restaurant
+      setSelectedCustomisableItem({
+        quantity: 1,
+        price: item.price, // Use the base price from the menu item
+        selectedOptions: [],
+      });
+      return;
+    }
+
+    // Find the existing item in the cart
+    const existingItem = restaurantCart.items.find(
+      (cartItem) => cartItem.id === item.id // Better to compare by ID than name
+    );
+
+    setSelectedCustomisableItem({
+      quantity: existingItem?.quantity || 1,
+      price: existingItem?.price || item.price,
+      selectedOptions: existingItem?.customisations || [],
+    });
+  }, [carts, restaurant.name, item.id, item.price]); // Add all dependencies
   // const snapPoints = useMemo(() => ["60%"], []);
   return (
     <BottomSheetModal
       ref={modalRef}
       onChange={(value) => {
         if (value === -1) {
-          // setSelectedCustomisableItem({});
+          setSelectedCustomisableItem({
+            price: 0,
+            quantity: 1,
+            selectedOptions: [],
+          });
+        } else {
+          prePopulateValues();
         }
       }}
       backdropComponent={ModalBackdrop}
@@ -178,26 +216,33 @@ const OptionItems = memo(({ item }: { item: CustomizationOption }) => {
   const { selectedCustomisableItem, setSelectedCustomisableItem } =
     useSharedState();
 
-  // const exists = useMemo(() => {
-  //   const itemExists = selectedCustomisableItem.find(
-  //     (itm) => itm.name === item.name
-  //   );
+  const exists = useMemo(() => {
+    return selectedCustomisableItem.selectedOptions.some(
+      (option) => option.name === item.name
+    );
+  }, [selectedCustomisableItem.selectedOptions, item.name]);
 
-  //   return itemExists;
-  // }, [selectedCustomisableItem]);
+  const handleSelection = () => {
+    console.log(selectedCustomisableItem);
+    if (!exists) {
+      console.log("Adding Item");
+      setSelectedCustomisableItem((prev) => ({
+        ...prev,
+        selectedOptions: [item, ...prev.selectedOptions],
+      }));
+    } else {
+      console.log("Removing Item");
+      const filteredItem = selectedCustomisableItem.selectedOptions.filter(
+        (options) => options.name != item.name
+      );
+      console.log(filteredItem);
+      setSelectedCustomisableItem((prev) => ({
+        ...prev,
+        selectedOptions: filteredItem,
+      }));
+    }
+  };
 
-  // const handleSelection = () => {
-  //   if (!exists) {
-  //     console.log("Adding Item");
-  //     setSelectedCustomisableItem((prev) => [...prev, item]);
-  //   } else {
-  //     console.log("Removing Item");
-  //     const filteredItem = selectedCustomisableItem.filter(
-  //       (itm) => itm.name != item.name
-  //     );
-  //     setSelectedCustomisableItem(filteredItem);
-  //   }
-  // };
   return (
     <View
       style={{
@@ -213,7 +258,7 @@ const OptionItems = memo(({ item }: { item: CustomizationOption }) => {
         <CustomText variant="h6">₹{item.price}</CustomText>
         <TouchableOpacity
           activeOpacity={0.8}
-          // onPress={handleSelection}
+          onPress={handleSelection}
           style={{
             height: 18,
             aspectRatio: 1,
@@ -222,7 +267,7 @@ const OptionItems = memo(({ item }: { item: CustomizationOption }) => {
             borderColor: COLORS.primary,
           }}
         >
-          {false && (
+          {exists && (
             <Animated.View
               entering={ZoomIn}
               exiting={ZoomOut}

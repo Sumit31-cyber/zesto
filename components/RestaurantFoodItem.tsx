@@ -26,24 +26,37 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const dispatch = useDispatch();
   const { selectedCustomisableItem } = useSharedState();
+
   const handleAddToCardButtonPress = useCallback(() => {
     if (item.isCustomisable) {
       bottomSheetModalRef.current?.present();
     } else {
+      dispatch(
+        addItemToCart({
+          item: {
+            ...item,
+            quantity: selectedCustomisableItem.quantity,
+            customisations: [],
+          },
+          restaurant: restaurant,
+        })
+      );
     }
   }, [item]);
+
   return (
     <View style={{}}>
       <CustomizableModal
         modalRef={bottomSheetModalRef}
         item={item}
+        restaurant={restaurant}
         onAddToCartPress={() => {
           dispatch(
             addItemToCart({
               item: {
                 ...item,
                 quantity: selectedCustomisableItem.quantity,
-                customisations: [],
+                customisations: selectedCustomisableItem.selectedOptions,
               },
               restaurant: restaurant,
             })
