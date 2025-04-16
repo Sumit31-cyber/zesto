@@ -26,6 +26,7 @@ interface SharedContextType {
   bottomSheetModalRef: RefObject<BottomSheetModal>;
   selectedCustomisableItem: CurrentCartItem;
   setSelectedCustomisableItem: Dispatch<SetStateAction<CurrentCartItem>>;
+  initializeCustomisableItem: (value: number) => void;
   //   scrollToTop: () => void;
 }
 
@@ -45,6 +46,13 @@ export const SharedStateProvider: FC<{ children: React.ReactNode }> = ({
       selectedOptions: [],
     });
 
+  const initializeCustomisableItem = (price: number) => {
+    setSelectedCustomisableItem((prev) => ({
+      quantity: 1,
+      selectedOptions: [],
+      price,
+    }));
+  };
   return (
     <SharedStateContext.Provider
       value={{
@@ -53,6 +61,7 @@ export const SharedStateProvider: FC<{ children: React.ReactNode }> = ({
         bottomSheetModalRef,
         selectedCustomisableItem,
         setSelectedCustomisableItem,
+        initializeCustomisableItem,
       }}
     >
       {children}

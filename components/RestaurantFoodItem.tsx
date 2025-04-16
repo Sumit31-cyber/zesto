@@ -1,18 +1,19 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { FC, useCallback, useRef, useState } from "react";
+import React, { FC, useCallback, useMemo, useRef, useState } from "react";
 import { MenuItem, RestaurantDetails } from "utils/dataObject";
 import { Image } from "expo-image";
 import { RFValue } from "react-native-responsive-fontsize";
 import DashedLine from "./DashedLine";
 import { BORDER_WIDTH, COLORS } from "utils/constants";
 import CustomText from "./customText";
-import { Feather } from "@expo/vector-icons";
+import { Entypo, Feather } from "@expo/vector-icons";
 import { useSharedState } from "context/sharedContext";
 import CustomizableModal from "./CustomizableModal";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RecommendedRestaurantDataTypes } from "types/types";
-import { addItemToCart } from "redux/slice/cartSlice";
+import { addItemToCart, removeItemFromCart } from "redux/slice/cartSlice";
+import { RootState } from "redux/store";
 
 interface Props {
   item: MenuItem;
@@ -25,11 +26,35 @@ const _addButtonHeight = RFValue(30);
 const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const dispatch = useDispatch();
-  const { selectedCustomisableItem } = useSharedState();
+  const {
+    selectedCustomisableItem,
+    setSelectedCustomisableItem,
+    initializeCustomisableItem,
+  } = useSharedState();
+  const { carts } = useSelector((state: RootState) => state.cart);
+
+  const cart = useMemo(() => {
+    let existingItem = null;
+    const existingRestaurant = carts.find(
+      (item) => item.restaurant.name === restaurant.name
+    );
+
+    if (existingRestaurant) {
+      const foodItem = existingRestaurant.items.find(
+        (options) => options.id == item.id
+      );
+
+      if (foodItem) {
+        existingItem = foodItem;
+      }
+    }
+    return existingItem;
+  }, [carts]);
 
   const handleAddToCardButtonPress = useCallback(() => {
     if (item.isCustomisable) {
       bottomSheetModalRef.current?.present();
+      initializeCustomisableItem(item.price);
     } else {
       dispatch(
         addItemToCart({
@@ -41,8 +66,9 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
           restaurant: restaurant,
         })
       );
+      // initializeCustomisableItem(0);
     }
-  }, [item]);
+  }, [item, cart, carts, selectedCustomisableItem]);
 
   return (
     <View style={{}}>
@@ -51,10 +77,12 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
         item={item}
         restaurant={restaurant}
         onAddToCartPress={() => {
+          bottomSheetModalRef.current?.dismiss();
           dispatch(
             addItemToCart({
               item: {
                 ...item,
+                price: selectedCustomisableItem.price,
                 quantity: selectedCustomisableItem.quantity,
                 customisations: selectedCustomisableItem.selectedOptions,
               },
@@ -144,26 +172,79 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
               gap: RFValue(6),
             }}
           >
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={handleAddToCardButtonPress}
-              style={{
-                width: "100%",
-                height: _addButtonHeight,
-                backgroundColor: "#fef2f3",
-                borderColor: "#e63946",
-                borderWidth: BORDER_WIDTH,
-                alignItems: "center",
-                justifyContent: "center",
-                borderRadius: 10,
+            {cart && cart?.quantity > 0 ? (
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={handleAddToCardButtonPress}
+                style={{
+                  width: "100%",
+                  height: _addButtonHeight,
+                  backgroundColor: COLORS.primary,
+                  borderColor: COLORS.primary,
+                  borderWidth: BORDER_WIDTH,
+                  borderRadius: 10,
+                  zIndex: 111,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <TouchableOpacity
+                  onPress={handleAddToCardButtonPress}
+                  style={{
+                    height: "100%",
+                    paddingHorizontal: RFValue(6),
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Entypo name="plus" size={24} color="white" />
+                </TouchableOpacity>
+                <CustomText variant="h4" fontFamily="aeonikBold" color="white">
+                  {cart.quantity}
+                </CustomText>
+                <TouchableOpacity
+                  onPress={() => {
+                    dispatch(
+                      removeItemFromCart({ restaurant: restaurant, item: item })
+                    );
+                  }}
+                  style={{
+                    height: "100%",
+                    paddingHorizontal: RFValue(6),
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Entypo name="minus" size={24} color="white" />
+                </TouchableOpacity>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={handleAddToCardButtonPress}
+                style={{
+                  width: "100%",
+                  height: _addButtonHeight,
+                  backgroundColor: "#effef5",
+                  borderColor: COLORS.primary,
+                  borderWidth: BORDER_WIDTH,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: 10,
+                  zIndex: 111,
+                }}
+              >
+                <CustomText
+                  variant="h4"
+                  fontFamily="aeonikBold"
+                  color={COLORS.primary}
+                >
+                  ADD
+                </CustomText>
+              </TouchableOpacity>
+            )}
 
-                zIndex: 111,
-              }}
-            >
-              <CustomText variant="h4" fontFamily="aeonikBold" color="#e63946">
-                ADD
-              </CustomText>
-            </TouchableOpacity>
             {item.isCustomisable && (
               <CustomText variant="h7" color={COLORS.liteGray}>
                 customisable
@@ -171,10 +252,6 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
             )}
           </View>
         </View>
-        {/* <View style={{ flex: 1, backgroundColor: "green" }}></View>
-        <View style={{ height: 300, aspectRatio: 1 }}>
-          <Image source={{ uti: item.image }} />
-        </View> */}
       </View>
       <DashedLine style={{ borderColor: COLORS.liteGray }} />
     </View>

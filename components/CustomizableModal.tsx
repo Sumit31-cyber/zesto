@@ -5,7 +5,14 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { memo, RefObject, useCallback, useMemo, useState } from "react";
+import React, {
+  memo,
+  RefObject,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
   BottomSheetModal,
   BottomSheetScrollView,
@@ -23,7 +30,7 @@ import { Image } from "expo-image";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BORDER_WIDTH, COLORS, PADDING_HORIZONTAL } from "utils/constants";
 import CustomText from "./customText";
-import { Feather } from "@expo/vector-icons";
+import { Entypo, Feather } from "@expo/vector-icons";
 import DashedLine from "./DashedLine";
 import Animated, {
   FadeIn,
@@ -32,7 +39,7 @@ import Animated, {
   ZoomOut,
 } from "react-native-reanimated";
 import { useDispatch, useSelector } from "react-redux";
-import { addItemToCart } from "redux/slice/cartSlice";
+import { addItemToCart, selectRestaurantCartItem } from "redux/slice/cartSlice";
 import { RootState } from "redux/store";
 import { RecommendedRestaurantDataTypes } from "types/types";
 
@@ -49,49 +56,19 @@ const CustomizableModal = ({
 }) => {
   const { bottomSheetModalRef } = useSharedState();
   const { bottom } = useSafeAreaInsets();
-  const { setSelectedCustomisableItem } = useSharedState();
-  const { carts } = useSelector((state: RootState) => state.cart);
+  const {
+    setSelectedCustomisableItem,
+    selectedCustomisableItem,
+    initializeCustomisableItem,
+  } = useSharedState();
+  const cart = useSelector(selectRestaurantCartItem(restaurant.id, item.id));
 
-  const prePopulateValues = useCallback(() => {
-    // Find the cart for the current restaurant
-    const restaurantCart = carts.find(
-      (cart) => cart.restaurant.name === restaurant.name
-    );
-
-    if (!restaurantCart) {
-      // Reset to defaults if no cart exists for this restaurant
-      setSelectedCustomisableItem({
-        quantity: 1,
-        price: item.price, // Use the base price from the menu item
-        selectedOptions: [],
-      });
-      return;
-    }
-
-    // Find the existing item in the cart
-    const existingItem = restaurantCart.items.find(
-      (cartItem) => cartItem.id === item.id // Better to compare by ID than name
-    );
-
-    setSelectedCustomisableItem({
-      quantity: existingItem?.quantity || 1,
-      price: existingItem?.price || item.price,
-      selectedOptions: existingItem?.customisations || [],
-    });
-  }, [carts, restaurant.name, item.id, item.price]); // Add all dependencies
-  // const snapPoints = useMemo(() => ["60%"], []);
   return (
     <BottomSheetModal
       ref={modalRef}
       onChange={(value) => {
         if (value === -1) {
-          setSelectedCustomisableItem({
-            price: 0,
-            quantity: 1,
-            selectedOptions: [],
-          });
-        } else {
-          prePopulateValues();
+          initializeCustomisableItem(0);
         }
       }}
       backdropComponent={ModalBackdrop}
@@ -179,14 +156,67 @@ const CustomizableModal = ({
             style={{
               height: RFValue(40),
               flex: 0.3,
-              justifyContent: "center",
-              alignItems: "center",
               borderRadius: 14,
-              borderWidth: BORDER_WIDTH,
-              borderColor: COLORS.primary,
+              // borderWidth: BORDER_WIDTH,
+              // borderColor: COLORS.primary,
               backgroundColor: "#effef5",
             }}
-          ></View>
+          >
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: COLORS.primary,
+                borderColor: COLORS.primary,
+                borderWidth: BORDER_WIDTH,
+                borderRadius: 10,
+                zIndex: 111,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <TouchableOpacity
+                disabled={selectedCustomisableItem.quantity == 1}
+                onPress={() => {
+                  if (selectedCustomisableItem.quantity == 1) return;
+                  setSelectedCustomisableItem((prev) => ({
+                    ...prev,
+                    price: prev.price - item.price,
+                    quantity: prev.quantity - 1,
+                  }));
+                }}
+                style={{
+                  height: "100%",
+                  paddingHorizontal: RFValue(6),
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Entypo name="minus" size={24} color="white" />
+              </TouchableOpacity>
+
+              <CustomText variant="h4" fontFamily="aeonikBold" color="white">
+                {selectedCustomisableItem.quantity}
+              </CustomText>
+              <TouchableOpacity
+                onPress={() => {
+                  setSelectedCustomisableItem((prev) => ({
+                    ...prev,
+                    price: prev.price + item.price,
+                    quantity: prev.quantity + 1,
+                  }));
+                }}
+                style={{
+                  height: "100%",
+                  paddingHorizontal: RFValue(6),
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Entypo name="plus" size={24} color="white" />
+              </TouchableOpacity>
+            </View>
+          </View>
           <TouchableOpacity
             onPress={onAddToCartPress}
             style={{
@@ -198,8 +228,8 @@ const CustomizableModal = ({
               borderRadius: 14,
             }}
           >
-            <CustomText variant="h5" color={"white"}>
-              Add item to cart
+            <CustomText variant="h6" color={"white"}>
+              Add item to cart ₹{selectedCustomisableItem.price}
             </CustomText>
           </TouchableOpacity>
         </View>
@@ -223,11 +253,11 @@ const OptionItems = memo(({ item }: { item: CustomizationOption }) => {
   }, [selectedCustomisableItem.selectedOptions, item.name]);
 
   const handleSelection = () => {
-    console.log(selectedCustomisableItem);
     if (!exists) {
       console.log("Adding Item");
       setSelectedCustomisableItem((prev) => ({
         ...prev,
+        price: selectedCustomisableItem.price + item.price,
         selectedOptions: [item, ...prev.selectedOptions],
       }));
     } else {
@@ -238,6 +268,7 @@ const OptionItems = memo(({ item }: { item: CustomizationOption }) => {
       console.log(filteredItem);
       setSelectedCustomisableItem((prev) => ({
         ...prev,
+        price: selectedCustomisableItem.price - item.price,
         selectedOptions: filteredItem,
       }));
     }
