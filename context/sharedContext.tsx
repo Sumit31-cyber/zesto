@@ -24,9 +24,9 @@ interface SharedContextType {
   scrollY: Animated.SharedValue<number>;
   scrollYGlobal: Animated.SharedValue<number>;
   bottomSheetModalRef: RefObject<BottomSheetModal>;
-  selectedCustomisableItem: CurrentCartItem;
-  setSelectedCustomisableItem: Dispatch<SetStateAction<CurrentCartItem>>;
-  initializeCustomisableItem: (value: number) => void;
+  selectedCustomizableItem: CurrentCartItem;
+  setSelectedCustomizableItem: Dispatch<SetStateAction<CurrentCartItem>>;
+  initializeCustomizableItem: (value: number) => void;
   //   scrollToTop: () => void;
 }
 
@@ -39,15 +39,15 @@ export const SharedStateProvider: FC<{ children: React.ReactNode }> = ({
   const scrollY = useSharedValue(1);
   const scrollYGlobal = useSharedValue(0);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-  const [selectedCustomisableItem, setSelectedCustomisableItem] =
+  const [selectedCustomizableItem, setSelectedCustomizableItem] =
     useState<CurrentCartItem>({
       quantity: 1,
       price: 0,
       selectedOptions: [],
     });
 
-  const initializeCustomisableItem = (price: number) => {
-    setSelectedCustomisableItem((prev) => ({
+  const initializeCustomizableItem = (price: number) => {
+    setSelectedCustomizableItem((prev) => ({
       quantity: 1,
       selectedOptions: [],
       price,
@@ -59,9 +59,9 @@ export const SharedStateProvider: FC<{ children: React.ReactNode }> = ({
         scrollY,
         scrollYGlobal,
         bottomSheetModalRef,
-        selectedCustomisableItem,
-        setSelectedCustomisableItem,
-        initializeCustomisableItem,
+        selectedCustomizableItem,
+        setSelectedCustomizableItem,
+        initializeCustomizableItem,
       }}
     >
       {children}

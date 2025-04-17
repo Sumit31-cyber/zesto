@@ -57,9 +57,9 @@ const CustomizableModal = ({
   const { bottomSheetModalRef } = useSharedState();
   const { bottom } = useSafeAreaInsets();
   const {
-    setSelectedCustomisableItem,
-    selectedCustomisableItem,
-    initializeCustomisableItem,
+    setSelectedCustomizableItem,
+    selectedCustomizableItem,
+    initializeCustomizableItem,
   } = useSharedState();
   const cart = useSelector(selectRestaurantCartItem(restaurant.id, item.id));
 
@@ -68,7 +68,7 @@ const CustomizableModal = ({
       ref={modalRef}
       onChange={(value) => {
         if (value === -1) {
-          initializeCustomisableItem(0);
+          initializeCustomizableItem(0);
         }
       }}
       backdropComponent={ModalBackdrop}
@@ -176,10 +176,10 @@ const CustomizableModal = ({
               }}
             >
               <TouchableOpacity
-                disabled={selectedCustomisableItem.quantity == 1}
+                disabled={selectedCustomizableItem.quantity == 1}
                 onPress={() => {
-                  if (selectedCustomisableItem.quantity == 1) return;
-                  setSelectedCustomisableItem((prev) => ({
+                  if (selectedCustomizableItem.quantity == 1) return;
+                  setSelectedCustomizableItem((prev) => ({
                     ...prev,
                     price: prev.price - item.price,
                     quantity: prev.quantity - 1,
@@ -196,11 +196,11 @@ const CustomizableModal = ({
               </TouchableOpacity>
 
               <CustomText variant="h4" fontFamily="aeonikBold" color="white">
-                {selectedCustomisableItem.quantity}
+                {selectedCustomizableItem.quantity}
               </CustomText>
               <TouchableOpacity
                 onPress={() => {
-                  setSelectedCustomisableItem((prev) => ({
+                  setSelectedCustomizableItem((prev) => ({
                     ...prev,
                     price: prev.price + item.price,
                     quantity: prev.quantity + 1,
@@ -229,7 +229,7 @@ const CustomizableModal = ({
             }}
           >
             <CustomText variant="h6" color={"white"}>
-              Add item to cart ₹{selectedCustomisableItem.price}
+              Add item to cart ₹{selectedCustomizableItem.price}
             </CustomText>
           </TouchableOpacity>
         </View>
@@ -243,32 +243,32 @@ export default CustomizableModal;
 const styles = StyleSheet.create({});
 
 const OptionItems = memo(({ item }: { item: CustomizationOption }) => {
-  const { selectedCustomisableItem, setSelectedCustomisableItem } =
+  const { selectedCustomizableItem, setSelectedCustomizableItem } =
     useSharedState();
 
   const exists = useMemo(() => {
-    return selectedCustomisableItem.selectedOptions.some(
+    return selectedCustomizableItem.selectedOptions.some(
       (option) => option.name === item.name
     );
-  }, [selectedCustomisableItem.selectedOptions, item.name]);
+  }, [selectedCustomizableItem.selectedOptions, item.name]);
 
   const handleSelection = () => {
     if (!exists) {
       console.log("Adding Item");
-      setSelectedCustomisableItem((prev) => ({
+      setSelectedCustomizableItem((prev) => ({
         ...prev,
-        price: selectedCustomisableItem.price + item.price,
+        price: selectedCustomizableItem.price + item.price,
         selectedOptions: [item, ...prev.selectedOptions],
       }));
     } else {
       console.log("Removing Item");
-      const filteredItem = selectedCustomisableItem.selectedOptions.filter(
+      const filteredItem = selectedCustomizableItem.selectedOptions.filter(
         (options) => options.name != item.name
       );
       console.log(filteredItem);
-      setSelectedCustomisableItem((prev) => ({
+      setSelectedCustomizableItem((prev) => ({
         ...prev,
-        price: selectedCustomisableItem.price - item.price,
+        price: selectedCustomizableItem.price - item.price,
         selectedOptions: filteredItem,
       }));
     }

@@ -27,9 +27,9 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const dispatch = useDispatch();
   const {
-    selectedCustomisableItem,
-    setSelectedCustomisableItem,
-    initializeCustomisableItem,
+    selectedCustomizableItem,
+    setSelectedCustomizableItem,
+    initializeCustomizableItem,
   } = useSharedState();
   const { carts } = useSelector((state: RootState) => state.cart);
 
@@ -52,23 +52,22 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
   }, [carts]);
 
   const handleAddToCardButtonPress = useCallback(() => {
-    if (item.isCustomisable) {
+    if (item.isCustomizable) {
       bottomSheetModalRef.current?.present();
-      initializeCustomisableItem(item.price);
+      initializeCustomizableItem(item.price);
     } else {
       dispatch(
         addItemToCart({
           item: {
             ...item,
-            quantity: selectedCustomisableItem.quantity,
-            customisations: [],
+            quantity: selectedCustomizableItem.quantity,
+            customizations: [],
           },
           restaurant: restaurant,
         })
       );
-      // initializeCustomisableItem(0);
     }
-  }, [item, cart, carts, selectedCustomisableItem]);
+  }, [item, cart, carts, selectedCustomizableItem]);
 
   return (
     <View style={{}}>
@@ -82,9 +81,9 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
             addItemToCart({
               item: {
                 ...item,
-                price: selectedCustomisableItem.price,
-                quantity: selectedCustomisableItem.quantity,
-                customisations: selectedCustomisableItem.selectedOptions,
+                price: selectedCustomizableItem.price,
+                quantity: selectedCustomizableItem.quantity,
+                customizations: selectedCustomizableItem.selectedOptions,
               },
               restaurant: restaurant,
             })
@@ -173,9 +172,7 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
             }}
           >
             {cart && cart?.quantity > 0 ? (
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={handleAddToCardButtonPress}
+              <View
                 style={{
                   width: "100%",
                   height: _addButtonHeight,
@@ -218,7 +215,7 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
                 >
                   <Entypo name="minus" size={24} color="white" />
                 </TouchableOpacity>
-              </TouchableOpacity>
+              </View>
             ) : (
               <TouchableOpacity
                 activeOpacity={0.8}
@@ -245,9 +242,9 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
               </TouchableOpacity>
             )}
 
-            {item.isCustomisable && (
+            {item.isCustomizable && (
               <CustomText variant="h7" color={COLORS.liteGray}>
-                customisable
+                customizable
               </CustomText>
             )}
           </View>
