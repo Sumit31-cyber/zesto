@@ -12,65 +12,75 @@ const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    addItemToCart: (state, action : PayloadAction<{
-      restaurant:RecommendedRestaurantDataTypes,
-      item:CartItem
+
+    addItemToCart: (state, action: PayloadAction<{
+      restaurant: RecommendedRestaurantDataTypes,
+      item: CartItem
     }>) => {
-      const {restaurant, item} = action.payload
-      const restaurantExists = state.carts.find(options => options.restaurant.id === restaurant.id)
+      const { restaurant, item } = action.payload;
+      const restaurantExists = state.carts.find(options => options.restaurant.id === restaurant.id);
+    
+      if (restaurantExists) {
+        const existingFood =restaurantExists.items.find(cartItem => 
+          cartItem.id === item.id)
+          if(existingFood){
+          const existingCustomizationItem = restaurantExists.items.find(cartItem => 
+            cartItem.id === item.id && 
+            JSON.stringify(cartItem.customizations) === JSON.stringify(item.customizations)
+          );
+          if(existingCustomizationItem){
+            existingCustomizationItem.quantity +=  item.quantity;
+            existingCustomizationItem.cartPrice != item.cartPrice
+          }else{
+            restaurantExists.items.push({
+              ...item,
+              quantity: item.quantity,
+              cartPrice: item.price * item.quantity
+            });
+          }
 
-      if(restaurantExists){
-        console.log('Item Exists in cart')
-        const existingFoodItem = restaurantExists?.items.find(cartItem => cartItem.id === item.id)
-
-        if(existingFoodItem){
-
-          existingFoodItem.quantity += item.quantity
-          existingFoodItem.cartPrice =  (existingFoodItem.cartPrice || 0) + item.price
-
-        }else{
-        restaurantExists.items.push({
-          ...item, quantity:item.quantity, price:item.price
-        })
-        }
-
-      }else{
-        console.log('Item Does not exists')
-        state.carts.push({
+          }else{
+            console.log('Restaurant does not exist in cart');
+            state.carts.push({
+              restaurant,
+              items: [{
+                ...item,
+                quantity: item.quantity,
+                cartPrice: item.price * item.quantity
+              }]
+            });
+          }
+        } else {
+          state.carts.push({
           restaurant,
-          items:[{...item, quantity:item.quantity, cartPrice:item.price, }]
-        })
+          items: [{
+            ...item,
+            quantity: item.quantity,
+            cartPrice: item.price * item.quantity
+          }]
+        });
       }
     },
+
     removeItemFromCart: (state, action) => {
       const {restaurant, item} = action.payload
       const restaurantExists = state.carts.find(options => options.restaurant.id === restaurant.id)
 
-      if(restaurantExists){
-        console.log('Item Exists in cart')
+      if(!restaurantExists) return;
+
         const existingFoodItem = restaurantExists?.items.find(cartItem => cartItem.id === item.id)
+        if(!existingFoodItem) return;
 
-        if(existingFoodItem){
-          if( existingFoodItem.quantity == 1){
-            const filteredList = restaurantExists.items.filter((options) => (options.id != item.id))
-         restaurantExists.items = filteredList
-          }
-
-          existingFoodItem.quantity -= 1
-          existingFoodItem.cartPrice =  (existingFoodItem.cartPrice || 0) - item.price
-
+        if(existingFoodItem.quantity > 1){
+          existingFoodItem.quantity -= 1;
+          existingFoodItem.cartPrice =  (existingFoodItem.cartPrice || 0) - item.price;
         }else{
-          const filteredList = restaurantExists.items.filter((options) => (options.id != item.id))
-         restaurantExists.items = filteredList
+          restaurantExists.items = restaurantExists.items.filter((options) => options.id != item.id)
         }
 
-      }else{
-        console.log('Item Does not exists')
-        state.carts.push({
-          restaurant,
-          items:[{...item, quantity:item.quantity, cartPrice:item.price, }]
-        })
-      }
+        if(restaurantExists.items.length === 0){
+          state.carts = state.carts.filter((options) => (options.restaurant.id != restaurantExists.restaurant.id))
+        }
     },
     clearAllCart: (state, action) => {
       state.carts = []

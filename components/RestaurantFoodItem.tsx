@@ -33,23 +33,42 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
   } = useSharedState();
   const { carts } = useSelector((state: RootState) => state.cart);
 
+  // const cart = useMemo(() => {
+  //   let existingItem = null;
+  //   const existingRestaurant = carts.find(
+  //     (item) => item.restaurant.name === restaurant.name
+  //   );
+
+  //   if (existingRestaurant) {
+
+  //   }
+  //   return existingItem;
+  // }, [carts]);
+
   const cart = useMemo(() => {
-    let existingItem = null;
     const existingRestaurant = carts.find(
-      (item) => item.restaurant.name === restaurant.name
+      (cart) => cart.restaurant.name === restaurant.name
     );
 
-    if (existingRestaurant) {
-      const foodItem = existingRestaurant.items.find(
-        (options) => options.id == item.id
-      );
+    if (!existingRestaurant) return null;
 
-      if (foodItem) {
-        existingItem = foodItem;
-      }
-    }
-    return existingItem;
-  }, [carts]);
+    const sameFoodItems = existingRestaurant.items.filter(
+      (options) => options.id === item.id
+    );
+
+    if (sameFoodItems.length === 0) return null;
+
+    const totalQuantity = sameFoodItems.reduce(
+      (sum, item) => sum + item.quantity,
+      0
+    );
+
+    return {
+      ...sameFoodItems[0],
+      quantity: totalQuantity,
+      variants: sameFoodItems, // Include all variants if needed
+    };
+  }, [carts, restaurant.name, item.id]);
 
   const handleAddToCardButtonPress = useCallback(() => {
     if (item.isCustomizable) {

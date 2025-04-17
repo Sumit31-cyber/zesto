@@ -18,7 +18,7 @@ const Favorite = () => {
       <TouchableOpacity
         onPress={() => {
           dispatch(clearAllCart());
-          // console.log(JSON.stringify(carts, null, 2));
+          console.log(JSON.stringify(carts, null, 2));
         }}
       >
         <CustomText variant="h1" color="red">
@@ -35,6 +35,11 @@ const Favorite = () => {
                   <Text>{item.name}</Text>
                   <Text>{item.quantity}</Text>
                   <Text>{item.cartPrice}</Text>
+                  <View style={{ flexDirection: "row" }}>
+                    {item.customizations?.map((cus) => {
+                      return <CustomText variant="h4">{cus.name} </CustomText>;
+                    })}
+                  </View>
                 </>
               );
             })}
