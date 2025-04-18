@@ -541,6 +541,17 @@ export type CustomizationOption = {
   // Example usage for an array of items:
   type MenuItemList = MenuItem[];
 
+//   export interface CartItem {
+//     isVeg: boolean;
+//     cartItemId: string;
+//     name: string;
+//     price: number;
+//     quantity: number;
+//     cartPrice?: number;
+//     isCustomizable: boolean;
+//     isBestSeller?:boolean;
+//     customizations?: CustomizationOption[];
+//   }
   export interface CartItem {
     isVeg: boolean;
     id: string;

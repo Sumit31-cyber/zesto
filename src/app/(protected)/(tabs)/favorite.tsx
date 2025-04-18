@@ -17,8 +17,17 @@ const Favorite = () => {
     >
       <TouchableOpacity
         onPress={() => {
-          dispatch(clearAllCart());
           console.log(JSON.stringify(carts, null, 2));
+        }}
+      >
+        <CustomText variant="h1" color="green">
+          Console
+        </CustomText>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          dispatch(clearAllCart());
+          // console.log(JSON.stringify(carts, null, 2));
         }}
       >
         <CustomText variant="h1" color="red">

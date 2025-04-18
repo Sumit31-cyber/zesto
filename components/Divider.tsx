@@ -8,7 +8,7 @@ const Divider = () => {
       style={{
         height: BORDER_WIDTH,
         backgroundColor: COLORS.darkGray,
-        flex: 1,
+        width: "100%",
       }}
     />
   );

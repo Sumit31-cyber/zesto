@@ -3,6 +3,8 @@ import { CartItem, CartState, CustomizationOption, RestaurantDetails } from "uti
 import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RecommendedRestaurantDataTypes } from "types/types";
 import { RootState } from "redux/store";
+import * as Crypto from "expo-crypto";
+import { Alert } from "react-native";
 
 const initialState: CartState = {
   carts: [],
@@ -12,76 +14,140 @@ const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
+    // addItemToCart: (
+    //   state,
+    //   action: PayloadAction<{
+    //     restaurant: RestaurantDetails;
+    //     item: CartItem;
+    //   }>
+    // ) => {
+    //   const { restaurant, item } = action.payload;
+    //   console.log(JSON.stringify(item, null, 2))
+    //   const existingRestaurantCart = state.carts.find(
+    //     cart => cart.restaurant.id === restaurant.id
+    //   );
 
-    addItemToCart: (state, action: PayloadAction<{
-      restaurant: RecommendedRestaurantDataTypes,
-      item: CartItem
-    }>) => {
-      const { restaurant, item } = action.payload;
-      const restaurantExists = state.carts.find(options => options.restaurant.id === restaurant.id);
+
+
+    //   if(existingRestaurantCart){
+    //     const existingCartItem = existingRestaurantCart.items.find((options) => options.id === item.id )
+
+    //     if(existingCartItem){
+    //       const existingCustomizationItem = existingRestaurantCart.items.find(cartItem => 
+    //         cartItem.id === item.id && 
+    //         JSON.stringify(cartItem.customizations) === JSON.stringify(item.customizations)
+    //       );
+
+    //       if(existingCustomizationItem){ 
+    //         existingCartItem.quantity += item?.quantity;
+    //         existingCartItem.cartPrice = (existingCartItem.cartPrice || 0) + item.price
+
+    //         console.log(existingCartItem)
+    //       } else{
+    //         console.log('Adding new Customizations')
+    //       }
+    //     }else{
+    //       existingRestaurantCart.items.push({...item})
+    //     }
+    //   }else{
+    //     state.carts.push({
+    //       restaurant,
+    //       items:[{...item}]
+    //     })
+    //   }
+
+    // },
+addItemToCart: (state, action: PayloadAction<{
+  restaurant: RecommendedRestaurantDataTypes;
+  item: CartItem;
+}>) => {
+  const { restaurant, item } = action.payload;
+  const existingRestaurant = state.carts.find(cart => cart.restaurant.id === restaurant.id);
+
+  if (existingRestaurant) {
+    const existingItemIndex = existingRestaurant.items.findIndex(cartItem => 
+      cartItem.id === item.id && 
+      JSON.stringify(cartItem.customizations || []) === JSON.stringify(item.customizations || [])
+    );
+
+    if (existingItemIndex >= 0) {
+      const existingItem = existingRestaurant.items[existingItemIndex];
+      existingItem.quantity += item.quantity;
+      existingItem.cartPrice = existingItem.cartPrice ? existingItem.cartPrice + item.price  : item.price;
+    } else {
+      existingRestaurant.items.push({
+        ...item,
+        quantity: item.quantity,
+        cartPrice: item.price,
+        customizations: item.customizations || []
+      });
+    }
+  } else {
+    state.carts.push({
+      restaurant,
+      items: [{
+        ...item,
+        quantity: item.quantity,
+        cartPrice: item.price,
+        customizations: item.customizations || []
+      }]
+    });
+  }
+},
+
+removeItemFromCart: (state, action: PayloadAction<{
+  restaurant: RecommendedRestaurantDataTypes;
+  item: CartItem;
+}>) => {
+  const { restaurant, item } = action.payload;
+  const existingRestaurant = state.carts.find(cart => cart.restaurant.id === restaurant.id);
+
+  if (!existingRestaurant) return;
+
+  // Find the exact item with matching customizations
+  const itemIndex = existingRestaurant.items.findIndex(cartItem => 
+    cartItem.id === item.id && 
+    JSON.stringify(cartItem.customizations || []) === JSON.stringify(item.customizations || [])
+  );
+
+  if (itemIndex === -1) return;
+
+  const existingItem = existingRestaurant.items[itemIndex];
+  
+  if (existingItem.quantity > 1) {
+    // Decrement quantity if more than 1
+    existingItem.quantity -= 1;
+    existingItem.cartPrice = existingItem.cartPrice ? existingItem.cartPrice - item.price : 0;
+  } else {
+    // Remove item completely if quantity would become 0
+    existingRestaurant.items.splice(itemIndex, 1);
     
-      if (restaurantExists) {
-        const existingFood =restaurantExists.items.find(cartItem => 
-          cartItem.id === item.id)
-          if(existingFood){
-          const existingCustomizationItem = restaurantExists.items.find(cartItem => 
-            cartItem.id === item.id && 
-            JSON.stringify(cartItem.customizations) === JSON.stringify(item.customizations)
-          );
-          if(existingCustomizationItem){
-            existingCustomizationItem.quantity +=  item.quantity;
-            existingCustomizationItem.cartPrice != item.cartPrice
-          }else{
-            restaurantExists.items.push({
-              ...item,
-              quantity: item.quantity,
-              cartPrice: item.price * item.quantity
-            });
-          }
+    // Remove restaurant entry if no items left
+    if (existingRestaurant.items.length === 0) {
+      state.carts = state.carts.filter(cart => cart.restaurant.id !== restaurant.id);
+    }
+  }
+},
+    // removeItemFromCart: (state, action) => {
+    //   const {restaurant, item} = action.payload
+    //   const restaurantExists = state.carts.find(options => options.restaurant.id === restaurant.id)
 
-          }else{
-            console.log('Restaurant does not exist in cart');
-            state.carts.push({
-              restaurant,
-              items: [{
-                ...item,
-                quantity: item.quantity,
-                cartPrice: item.price * item.quantity
-              }]
-            });
-          }
-        } else {
-          state.carts.push({
-          restaurant,
-          items: [{
-            ...item,
-            quantity: item.quantity,
-            cartPrice: item.price * item.quantity
-          }]
-        });
-      }
-    },
+    //   if(!restaurantExists) return;
 
-    removeItemFromCart: (state, action) => {
-      const {restaurant, item} = action.payload
-      const restaurantExists = state.carts.find(options => options.restaurant.id === restaurant.id)
+    //     const existingFoodItem = restaurantExists?.items.find(cartItem => cartItem.id === item.id)
+    //     if(!existingFoodItem) return;
 
-      if(!restaurantExists) return;
+    //     if(existingFoodItem.quantity > 1){
+    //       existingFoodItem.quantity -= 1;
+    //       existingFoodItem.cartPrice =  (existingFoodItem.cartPrice || 0) - item.price;
+    //     }else{
+    //       restaurantExists.items = restaurantExists.items.filter((options) => options.id != item.id)
+    //     }
 
-        const existingFoodItem = restaurantExists?.items.find(cartItem => cartItem.id === item.id)
-        if(!existingFoodItem) return;
-
-        if(existingFoodItem.quantity > 1){
-          existingFoodItem.quantity -= 1;
-          existingFoodItem.cartPrice =  (existingFoodItem.cartPrice || 0) - item.price;
-        }else{
-          restaurantExists.items = restaurantExists.items.filter((options) => options.id != item.id)
-        }
-
-        if(restaurantExists.items.length === 0){
-          state.carts = state.carts.filter((options) => (options.restaurant.id != restaurantExists.restaurant.id))
-        }
-    },
+    //     if(restaurantExists.items.length === 0){
+    //       state.carts = state.carts.filter((options) => (options.restaurant.id != restaurantExists.restaurant.id))
+    //     }
+    // },
     clearAllCart: (state, action) => {
       state.carts = []
     },
@@ -106,3 +172,4 @@ export const selectRestaurantCartItem = (restaurantId : number, itemId:string) =
   (state : RootState) => 
     state.cart.carts.find(option => option.restaurant.id === restaurantId)?.items,
   items => items?.find(option => option.id === itemId) || null)
+

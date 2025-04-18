@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RecommendedRestaurantDataTypes } from "types/types";
 import { addItemToCart, removeItemFromCart } from "redux/slice/cartSlice";
 import { RootState } from "redux/store";
+import RepeatModal from "./RepeatModal";
 
 interface Props {
   item: MenuItem;
@@ -25,6 +26,7 @@ const _imageSize = RFValue(120);
 const _addButtonHeight = RFValue(30);
 const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const repeatModalRef = useRef<BottomSheetModal>(null);
   const dispatch = useDispatch();
   const {
     selectedCustomizableItem,
@@ -32,18 +34,6 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
     initializeCustomizableItem,
   } = useSharedState();
   const { carts } = useSelector((state: RootState) => state.cart);
-
-  // const cart = useMemo(() => {
-  //   let existingItem = null;
-  //   const existingRestaurant = carts.find(
-  //     (item) => item.restaurant.name === restaurant.name
-  //   );
-
-  //   if (existingRestaurant) {
-
-  //   }
-  //   return existingItem;
-  // }, [carts]);
 
   const cart = useMemo(() => {
     const existingRestaurant = carts.find(
@@ -72,8 +62,13 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
 
   const handleAddToCardButtonPress = useCallback(() => {
     if (item.isCustomizable) {
-      bottomSheetModalRef.current?.present();
-      initializeCustomizableItem(item.price);
+      if (cart && cart?.quantity != 0) {
+        console.log(cart?.quantity);
+        repeatModalRef.current?.present();
+      } else {
+        bottomSheetModalRef.current?.present();
+        initializeCustomizableItem(item.price);
+      }
     } else {
       dispatch(
         addItemToCart({
@@ -107,6 +102,16 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
               restaurant: restaurant,
             })
           );
+        }}
+      />
+      <RepeatModal
+        modalRef={repeatModalRef}
+        foodItem={item}
+        restaurant={restaurant}
+        onAddNewCustomizable={() => {
+          repeatModalRef?.current?.dismiss();
+          bottomSheetModalRef?.current?.present();
+          initializeCustomizableItem(item.price);
         }}
       />
       <View
@@ -221,9 +226,16 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
                 </CustomText>
                 <TouchableOpacity
                   onPress={() => {
-                    dispatch(
-                      removeItemFromCart({ restaurant: restaurant, item: item })
-                    );
+                    if (cart.quantity === 1) {
+                      dispatch(
+                        removeItemFromCart({
+                          restaurant: restaurant,
+                          item: cart,
+                        })
+                      );
+                    } else {
+                      repeatModalRef.current?.present();
+                    }
                   }}
                   style={{
                     height: "100%",
