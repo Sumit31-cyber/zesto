@@ -104,7 +104,6 @@ removeItemFromCart: (state, action: PayloadAction<{
 
   if (!existingRestaurant) return;
 
-  // Find the exact item with matching customizations
   const itemIndex = existingRestaurant.items.findIndex(cartItem => 
     cartItem.id === item.id && 
     JSON.stringify(cartItem.customizations || []) === JSON.stringify(item.customizations || [])
@@ -115,39 +114,16 @@ removeItemFromCart: (state, action: PayloadAction<{
   const existingItem = existingRestaurant.items[itemIndex];
   
   if (existingItem.quantity > 1) {
-    // Decrement quantity if more than 1
     existingItem.quantity -= 1;
     existingItem.cartPrice = existingItem.cartPrice ? existingItem.cartPrice - item.price : 0;
   } else {
-    // Remove item completely if quantity would become 0
     existingRestaurant.items.splice(itemIndex, 1);
     
-    // Remove restaurant entry if no items left
     if (existingRestaurant.items.length === 0) {
       state.carts = state.carts.filter(cart => cart.restaurant.id !== restaurant.id);
     }
   }
 },
-    // removeItemFromCart: (state, action) => {
-    //   const {restaurant, item} = action.payload
-    //   const restaurantExists = state.carts.find(options => options.restaurant.id === restaurant.id)
-
-    //   if(!restaurantExists) return;
-
-    //     const existingFoodItem = restaurantExists?.items.find(cartItem => cartItem.id === item.id)
-    //     if(!existingFoodItem) return;
-
-    //     if(existingFoodItem.quantity > 1){
-    //       existingFoodItem.quantity -= 1;
-    //       existingFoodItem.cartPrice =  (existingFoodItem.cartPrice || 0) - item.price;
-    //     }else{
-    //       restaurantExists.items = restaurantExists.items.filter((options) => options.id != item.id)
-    //     }
-
-    //     if(restaurantExists.items.length === 0){
-    //       state.carts = state.carts.filter((options) => (options.restaurant.id != restaurantExists.restaurant.id))
-    //     }
-    // },
     clearAllCart: (state, action) => {
       state.carts = []
     },

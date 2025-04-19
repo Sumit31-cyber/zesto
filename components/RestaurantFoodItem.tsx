@@ -87,7 +87,7 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
     <View style={{}}>
       <CustomizableModal
         modalRef={bottomSheetModalRef}
-        item={item}
+        menuItem={item}
         restaurant={restaurant}
         onAddToCartPress={() => {
           bottomSheetModalRef.current?.dismiss();
