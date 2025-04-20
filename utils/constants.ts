@@ -10,7 +10,7 @@ export const isBannerHeight = screenHeight * 0.4
 export const COLORS = {
     primary: '#0fb758',
     gray:"#adb5bd",
-    darkGray:"#6c757d",
+    darkGray:"#7d8593",
     liteGray:'#adb5bd',
     black:"#141414"
 }
@@ -20,9 +20,13 @@ export const PADDING_HORIZONTAL =  14;
 
 
 export enum FONTS {
-    Regular = 'aeonikRegular',
-    Bold = 'aeonikBold',
-    Light = 'aeonikLight',
+    Regular = 'gilroyRegular',
+    Bold = 'gilroyBold',
+    Light = 'gilroyLight',
+    Semibold = 'gilroySemiBold',
+    Thin = 'gilroyThin',
+    ExtraBold = 'gilroyExtraBold',
+    Medium = 'gilroyMedium',
 }
 
 

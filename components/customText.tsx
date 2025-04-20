@@ -1,10 +1,18 @@
 import { Platform, StyleSheet, Text, TextStyle } from "react-native";
 import React, { FC } from "react";
 import { RFValue } from "react-native-responsive-fontsize";
+import { FONTS } from "utils/constants";
 
 interface CustomTextProps {
   variant: Variant;
-  fontFamily?: "aeonikRegular" | "aeonikBold" | "aeonikLight";
+  fontFamily?:
+    | "gilroyRegular"
+    | "gilroyBold"
+    | "gilroyLight"
+    | "gilroySemiBold"
+    | "gilroyThin"
+    | "gilroyExtraBold"
+    | "gilroyMedium";
   fontSize?: number;
   color?: string;
   style?: TextStyle | TextStyle[];
@@ -26,7 +34,7 @@ export const fontSizeMap: Record<Variant, Record<PlatformType, number>> = {
 };
 const CustomText: FC<CustomTextProps> = ({
   variant,
-  fontFamily,
+  fontFamily = FONTS.Regular,
   fontSize,
   color,
   children,

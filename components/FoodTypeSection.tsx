@@ -56,8 +56,6 @@ const FoodTypeSection = () => {
 
 export default FoodTypeSection;
 
-const styles = StyleSheet.create({});
-
 const RenderItem = ({
   item,
   index,
@@ -80,6 +78,7 @@ const RenderItem = ({
       <CustomText
         variant="h7"
         color={COLORS.darkGray}
+        fontFamily="gilroyMedium"
         style={{ textTransform: "capitalize" }}
       >
         {item.name}

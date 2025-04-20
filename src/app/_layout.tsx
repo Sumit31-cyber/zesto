@@ -15,6 +15,16 @@ export default function RootLayout() {
     aeonikRegular: require("assets/fonts/AeonikRegular.otf"),
     aeonikBold: require("assets/fonts/AeonikBold.otf"),
     aeonikLight: require("assets/fonts/AeonikLight.otf"),
+
+    gilroyBlack: require("assets/fonts/GilroyBlack.ttf"),
+    gilroyBold: require("assets/fonts/GilroyBold.ttf"),
+    gilroyExtraBold: require("assets/fonts/GilroyExtraBold.ttf"),
+    gilroyHeavy: require("assets/fonts/GilroyHeavy.ttf"),
+    gilroyLight: require("assets/fonts/GilroyLight.ttf"),
+    gilroyMedium: require("assets/fonts/GilroyMedium.ttf"),
+    gilroyRegular: require("assets/fonts/GilroyRegular.ttf"),
+    gilroySemiBold: require("assets/fonts/GilroySemiBold.ttf"),
+    gilroyThin: require("assets/fonts/GilroyThin.ttf"),
   });
 
   useEffect(() => {

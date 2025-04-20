@@ -156,7 +156,7 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
           <CustomText variant="h7" numberOfLines={2} color={COLORS.darkGray}>
             {item.description}
           </CustomText>
-          <CustomText variant="h6" fontFamily="aeonikBold" color={COLORS.black}>
+          <CustomText variant="h6" fontFamily="gilroyBold" color={COLORS.black}>
             ₹{item.price}
           </CustomText>
           <View
@@ -221,7 +221,7 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
                 >
                   <Entypo name="plus" size={24} color="white" />
                 </TouchableOpacity>
-                <CustomText variant="h4" fontFamily="aeonikBold" color="white">
+                <CustomText variant="h4" fontFamily="gilroyBold" color="white">
                   {cart.quantity}
                 </CustomText>
                 <TouchableOpacity
@@ -265,7 +265,7 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
               >
                 <CustomText
                   variant="h4"
-                  fontFamily="aeonikBold"
+                  fontFamily="gilroyBold"
                   color={COLORS.primary}
                 >
                   ADD
