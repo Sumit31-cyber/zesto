@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useMemo } from "react";
 import { COLORS, PADDING_HORIZONTAL } from "utils/constants";
 import Animated, {
   SharedValue,
@@ -33,6 +33,14 @@ const DropDownItem: React.FC<Props> = ({
   dropdownItemLength,
   expanded,
 }) => {
+  const foodQuantity = useMemo(() => {
+    if (item.restaurant.name === "Belgian Waffle")
+      console.log(JSON.stringify(item.items, null, 0));
+    const quantity = item.items.reduce((acc, curr) => acc + curr.quantity, 0);
+
+    return quantity;
+  }, [item]);
+
   const scale = 1 - index * 0.1;
 
   const expandedTransformY = -(
@@ -68,6 +76,12 @@ const DropDownItem: React.FC<Props> = ({
     };
   });
 
+  const animatedOpacity = useAnimatedStyle(() => {
+    return {
+      opacity: withTiming(expanded.value ? 0 : 1),
+    };
+  });
+
   return (
     <Animated.View
       onTouchEnd={() => {
@@ -94,6 +108,41 @@ const DropDownItem: React.FC<Props> = ({
         },
       ]}
     >
+      {index == 1 && (
+        <Animated.View
+          onTouchEnd={() => {
+            console.log(foodQuantity);
+          }}
+          style={[
+            animatedOpacity,
+            {
+              position: "absolute",
+              zIndex: 10,
+              backgroundColor: COLORS.primary,
+              top: -15,
+              height: 30,
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: 100,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+              gap: 5,
+              alignSelf: "center",
+            },
+          ]}
+        >
+          <CustomText variant="h7" color="white" fontFamily="aeonikBold">
+            All Carts
+          </CustomText>
+          <AntDesign
+            name="caretup"
+            size={12}
+            color="white"
+            style={{ marginTop: 2 }}
+          />
+        </Animated.View>
+      )}
       <View
         style={{
           flexDirection: "row",
@@ -145,7 +194,7 @@ const DropDownItem: React.FC<Props> = ({
             View Cart
           </CustomText>
           <CustomText variant="h7" color="white">
-            {item.items.length} items
+            {foodQuantity} items
           </CustomText>
         </View>
       </View>
