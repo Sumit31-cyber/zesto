@@ -13,9 +13,7 @@ const DineOut = () => {
       style={{
         flex: 1,
       }}
-    >
-      <Dropdown />
-    </View>
+    ></View>
   );
 };
 
