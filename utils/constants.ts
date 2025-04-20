@@ -1,6 +1,7 @@
 import { Dimensions, Platform, StyleSheet } from "react-native";
+import { RFValue } from "react-native-responsive-fontsize";
 
-export const BOTTOM_TAB_HEIGHT = 90
+export const BOTTOM_TAB_HEIGHT = RFValue(70)
 export const screenHeight = Dimensions.get('screen').height
 export const screenWidth = Dimensions.get('screen').width
 export const isBannerHeight = screenHeight * 0.4

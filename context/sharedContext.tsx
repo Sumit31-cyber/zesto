@@ -11,7 +11,7 @@ import {
   useRef,
   useState,
 } from "react";
-import Animated, { useSharedValue } from "react-native-reanimated";
+import Animated, { SharedValue, useSharedValue } from "react-native-reanimated";
 import { CustomizationOption } from "utils/dataObject";
 
 interface CurrentCartItem {
@@ -21,8 +21,9 @@ interface CurrentCartItem {
 }
 
 interface SharedContextType {
-  scrollY: Animated.SharedValue<number>;
-  scrollYGlobal: Animated.SharedValue<number>;
+  scrollY: SharedValue<number>;
+  scrollYGlobal: SharedValue<number>;
+  expanded: SharedValue<boolean>;
   bottomSheetModalRef: RefObject<BottomSheetModal>;
   selectedCustomizableItem: CurrentCartItem;
   setSelectedCustomizableItem: Dispatch<SetStateAction<CurrentCartItem>>;
@@ -38,6 +39,7 @@ export const SharedStateProvider: FC<{ children: React.ReactNode }> = ({
 }) => {
   const scrollY = useSharedValue(1);
   const scrollYGlobal = useSharedValue(0);
+  const expanded = useSharedValue(false);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const [selectedCustomizableItem, setSelectedCustomizableItem] =
     useState<CurrentCartItem>({
@@ -62,6 +64,7 @@ export const SharedStateProvider: FC<{ children: React.ReactNode }> = ({
         selectedCustomizableItem,
         setSelectedCustomizableItem,
         initializeCustomizableItem,
+        expanded,
       }}
     >
       {children}

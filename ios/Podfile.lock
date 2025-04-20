@@ -9,6 +9,8 @@ PODS:
     - ExpoModulesCore
   - ExpoAsset (11.0.5):
     - ExpoModulesCore
+  - ExpoBlur (14.0.3):
+    - ExpoModulesCore
   - ExpoCrypto (14.0.2):
     - ExpoModulesCore
   - ExpoFileSystem (18.0.12):
@@ -1897,6 +1899,7 @@ DEPENDENCIES:
   - EXConstants (from `../node_modules/expo-constants/ios`)
   - Expo (from `../node_modules/expo`)
   - ExpoAsset (from `../node_modules/expo-asset/ios`)
+  - ExpoBlur (from `../node_modules/expo-blur/ios`)
   - ExpoCrypto (from `../node_modules/expo-crypto/ios`)
   - ExpoFileSystem (from `../node_modules/expo-file-system/ios`)
   - ExpoFont (from `../node_modules/expo-font/ios`)
@@ -2004,6 +2007,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo"
   ExpoAsset:
     :path: "../node_modules/expo-asset/ios"
+  ExpoBlur:
+    :path: "../node_modules/expo-blur/ios"
   ExpoCrypto:
     :path: "../node_modules/expo-crypto/ios"
   ExpoFileSystem:
@@ -2175,6 +2180,7 @@ SPEC CHECKSUMS:
   EXConstants: a1f35b9aabbb3c6791f8e67722579b1ffcdd3f18
   Expo: 3a8a619381412bbf8537746ec27b485be01c8a1f
   ExpoAsset: 0687fe05f5d051c4a34dd1f9440bd00858413cfe
+  ExpoBlur: 567af66164e3043a9a30069594aed1ddf0a88d97
   ExpoCrypto: 1eaf79360c8135af1f2ebb133394fd3513ca9a3d
   ExpoFileSystem: c8c19bf80d914c83dda3beb8569d7fb603be0970
   ExpoFont: 773955186469acc5108ff569712a2d243857475f

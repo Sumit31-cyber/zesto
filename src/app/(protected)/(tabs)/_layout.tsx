@@ -17,6 +17,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import CustomTabBar from "components/CustomTabBar";
+import { BlurView } from "expo-blur";
 
 const TabLayout = () => {
   const router = useRouter();
