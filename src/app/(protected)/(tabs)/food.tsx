@@ -69,6 +69,7 @@ const Food = () => {
       );
 
       const isScrollingDown = currentScrollY > scrollYGlobal.value;
+
       if (currentScrollY < 200) {
         scrollYGlobal.value = currentScrollY;
         return;

@@ -15,16 +15,13 @@ const favoriteSlice = createSlice({
   initialState,
   reducers: {
     addItemToFavorite:(state, action) => {
-        const {id} = action.payload
-        const existingRestaurantId = state.favorites.find(item => item.id == id)
-
-        if(!existingRestaurantId){
-            state.favorites.push({id})
-        } 
+        const {restaurant} = action.payload
+        state.favorites.push(restaurant)
     },
     removeItemFromFavorite: (state, action) => {
-        const {id} = action.payload
-        const existingRestaurantIndex = state.favorites.findIndex(item => item.id == id)
+        const {restaurant} = action.payload
+
+        const existingRestaurantIndex = state.favorites.findIndex(item => item.id == restaurant.id)
 
         if(existingRestaurantIndex != null || undefined){
             state.favorites.splice(existingRestaurantIndex, 1)

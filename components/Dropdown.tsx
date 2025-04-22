@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import React from "react";
 import DropDownItem from "./DropDownItem";
 import Animated, {
@@ -66,17 +66,18 @@ const Dropdown = () => {
             flex: 1,
           },
         ]}
-      ></Animated.View>
+      />
 
       {carts.map((item, index) => {
         return (
-          <DropDownItem
-            key={index}
-            item={item}
-            index={index}
-            dropdownItemLength={carts.length}
-            expanded={expanded}
-          />
+          <React.Fragment key={index}>
+            <DropDownItem
+              item={item}
+              index={index}
+              dropdownItemLength={carts.length}
+              expanded={expanded}
+            />
+          </React.Fragment>
         );
       })}
     </Animated.View>

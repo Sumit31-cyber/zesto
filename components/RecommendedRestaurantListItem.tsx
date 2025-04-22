@@ -37,6 +37,7 @@ const RecommendedRestaurantListItem: React.FC<Props> = ({
   const likeAnimationRef = useRef<LottieView>(null);
   const isFavorite = useMemo(() => {
     const isFav = favorites.find((option) => option.id == item.id);
+
     return isFav ? true : false;
   }, [favorites, item]);
 
@@ -95,12 +96,19 @@ const RecommendedRestaurantListItem: React.FC<Props> = ({
             <TouchableOpacity
               onPress={() => {
                 if (isFavorite) {
-                  dispatch(removeItemFromFavorite({ id: item.id }));
+                  dispatch(removeItemFromFavorite({ restaurant: item }));
                   return;
                 }
-                dispatch(addItemToFavorite({ id: item.id }));
+                dispatch(addItemToFavorite({ restaurant: item }));
               }}
-              style={{ zIndex: 100 }}
+              style={{
+                zIndex: 100,
+                width: RFValue(40),
+                height: RFValue(40),
+                top: -RFValue(15),
+                right: -RFValue(60),
+                borderRadius: 100,
+              }}
             >
               <LottieView
                 ref={likeAnimationRef}
@@ -111,10 +119,7 @@ const RecommendedRestaurantListItem: React.FC<Props> = ({
                 style={{
                   width: RFValue(50),
                   height: RFValue(50),
-                  marginTop: "auto",
-                  marginLeft: "auto",
-                  top: -RFValue(15),
-                  right: -RFValue(15),
+                  right: RFValue(6),
                 }}
                 source={require("assets/LikeAnimation.json")}
               />

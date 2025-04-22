@@ -590,6 +590,6 @@ export type CustomizationOption = {
     id:number
   }
   export interface FavoriteState {
-    favorites:FavoriteItem[]
+    favorites:RecommendedRestaurantDataTypes[]
   }
   
