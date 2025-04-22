@@ -46,8 +46,6 @@ const RestaurantScreen = () => {
       return response;
     }, [restaurantId]);
 
-  console.log(restaurantData);
-
   const restaurantScreenGlobalScrollY = useSharedValue(0);
   const { top } = useSafeAreaInsets();
   // const restaurantData = JSON.parse(

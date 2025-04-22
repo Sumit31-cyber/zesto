@@ -52,7 +52,7 @@ const SignInScreen = () => {
     try {
       Keyboard.dismiss();
       setIsLoading(true);
-      console.log(isLoaded);
+
       if (!isLoaded) return;
       if (phoneNumber != undefined) {
         const response = await signUp.create({
@@ -64,7 +64,6 @@ const SignInScreen = () => {
         // });
 
         setIsLoading(false);
-        console.log(JSON.stringify(response, null, 2));
         if (response.status === "complete") {
           router.replace("/(protected)");
         }

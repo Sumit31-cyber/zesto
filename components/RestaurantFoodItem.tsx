@@ -63,7 +63,6 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
   const handleAddToCardButtonPress = useCallback(() => {
     if (item.isCustomizable) {
       if (cart && cart?.quantity != 0) {
-        console.log(cart?.quantity);
         repeatModalRef.current?.present();
       } else {
         bottomSheetModalRef.current?.present();

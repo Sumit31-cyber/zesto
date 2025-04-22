@@ -52,7 +52,6 @@ const CustomTabBar: FC<BottomTabBarProps> = ({
 
   useEffect(() => {
     activeIndex.value = state.index;
-    console.log(state.index);
   }, [state.index]);
   return (
     <>

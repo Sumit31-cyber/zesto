@@ -24,7 +24,7 @@ const VerificationScreen = () => {
     if (!isLoaded) return;
     try {
       const code = String(otp.join(""));
-      console.log(typeof code);
+
       if (code) {
         const response = await signUp.attemptVerification({
           code,

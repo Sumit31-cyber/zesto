@@ -26,7 +26,7 @@ const favoriteSlice = createSlice({
         const {id} = action.payload
         const existingRestaurantIndex = state.favorites.findIndex(item => item.id == id)
 
-        if(existingRestaurantIndex){
+        if(existingRestaurantIndex != null || undefined){
             state.favorites.splice(existingRestaurantIndex, 1)
         } 
     }

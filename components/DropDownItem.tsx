@@ -36,8 +36,6 @@ const DropDownItem: React.FC<Props> = ({
   expanded,
 }) => {
   const foodQuantity = useMemo(() => {
-    if (item.restaurant.name === "Belgian Waffle")
-      console.log(JSON.stringify(item.items, null, 0));
     const quantity = item.items.reduce((acc, curr) => acc + curr.quantity, 0);
 
     return quantity;
@@ -144,8 +142,10 @@ const DropDownItem: React.FC<Props> = ({
       )}
       <Pressable
         onPress={async () => {
-          expanded.value = !expanded.value;
-          await wait(200); // To make the navigation smoother
+          if (expanded.value) {
+            expanded.value = !expanded.value;
+            await wait(200); // To make the navigation smoother
+          }
           router.navigate({
             pathname: "/(protected)/restaurant",
             params: { restaurantId: item.restaurant.id },

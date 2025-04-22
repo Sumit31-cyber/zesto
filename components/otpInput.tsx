@@ -25,7 +25,6 @@ const OtpInput = ({ otp, setOtp }: props) => {
 
   const handleBackPress = (key: string, index: number) => {
     if (otp[index] != "" && key != "Backspace") {
-      console.log("Has Something");
       textInputRef.current[index + 1]?.focus();
       handleChange(key, index + 1);
     }
@@ -34,7 +33,6 @@ const OtpInput = ({ otp, setOtp }: props) => {
         handleChange("", index - 1);
       } else {
         if (otp[index] == "") {
-          console.log("Executing this block");
           textInputRef.current[index - 1]?.focus();
           handleChange("", index - 1);
           return;
@@ -59,9 +57,6 @@ const OtpInput = ({ otp, setOtp }: props) => {
       {otp.map((item, index) => {
         return (
           <TextInput
-            onTouchStart={() => {
-              console.log("df");
-            }}
             pointerEvents="none"
             key={index}
             caretHidden={true}

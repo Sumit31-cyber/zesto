@@ -1,12 +1,26 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import React, { useEffect, useMemo, useRef } from "react";
 import { RecommendedRestaurantDataTypes } from "types/types";
 import { RFValue } from "react-native-responsive-fontsize";
 import { Image } from "expo-image";
 import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
-import { COLORS } from "utils/constants";
+import { COLORS, PADDING_HORIZONTAL } from "utils/constants";
 import CustomText from "./customText";
 import { LinearGradient } from "expo-linear-gradient";
+import LottieView from "lottie-react-native";
+import {
+  addItemToFavorite,
+  removeItemFromFavorite,
+  selectFavorite,
+} from "redux/slice/favoriteSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "redux/store";
 
 type Props = {
   item: RecommendedRestaurantDataTypes;
@@ -18,6 +32,21 @@ const RecommendedRestaurantListItem: React.FC<Props> = ({
   index,
   onPress,
 }) => {
+  const { favorites } = useSelector((state: RootState) => state.favorite);
+  const dispatch = useDispatch();
+  const likeAnimationRef = useRef<LottieView>(null);
+  const isFavorite = useMemo(() => {
+    const isFav = favorites.find((option) => option.id == item.id);
+    return isFav ? true : false;
+  }, [favorites, item]);
+
+  useEffect(() => {
+    if (isFavorite) {
+      likeAnimationRef.current?.play(0, 20);
+    } else {
+      likeAnimationRef.current?.play(11, 0);
+    }
+  }, [isFavorite]);
   return (
     <Pressable
       onPress={onPress}
@@ -63,6 +92,34 @@ const RecommendedRestaurantListItem: React.FC<Props> = ({
               paddingVertical: 10,
             }}
           >
+            <TouchableOpacity
+              onPress={() => {
+                if (isFavorite) {
+                  dispatch(removeItemFromFavorite({ id: item.id }));
+                  return;
+                }
+                dispatch(addItemToFavorite({ id: item.id }));
+              }}
+              style={{ zIndex: 100 }}
+            >
+              <LottieView
+                ref={likeAnimationRef}
+                autoPlay
+                loop={false}
+                resizeMode="contain"
+                speed={0.8}
+                style={{
+                  width: RFValue(50),
+                  height: RFValue(50),
+                  marginTop: "auto",
+                  marginLeft: "auto",
+                  top: -RFValue(15),
+                  right: -RFValue(15),
+                }}
+                source={require("assets/LikeAnimation.json")}
+              />
+            </TouchableOpacity>
+
             <View style={{ marginTop: "auto" }}>
               <CustomText variant="h6" fontFamily="gilroyBold" color="white">
                 {item.discount}

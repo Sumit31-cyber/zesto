@@ -15,7 +15,7 @@ const viewHeight = screenHeight * 0.08;
 const CartFloatingStack = () => {
   const { carts } = useSelector((state: RootState) => state.cart);
   const [open, setOpen] = useState(false);
-  console.log(carts.length);
+
   const rStyle = useAnimatedStyle(() => {
     return {
       opacity: withTiming(open ? 1 : 0),
@@ -58,7 +58,6 @@ const CartFloatingStack = () => {
             key={index}
             index={index}
             onPress={() => {
-              console.log("pressed");
               setOpen(!open);
             }}
             open={open}
