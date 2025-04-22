@@ -99,7 +99,7 @@ const CustomizableModal = ({
               >
                 <CustomText
                   variant="h6"
-                  fontFamily="aeonikBold"
+                  fontFamily="gilroyBold"
                   color={COLORS.black}
                 >
                   {item.type}
@@ -181,7 +181,7 @@ const CustomizableModal = ({
                 <Entypo name="minus" size={24} color="white" />
               </TouchableOpacity>
 
-              <CustomText variant="h4" fontFamily="aeonikBold" color="white">
+              <CustomText variant="h4" fontFamily="gilroyBold" color="white">
                 {selectedCustomizableItem.quantity}
               </CustomText>
 

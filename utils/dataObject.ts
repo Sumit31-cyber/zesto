@@ -100,7 +100,7 @@ export const recommendedListData : RecommendedRestaurantDataTypes[] = [
         "id": 1,
         "name": "Moti Mahal Delux Tandoori Trail",
         "discount": "40% OFF",
-        "discountAmount": "up to ₹80",
+        "discountAmount": "UPTO₹80",
         "time": "25 mins",
         "distance": "5.5 km",
         "rating": 4.2,
@@ -111,7 +111,7 @@ export const recommendedListData : RecommendedRestaurantDataTypes[] = [
         "id": 2,
         "name": "Butter Story",
         "discount": "10% OFF",
-        "discountAmount": "up to ₹40",
+        "discountAmount": "UPTO₹40",
         "time": "33 mins",
         "rating": 4.5,
         "distance": "8.5 km",
@@ -122,7 +122,7 @@ export const recommendedListData : RecommendedRestaurantDataTypes[] = [
         "id": 3,
         "name": "Limone Lounge",
         "discount": "FLAT ₹100 OFF",
-        "discountAmount": "up to ₹70",
+        "discountAmount": "UPTO₹70",
         "time": "36 mins",
         "rating": 3.2,
         "distance": "7.5 km",
@@ -134,7 +134,7 @@ export const recommendedListData : RecommendedRestaurantDataTypes[] = [
         "name": "Neel Kamal Veg Fami...",
         "discount": "FLAT ₹50 OFF",
         "rating": 1.2,
-        "discountAmount": "up to ₹70",
+        "discountAmount": "UPTO₹70",
         "time": "19 mins",
         "distance": "1 km",
         "address" : "1st Floor, S.S Tower, Lohia Nagar, Kankarbagh Near Idbi Bank, Near Panchshiv Mandir,  Central Patna 800020",
@@ -144,7 +144,7 @@ export const recommendedListData : RecommendedRestaurantDataTypes[] = [
         "id": 5,
         "name": "Belgian Waffle",
         "discount": "30% OFF",
-        "discountAmount": "up to ₹75",
+        "discountAmount": "UPTO₹75",
         "time": "15 mins",
         "distance": "1 km",
         "rating": 2.2,
@@ -155,7 +155,7 @@ export const recommendedListData : RecommendedRestaurantDataTypes[] = [
         "id": 6,
         "name": "A One Bakery",
         "discount": "10% OFF",
-        "discountAmount": "up to ₹25",
+        "discountAmount": "UPTO₹25",
         "time": "24 mins",
         "rating": 4.2,
         "distance": "5 km",
@@ -166,7 +166,7 @@ export const recommendedListData : RecommendedRestaurantDataTypes[] = [
         "id": 7,
         "name": "Spice Symphony",
         "discount": "20% OFF",
-        "discountAmount": "up to ₹50",
+        "discountAmount": "UPTO₹50",
         "time": "22 mins",
         "rating": 4.2,
         "distance": "6.5 km",
@@ -177,7 +177,7 @@ export const recommendedListData : RecommendedRestaurantDataTypes[] = [
         "id": 8,
         "name": "Crispy Creations",
         "discount": "10% OFF",
-        "discountAmount": "up to ₹30",
+        "discountAmount": "UPTO₹30",
         "time": "18 mins",
         "distance": "4.2 km",
         "address" : "1st Floor, S.S Tower, Lohia Nagar, Kankarbagh Near Idbi Bank, Near Panchshiv Mandir,  Central Patna 800020",
@@ -187,7 +187,7 @@ export const recommendedListData : RecommendedRestaurantDataTypes[] = [
         "id": 9,
         "name": "Wow Momo",
         "discount": "15% OFF",
-        "discountAmount": "up to ₹40",
+        "discountAmount": "UPTO₹40",
         "time": "28 mins",
         "distance": "9 km",
         "address" : "Nutan Plaza, 7Th Floor, Bander Bagicha, Off Fraser Road, Fraser Road Area Near Modern Electronics, North Patna 800001",
@@ -197,7 +197,7 @@ export const recommendedListData : RecommendedRestaurantDataTypes[] = [
         "id": 10,
         "name": "Pasta Fresca",
         "discount": "25% OFF",
-        "discountAmount": "up to ₹60",
+        "discountAmount": "UPTO₹60",
         "time": "35 mins",
         "distance": "7.8 km",
         "address" : "Nutan Plaza, 7Th Floor, Bander Bagicha, Off Fraser Road, Fraser Road Area Near Modern Electronics, North Patna 800001",
@@ -208,7 +208,7 @@ export const recommendedListData : RecommendedRestaurantDataTypes[] = [
         "name": "Burger Mania",
         "rating": 4.9,
         "discount": "30% OFF",
-        "discountAmount": "up to ₹70",
+        "discountAmount": "UPTO₹70",
         "time": "20 mins",
         "distance": "3.5 km",
         "address" : "1st Floor, S.S Tower, Lohia Nagar, Kankarbagh Near Idbi Bank, Near Panchshiv Mandir,  Central Patna 800020",
@@ -218,7 +218,7 @@ export const recommendedListData : RecommendedRestaurantDataTypes[] = [
         "id": 12,
         "name": "Sushi Delight",
         "discount": "30% OFF",
-        "discountAmount": "up to ₹70",
+        "discountAmount": "UPTO₹70",
         "rating": 4.9,
         "time": "40 mins",
         "distance": "11 km",
@@ -585,4 +585,11 @@ export type CustomizationOption = {
     carts: RestaurantCart[];
   }
   
+
+  export interface FavoriteItem {
+    id:number
+  }
+  export interface FavoriteState {
+    favorites:FavoriteItem[]
+  }
   

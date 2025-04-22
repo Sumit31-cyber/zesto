@@ -274,7 +274,7 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
             )}
 
             {item.isCustomizable && (
-              <CustomText variant="h7" color={COLORS.liteGray}>
+              <CustomText variant="h7" color={COLORS.darkGray}>
                 customizable
               </CustomText>
             )}

@@ -96,7 +96,7 @@ const MiniFoodItem = ({
           >
             <Entypo name="plus" size={20} color={COLORS.primary} />
           </TouchableOpacity>
-          <CustomText variant="h6" fontFamily="aeonikBold" color="black">
+          <CustomText variant="h6" fontFamily="gilroyBold" color="black">
             {item.quantity}
           </CustomText>
           <TouchableOpacity

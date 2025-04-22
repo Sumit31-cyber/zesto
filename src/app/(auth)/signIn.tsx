@@ -156,14 +156,14 @@ const SignInScreen = () => {
         >
           <CustomText
             variant="h4"
-            fontFamily="aeonikBold"
+            fontFamily="gilroyBold"
             style={{ letterSpacing: 0.8, marginBottom: 5 }}
           >
             LOGIN
           </CustomText>
           <CustomText
             variant="h7"
-            fontFamily="aeonikLight"
+            fontFamily="gilroyLight"
             style={{ letterSpacing: 0.8 }}
           >
             Please enter your email and password to login

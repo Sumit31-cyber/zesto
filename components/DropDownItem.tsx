@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import React, { useMemo } from "react";
 import { COLORS, PADDING_HORIZONTAL } from "utils/constants";
 import Animated, {
@@ -16,6 +16,8 @@ import {
   _dropDownItemMargin,
   _marginBottom,
 } from "./Dropdown";
+import { router } from "expo-router";
+import { wait } from "utils/functions";
 
 export type ItemType = {
   id: number;
@@ -84,9 +86,6 @@ const DropDownItem: React.FC<Props> = ({
 
   return (
     <Animated.View
-      onTouchEnd={() => {
-        expanded.value = !expanded.value;
-      }}
       style={[
         animatedStyle,
         {
@@ -111,13 +110,13 @@ const DropDownItem: React.FC<Props> = ({
       {index == 1 && (
         <Animated.View
           onTouchEnd={() => {
-            console.log(foodQuantity);
+            expanded.value = !expanded.value;
           }}
           style={[
             animatedOpacity,
             {
               position: "absolute",
-              zIndex: 10,
+              zIndex: 100,
               backgroundColor: COLORS.primary,
               top: -15,
               height: 30,
@@ -132,7 +131,7 @@ const DropDownItem: React.FC<Props> = ({
             },
           ]}
         >
-          <CustomText variant="h7" color="white" fontFamily="aeonikBold">
+          <CustomText variant="h7" color="white" fontFamily="gilroyBold">
             All Carts
           </CustomText>
           <AntDesign
@@ -143,7 +142,15 @@ const DropDownItem: React.FC<Props> = ({
           />
         </Animated.View>
       )}
-      <View
+      <Pressable
+        onPress={async () => {
+          expanded.value = !expanded.value;
+          await wait(200); // To make the navigation smoother
+          router.navigate({
+            pathname: "/(protected)/restaurant",
+            params: { restaurantId: item.restaurant.id },
+          });
+        }}
         style={{
           flexDirection: "row",
           alignItems: "center",
@@ -160,7 +167,7 @@ const DropDownItem: React.FC<Props> = ({
         <View
           style={{ flex: 1, paddingHorizontal: 10, marginRight: 10, gap: 2 }}
         >
-          <CustomText variant="h7" fontFamily="aeonikBold" numberOfLines={1}>
+          <CustomText variant="h7" fontFamily="gilroyBold" numberOfLines={1}>
             {item.restaurant.name}
           </CustomText>
           <View
@@ -190,14 +197,14 @@ const DropDownItem: React.FC<Props> = ({
             gap: 2,
           }}
         >
-          <CustomText variant="h7" fontFamily="aeonikBold" color="white">
+          <CustomText variant="h7" fontFamily="gilroyBold" color="white">
             View Cart
           </CustomText>
           <CustomText variant="h7" color="white">
             {foodQuantity} items
           </CustomText>
         </View>
-      </View>
+      </Pressable>
     </Animated.View>
   );
 };

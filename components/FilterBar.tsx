@@ -1,15 +1,10 @@
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import React from "react";
 import CustomText from "./customText";
 import { BORDER_WIDTH, COLORS, PADDING_HORIZONTAL } from "utils/constants";
 import { FilterIcon, OfferIcon } from "assets/svgs/svgs";
 import { RFValue } from "react-native-responsive-fontsize";
-import {
-  AntDesign,
-  Entypo,
-  FontAwesome,
-  FontAwesome6,
-} from "@expo/vector-icons";
+import { AntDesign, FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import { filtersOption } from "utils/dataObject";
 import { Image } from "expo-image";
 
@@ -36,15 +31,11 @@ const FilterBar = () => {
           }}
         >
           <View style={styles.itemContainer}>
-            <CustomText variant="h7" color={COLORS.black}>
-              Filter
-            </CustomText>
+            <Title title="Filter" />
             <FilterIcon size={RFValue(12)} tint={COLORS.black} />
           </View>
           <View style={styles.itemContainer}>
-            <CustomText variant="h7" color={COLORS.black}>
-              Sort by
-            </CustomText>
+            <Title title="Sort by" />
             <AntDesign name="down" size={RFValue(12)} color="black" />
           </View>
 
@@ -99,9 +90,7 @@ const FilterBar = () => {
                     />
                   </View>
                 )}
-                <CustomText variant="h7" color={COLORS.black}>
-                  {item}
-                </CustomText>
+                <Title title={item} />
               </View>
             );
           })}
@@ -126,3 +115,16 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
 });
+
+const Title = ({ title }: { title: string }) => {
+  return (
+    <CustomText
+      variant="h7"
+      color={COLORS.black}
+      fontFamily="gilroySemiBold"
+      style={{ letterSpacing: 0.6 }}
+    >
+      {title}
+    </CustomText>
+  );
+};

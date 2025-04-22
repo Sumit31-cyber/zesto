@@ -67,7 +67,7 @@ const OfferCarousel = () => {
                   gap: 4,
                 }}
               >
-                <CustomText variant="h5" fontFamily="aeonikBold" color="white">
+                <CustomText variant="h5" fontFamily="gilroyBold" color="white">
                   {item.title}
                 </CustomText>
                 <CustomText variant="h6" color="white">

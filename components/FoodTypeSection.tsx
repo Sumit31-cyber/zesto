@@ -30,7 +30,8 @@ const FoodTypeSection = () => {
         <CustomText
           variant="h7"
           color={COLORS.black}
-          style={{ textTransform: "uppercase" }}
+          fontFamily="gilroyMedium"
+          style={{ textTransform: "uppercase", letterSpacing: 1.2 }}
         >
           Sumit, What's on your mind?
         </CustomText>

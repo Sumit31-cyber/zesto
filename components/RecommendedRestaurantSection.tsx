@@ -15,7 +15,7 @@ const RecommendedRestaurantSection = () => {
     <View style={{ paddingHorizontal: PADDING_HORIZONTAL }}>
       <CustomText
         variant="h6"
-        fontFamily="gilroyBold"
+        fontFamily="gilroySemiBold"
         style={{ marginVertical: 10 }}
       >
         Top {recommendedListData.length} restaurants to explore
@@ -42,7 +42,7 @@ const RecommendedRestaurantSection = () => {
               onPress={() => {
                 router.navigate({
                   pathname: "/(protected)/restaurant",
-                  params: { restaurant: JSON.stringify(item) },
+                  params: { restaurantId: item.id },
                 });
               }}
             />

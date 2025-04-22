@@ -66,7 +66,7 @@ const RepeatModal = ({
         <View
           style={{ paddingVertical: 14, paddingHorizontal: PADDING_HORIZONTAL }}
         >
-          <CustomText variant="h6" fontFamily="aeonikBold">
+          <CustomText variant="h6" fontFamily="gilroyBold">
             Repeat last used customizations?
           </CustomText>
         </View>
@@ -90,7 +90,7 @@ const RepeatModal = ({
             }}
           >
             <Entypo name="plus" size={20} color={"red"} />
-            <CustomText variant="h6" color="red" fontFamily="aeonikBold">
+            <CustomText variant="h6" color="red" fontFamily="gilroyBold">
               Add new customizations
             </CustomText>
           </Pressable>

@@ -38,7 +38,7 @@ const LocationHeader = () => {
               gap: 5,
             }}
           >
-            <CustomText variant="h3" fontFamily="aeonikBold" color="black">
+            <CustomText variant="h3" fontFamily="gilroyBold" color="black">
               Phulwari Sharif
             </CustomText>
             <AntDesign name="down" size={18} color="black" />
