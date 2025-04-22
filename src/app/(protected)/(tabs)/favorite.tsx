@@ -27,53 +27,136 @@ import Animated, {
   FadeIn,
   FadeInDown,
   FadeOut,
+  interpolate,
   LinearTransition,
   useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
   withTiming,
 } from "react-native-reanimated";
 import { useSharedState } from "context/sharedContext";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+const headerHeight = screenHeight * 0.06;
 
 const Favorite = () => {
   const { favorites } = useSelector((state: RootState) => state.favorite);
-  const { scrollYGlobal, scrollY } = useSharedState();
+  const { top } = useSafeAreaInsets();
+  const { scrollY } = useSharedState();
+
+  const flatListScrollY = useSharedValue(0);
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
       const currentScrollY = event.contentOffset.y;
-      const isScrollingDown = currentScrollY > scrollYGlobal.value;
-      scrollYGlobal.value = currentScrollY;
+      const isScrollingDown = currentScrollY > flatListScrollY.value;
+      flatListScrollY.value = currentScrollY;
       scrollY.value = isScrollingDown ? withTiming(0) : withTiming(1);
     },
   });
+
+  const rStyle = useAnimatedStyle(() => {
+    const opacity = interpolate(flatListScrollY.value, [0, 100], [0, 1]);
+    return {
+      opacity,
+    };
+  });
+
+  const handleBackNavigation = () => {
+    router.back();
+    scrollY.value = withTiming(1);
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
-      <View
-        style={{
-          height: RFValue(80),
-          width: "100%",
-          justifyContent: "flex-end",
-          paddingHorizontal: PADDING_HORIZONTAL,
-          paddingVertical: RFValue(5),
-          position: "absolute",
-          zIndex: 100,
-        }}
+      <Animated.View
+        style={[
+          {
+            height: headerHeight + top,
+            width: "100%",
+            justifyContent: "flex-end",
+            paddingHorizontal: PADDING_HORIZONTAL,
+            paddingVertical: RFValue(5),
+            position: "absolute",
+            zIndex: 100,
+          },
+        ]}
       >
-        <TouchableOpacity
-          onPress={() => {
-            router.back();
-          }}
+        <View
           style={{
-            height: RFValue(30),
-            aspectRatio: 1,
-            backgroundColor: "rgba(1,1,1,0.1)",
-            borderRadius: 100,
+            height: headerHeight,
+            width: "100%",
             justifyContent: "center",
-            alignItems: "center",
           }}
         >
-          <AntDesign name="arrowleft" size={24} color="white" />
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity
+            onPress={handleBackNavigation}
+            style={{
+              height: RFValue(30),
+              aspectRatio: 1,
+              backgroundColor: "rgba(1,1,1,0.1)",
+              borderRadius: 100,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <AntDesign name="arrowleft" size={24} color="white" />
+          </TouchableOpacity>
+        </View>
+
+        <Animated.View
+          style={[
+            StyleSheet.absoluteFill,
+            rStyle,
+            {
+              backgroundColor: "white",
+              alignItems: "flex-end",
+              paddingHorizontal: PADDING_HORIZONTAL,
+              paddingVertical: RFValue(5),
+              flexDirection: "row",
+              gap: RFValue(4),
+            },
+          ]}
+        >
+          <View
+            style={{
+              height: headerHeight,
+              width: "100%",
+              justifyContent: "center",
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 10,
+            }}
+          >
+            <TouchableOpacity
+              onPress={handleBackNavigation}
+              style={{
+                height: RFValue(30),
+                aspectRatio: 1,
+                borderRadius: 100,
+                justifyContent: "center",
+                alignItems: "center",
+                zIndex: 100,
+              }}
+            >
+              <AntDesign name="arrowleft" size={24} color="black" />
+            </TouchableOpacity>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+              }}
+            >
+              <CustomText variant="h6" fontFamily="gilroyMedium">
+                Favorites Restaurants
+              </CustomText>
+              <CustomText variant="h7" color={COLORS.darkGray}>
+                {favorites.length} Items
+              </CustomText>
+            </View>
+          </View>
+        </Animated.View>
+      </Animated.View>
 
       <Animated.FlatList
         onScroll={scrollHandler}
