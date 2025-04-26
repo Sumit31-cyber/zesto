@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TextStyle, View } from "react-native";
 import React from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { COLORS } from "utils/constants";
@@ -6,8 +6,16 @@ import { SendIcon } from "assets/svgs/svgs";
 import CustomText from "./customText";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
 
-const LocationHeader = () => {
-  const { top } = useSafeAreaInsets();
+type Props = {
+  titleStyle?: TextStyle;
+  locationTextStyle?: TextStyle;
+  iconColor?: string;
+};
+const LocationHeader: React.FC<Props> = ({
+  titleStyle,
+  locationTextStyle,
+  iconColor = "black",
+}) => {
   return (
     <View
       style={{
@@ -29,7 +37,7 @@ const LocationHeader = () => {
               alignSelf: "flex-start",
             }}
           >
-            <SendIcon size={40} tint="black" />
+            <SendIcon size={40} tint={iconColor} />
           </View>
           <View
             style={{
@@ -38,7 +46,12 @@ const LocationHeader = () => {
               gap: 5,
             }}
           >
-            <CustomText variant="h3" fontFamily="gilroyBold" color="black">
+            <CustomText
+              variant="h3"
+              fontFamily="gilroyBold"
+              color="black"
+              style={titleStyle}
+            >
               Phulwari Sharif
             </CustomText>
             <AntDesign name="down" size={18} color="black" />
@@ -48,7 +61,7 @@ const LocationHeader = () => {
           variant="h6"
           color="black"
           numberOfLines={1}
-          style={{ opacity: 0.8 }}
+          style={[{ opacity: 0.8, ...locationTextStyle }]}
         >
           Mitra Mandal Colony, Nagar Nigam Colony, PhulwariSharif, near Shiv
           Mandir

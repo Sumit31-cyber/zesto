@@ -37,7 +37,7 @@ import Animated, {
 import { useSharedState } from "context/sharedContext";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const headerHeight = screenHeight * 0.06;
+export const headerHeight = screenHeight * 0.06;
 
 const Favorite = () => {
   const { favorites } = useSelector((state: RootState) => state.favorite);
@@ -169,7 +169,7 @@ const Favorite = () => {
           <>{favorites.length > 0 && <ListHeaderComponent />}</>
         }
         ListEmptyComponent={ListEmptyComponent}
-        contentContainerStyle={{ paddingBottom: screenHeight * 0.2 }}
+        contentContainerStyle={{ paddingBottom: screenHeight * 0.3 }}
         renderItem={({ item, index }) => {
           return (
             <Animated.View

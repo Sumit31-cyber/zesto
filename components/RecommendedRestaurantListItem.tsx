@@ -36,18 +36,19 @@ const RecommendedRestaurantListItem: React.FC<Props> = ({
   const dispatch = useDispatch();
   const likeAnimationRef = useRef<LottieView>(null);
   const isFavorite = useMemo(() => {
-    const isFav = favorites.find((option) => option.id == item.id);
-
-    return isFav ? true : false;
-  }, [favorites, item]);
+    return favorites.some((option) => option.id === item.id);
+  }, [favorites, item.id]); // Only depend on item.id instead of the whole item
 
   useEffect(() => {
+    // console.log(favorites);
+    if (!likeAnimationRef.current) return;
+
     if (isFavorite) {
-      likeAnimationRef.current?.play(0, 20);
+      likeAnimationRef.current.play(0, 20);
     } else {
-      likeAnimationRef.current?.play(11, 0);
+      likeAnimationRef.current.play(11, 0);
     }
-  }, [isFavorite]);
+  }, [isFavorite]); // Remove item from dependencies if not needed
   return (
     <Pressable
       onPress={onPress}

@@ -31,7 +31,7 @@ const SearchBar = ({ value, onClosePress, ...props }: PropsType) => {
   const showCloseButton = value.length > 0;
 
   return (
-    <View style={{ paddingTop: 10 }}>
+    <View style={{ paddingVertical: 10 }}>
       <View
         style={{
           height: screenHeight * 0.06,

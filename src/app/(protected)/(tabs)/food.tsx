@@ -18,29 +18,17 @@ import {
 } from "assets/svgs/svgs";
 import LocationHeader from "components/LocationHeader";
 import SearchBar from "components/SearchBar";
-import {
-  BORDER_WIDTH,
-  BOTTOM_TAB_HEIGHT,
-  COLORS,
-  screenHeight,
-  screenWidth,
-} from "utils/constants";
+import { BOTTOM_TAB_HEIGHT, COLORS } from "utils/constants";
 import Animated, {
-  Extrapolation,
   interpolate,
   interpolateColor,
-  SharedValue,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
 import { useSharedState } from "context/sharedContext";
-import { Image, ImageBackground } from "expo-image";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import LottieView from "lottie-react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import CustomText from "components/customText";
 import { OfferItem, SectionListDataProps } from "types/types";
 import OfferCarousel from "components/OfferCarousal";
 import HeaderSection from "components/HeaderSection";
@@ -102,7 +90,7 @@ const Food = () => {
     };
   });
 
-  const sectionListData: SectionListDataProps[] = [
+  const sectionListData = [
     {
       id: 0,
       title: "Header",
@@ -152,7 +140,6 @@ const Food = () => {
             },
             shadowOpacity: 0.25,
             shadowRadius: 3.84,
-
             elevation: 5,
           },
         ]}
@@ -174,6 +161,7 @@ const Food = () => {
           paddingBottom: BOTTOM_TAB_HEIGHT + 20,
           backgroundColor: "white",
         }}
+        keyExtractor={(item, index) => index.toString()}
         overScrollMode={"always"}
         onScroll={scrollHandler}
         scrollEventThrottle={16}
@@ -181,9 +169,9 @@ const Food = () => {
         bounces={false}
         nestedScrollEnabled
         showsVerticalScrollIndicator={false}
-        keyExtractor={(item) => item.id}
-        renderSectionHeader={({ section }) => {
-          if (section.title != "Restaurant") {
+        // @ts-ignore
+        renderSectionHeader={({ section: { title } }) => {
+          if (title != "Restaurant") {
             return null;
           }
           return <FilterBar />;

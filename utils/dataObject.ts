@@ -1,3 +1,4 @@
+import { ImageRequireSource } from "react-native";
 import { RecommendedRestaurantDataTypes } from "types/types";
 
 export const foodType  = [
@@ -492,6 +493,205 @@ export const restaurantItemsData : MenuItemList = [
     }
 ];
 
+export const dineOutRestaurantsList : DineOutRestaurant[] = [
+    {
+        id:1,
+        name:"Heaven Spices",
+        address:"Khajpura, Patna",
+        image:"https://media.istockphoto.com/id/1157329688/photo/cafe-store-facade-mockup.jpg?s=612x612&w=0&k=20&c=-ea5sHQMNaS-3Wbytq_parW1POBbQ6q7zbSBffukj0k=",
+        rating:4.4,
+        totalNumberOfRatings:12,
+        menuImages:[
+            "https://media.istockphoto.com/id/526548484/vector/restaurant-cafe-menu-template-design.jpg?s=612x612&w=0&k=20&c=SYfOS5Qx-gcwBcSPefLBCMlJIWI1c-Kd1FeMrQc4W28=",
+            "https://media.istockphoto.com/id/538032970/vector/restaurant-cafe-menu-template-design.jpg?s=612x612&w=0&k=20&c=Vm08v4e4tCSWchmDwfHpE0FWu7MWnBgt_FIZcwjxc8U=",
+            "https://media.istockphoto.com/id/922873252/vector/bagel-menu-restaurant-food-template.jpg?s=612x612&w=0&k=20&c=W2o0VctnNDQRFAMUGM7wYpffEj1oIvCAyPVOWNog5sA=",
+            "https://media.istockphoto.com/id/1031400596/vector/burger-flyer-for-restaurant-vector-food-menu-for-bar-and-cafe-design-template-with-vintage.jpg?s=612x612&w=0&k=20&c=pDtkMZmM1MnsWhlkDE1vUSZ42iAAKVJt-YaQYlydp_0="
+        ],
+        photos:[
+            "https://media.istockphoto.com/id/1162736539/photo/interior-of-a-fine-dining-indian-restaurant.jpg?s=612x612&w=0&k=20&c=h7_CK_Ylxz0Nqjj7sa_f_xWIcfxD_hZe4XnBrxaowNs=",
+            "https://media.istockphoto.com/id/1312767689/photo/fine-dining-restaurant-interior.jpg?s=612x612&w=0&k=20&c=p5Eg5K_2usipfxxqJ4gSaoIkdmb_TsqlE-nfMuBiF1Y=",
+            "https://media.istockphoto.com/id/1804281240/photo/empty-restaurant-fine-dining.jpg?s=612x612&w=0&k=20&c=fmLU8hFki7PdUoBTWDzkzcW4uZH9hBol3jbL93q8A0o=",
+            "https://media.istockphoto.com/id/1131441486/photo/fine-dining-restaurant-in-dubai.jpg?s=612x612&w=0&k=20&c=C7CINZkuXYxCklnTXSwBgxs50UyUn_n_WjFQZl6bOtE=",
+            "https://media.istockphoto.com/id/1163284610/photo/very-stylish-indian-gourmet-restaurant.jpg?s=612x612&w=0&k=20&c=-0Bz0mNjnrDoXApfo6P_xBrKmIMPZYJwQ5zAGEpzThI=",
+            "https://media.istockphoto.com/id/1312767715/photo/fine-dining-restaurant-interior.jpg?s=612x612&w=0&k=20&c=qMQbVCsZn9q4v2mBj7l83BewfTgnaJiuLXXKnicbrx4=",
+        ],
+    },
+    {
+        id:2,
+        name:"Heaven Spices",
+        address:"Khajpura, Patna",
+        image:"https://media.istockphoto.com/id/1065677424/photo/restaurant-pub-in-gastown-downtown-vancouver-canada.jpg?s=612x612&w=0&k=20&c=udXxwJTJigXPHu0nhA-rOllm9o5uyeHF9jhXfInFu1A=",
+        rating:4.4,
+        totalNumberOfRatings:12,
+        menuImages:[
+            "https://media.istockphoto.com/id/526548484/vector/restaurant-cafe-menu-template-design.jpg?s=612x612&w=0&k=20&c=SYfOS5Qx-gcwBcSPefLBCMlJIWI1c-Kd1FeMrQc4W28=",
+            "https://media.istockphoto.com/id/538032970/vector/restaurant-cafe-menu-template-design.jpg?s=612x612&w=0&k=20&c=Vm08v4e4tCSWchmDwfHpE0FWu7MWnBgt_FIZcwjxc8U=",
+            "https://media.istockphoto.com/id/922873252/vector/bagel-menu-restaurant-food-template.jpg?s=612x612&w=0&k=20&c=W2o0VctnNDQRFAMUGM7wYpffEj1oIvCAyPVOWNog5sA=",
+            "https://media.istockphoto.com/id/1031400596/vector/burger-flyer-for-restaurant-vector-food-menu-for-bar-and-cafe-design-template-with-vintage.jpg?s=612x612&w=0&k=20&c=pDtkMZmM1MnsWhlkDE1vUSZ42iAAKVJt-YaQYlydp_0="
+        ],
+        photos:[
+            "https://media.istockphoto.com/id/1162736539/photo/interior-of-a-fine-dining-indian-restaurant.jpg?s=612x612&w=0&k=20&c=h7_CK_Ylxz0Nqjj7sa_f_xWIcfxD_hZe4XnBrxaowNs=",
+            "https://media.istockphoto.com/id/1312767689/photo/fine-dining-restaurant-interior.jpg?s=612x612&w=0&k=20&c=p5Eg5K_2usipfxxqJ4gSaoIkdmb_TsqlE-nfMuBiF1Y=",
+            "https://media.istockphoto.com/id/1804281240/photo/empty-restaurant-fine-dining.jpg?s=612x612&w=0&k=20&c=fmLU8hFki7PdUoBTWDzkzcW4uZH9hBol3jbL93q8A0o=",
+            "https://media.istockphoto.com/id/1131441486/photo/fine-dining-restaurant-in-dubai.jpg?s=612x612&w=0&k=20&c=C7CINZkuXYxCklnTXSwBgxs50UyUn_n_WjFQZl6bOtE=",
+            "https://media.istockphoto.com/id/1163284610/photo/very-stylish-indian-gourmet-restaurant.jpg?s=612x612&w=0&k=20&c=-0Bz0mNjnrDoXApfo6P_xBrKmIMPZYJwQ5zAGEpzThI=",
+            "https://media.istockphoto.com/id/1312767715/photo/fine-dining-restaurant-interior.jpg?s=612x612&w=0&k=20&c=qMQbVCsZn9q4v2mBj7l83BewfTgnaJiuLXXKnicbrx4=",
+        ],
+    },
+    {
+        id:3,
+        name:"Heaven Spices",
+        address:"Khajpura, Patna",
+        image:"https://media.istockphoto.com/id/1422328766/photo/cozy-street-cafe-in-manhattan-with-garland-on-the-top.jpg?s=612x612&w=0&k=20&c=QHfhboLKr2in11v3QHNhlxITaRVEZYXn2gPanTjPBKc=",
+        rating:4.4,
+        totalNumberOfRatings:12,
+        menuImages:[
+            "https://media.istockphoto.com/id/526548484/vector/restaurant-cafe-menu-template-design.jpg?s=612x612&w=0&k=20&c=SYfOS5Qx-gcwBcSPefLBCMlJIWI1c-Kd1FeMrQc4W28=",
+            "https://media.istockphoto.com/id/538032970/vector/restaurant-cafe-menu-template-design.jpg?s=612x612&w=0&k=20&c=Vm08v4e4tCSWchmDwfHpE0FWu7MWnBgt_FIZcwjxc8U=",
+            "https://media.istockphoto.com/id/922873252/vector/bagel-menu-restaurant-food-template.jpg?s=612x612&w=0&k=20&c=W2o0VctnNDQRFAMUGM7wYpffEj1oIvCAyPVOWNog5sA=",
+            "https://media.istockphoto.com/id/1031400596/vector/burger-flyer-for-restaurant-vector-food-menu-for-bar-and-cafe-design-template-with-vintage.jpg?s=612x612&w=0&k=20&c=pDtkMZmM1MnsWhlkDE1vUSZ42iAAKVJt-YaQYlydp_0="
+        ],
+        photos:[
+            "https://media.istockphoto.com/id/1162736539/photo/interior-of-a-fine-dining-indian-restaurant.jpg?s=612x612&w=0&k=20&c=h7_CK_Ylxz0Nqjj7sa_f_xWIcfxD_hZe4XnBrxaowNs=",
+            "https://media.istockphoto.com/id/1312767689/photo/fine-dining-restaurant-interior.jpg?s=612x612&w=0&k=20&c=p5Eg5K_2usipfxxqJ4gSaoIkdmb_TsqlE-nfMuBiF1Y=",
+            "https://media.istockphoto.com/id/1804281240/photo/empty-restaurant-fine-dining.jpg?s=612x612&w=0&k=20&c=fmLU8hFki7PdUoBTWDzkzcW4uZH9hBol3jbL93q8A0o=",
+            "https://media.istockphoto.com/id/1131441486/photo/fine-dining-restaurant-in-dubai.jpg?s=612x612&w=0&k=20&c=C7CINZkuXYxCklnTXSwBgxs50UyUn_n_WjFQZl6bOtE=",
+            "https://media.istockphoto.com/id/1163284610/photo/very-stylish-indian-gourmet-restaurant.jpg?s=612x612&w=0&k=20&c=-0Bz0mNjnrDoXApfo6P_xBrKmIMPZYJwQ5zAGEpzThI=",
+            "https://media.istockphoto.com/id/1312767715/photo/fine-dining-restaurant-interior.jpg?s=612x612&w=0&k=20&c=qMQbVCsZn9q4v2mBj7l83BewfTgnaJiuLXXKnicbrx4=",
+        ],
+    },
+    {
+        id:4,
+        name:"Heaven Spices",
+        address:"Khajpura, Patna",
+        image:"https://media.istockphoto.com/id/1277176136/photo/empty-coffee-and-restaurant-terrace-with-tables-and-chairs-in-london-indie-and-hipster-style.jpg?s=612x612&w=0&k=20&c=93D50nlTsG5td6mpC-PiRhm56PEl-8aZpa5_NHSUiSU=",
+        rating:4.4,
+        totalNumberOfRatings:12,
+        menuImages:[
+            "https://media.istockphoto.com/id/526548484/vector/restaurant-cafe-menu-template-design.jpg?s=612x612&w=0&k=20&c=SYfOS5Qx-gcwBcSPefLBCMlJIWI1c-Kd1FeMrQc4W28=",
+            "https://media.istockphoto.com/id/538032970/vector/restaurant-cafe-menu-template-design.jpg?s=612x612&w=0&k=20&c=Vm08v4e4tCSWchmDwfHpE0FWu7MWnBgt_FIZcwjxc8U=",
+            "https://media.istockphoto.com/id/922873252/vector/bagel-menu-restaurant-food-template.jpg?s=612x612&w=0&k=20&c=W2o0VctnNDQRFAMUGM7wYpffEj1oIvCAyPVOWNog5sA=",
+            "https://media.istockphoto.com/id/1031400596/vector/burger-flyer-for-restaurant-vector-food-menu-for-bar-and-cafe-design-template-with-vintage.jpg?s=612x612&w=0&k=20&c=pDtkMZmM1MnsWhlkDE1vUSZ42iAAKVJt-YaQYlydp_0="
+        ],
+        photos:[
+            "https://media.istockphoto.com/id/1162736539/photo/interior-of-a-fine-dining-indian-restaurant.jpg?s=612x612&w=0&k=20&c=h7_CK_Ylxz0Nqjj7sa_f_xWIcfxD_hZe4XnBrxaowNs=",
+            "https://media.istockphoto.com/id/1312767689/photo/fine-dining-restaurant-interior.jpg?s=612x612&w=0&k=20&c=p5Eg5K_2usipfxxqJ4gSaoIkdmb_TsqlE-nfMuBiF1Y=",
+            "https://media.istockphoto.com/id/1804281240/photo/empty-restaurant-fine-dining.jpg?s=612x612&w=0&k=20&c=fmLU8hFki7PdUoBTWDzkzcW4uZH9hBol3jbL93q8A0o=",
+            "https://media.istockphoto.com/id/1131441486/photo/fine-dining-restaurant-in-dubai.jpg?s=612x612&w=0&k=20&c=C7CINZkuXYxCklnTXSwBgxs50UyUn_n_WjFQZl6bOtE=",
+            "https://media.istockphoto.com/id/1163284610/photo/very-stylish-indian-gourmet-restaurant.jpg?s=612x612&w=0&k=20&c=-0Bz0mNjnrDoXApfo6P_xBrKmIMPZYJwQ5zAGEpzThI=",
+            "https://media.istockphoto.com/id/1312767715/photo/fine-dining-restaurant-interior.jpg?s=612x612&w=0&k=20&c=qMQbVCsZn9q4v2mBj7l83BewfTgnaJiuLXXKnicbrx4=",
+        ],
+    },
+    {
+        id:5,
+        name:"Heaven Spices",
+        address:"Khajpura, Patna",
+        image:"https://media.istockphoto.com/id/927019058/photo/green-cafe-on-a-small-street.jpg?s=612x612&w=0&k=20&c=O4iZumzQnN_FdSWDFqBvrQ28fEvUf3XkfU7KwKR1u1I=",
+        rating:4.4,
+        totalNumberOfRatings:12,
+        menuImages:[
+            "https://media.istockphoto.com/id/526548484/vector/restaurant-cafe-menu-template-design.jpg?s=612x612&w=0&k=20&c=SYfOS5Qx-gcwBcSPefLBCMlJIWI1c-Kd1FeMrQc4W28=",
+            "https://media.istockphoto.com/id/538032970/vector/restaurant-cafe-menu-template-design.jpg?s=612x612&w=0&k=20&c=Vm08v4e4tCSWchmDwfHpE0FWu7MWnBgt_FIZcwjxc8U=",
+            "https://media.istockphoto.com/id/922873252/vector/bagel-menu-restaurant-food-template.jpg?s=612x612&w=0&k=20&c=W2o0VctnNDQRFAMUGM7wYpffEj1oIvCAyPVOWNog5sA=",
+            "https://media.istockphoto.com/id/1031400596/vector/burger-flyer-for-restaurant-vector-food-menu-for-bar-and-cafe-design-template-with-vintage.jpg?s=612x612&w=0&k=20&c=pDtkMZmM1MnsWhlkDE1vUSZ42iAAKVJt-YaQYlydp_0="
+        ],
+        photos:[
+            "https://media.istockphoto.com/id/1162736539/photo/interior-of-a-fine-dining-indian-restaurant.jpg?s=612x612&w=0&k=20&c=h7_CK_Ylxz0Nqjj7sa_f_xWIcfxD_hZe4XnBrxaowNs=",
+            "https://media.istockphoto.com/id/1312767689/photo/fine-dining-restaurant-interior.jpg?s=612x612&w=0&k=20&c=p5Eg5K_2usipfxxqJ4gSaoIkdmb_TsqlE-nfMuBiF1Y=",
+            "https://media.istockphoto.com/id/1804281240/photo/empty-restaurant-fine-dining.jpg?s=612x612&w=0&k=20&c=fmLU8hFki7PdUoBTWDzkzcW4uZH9hBol3jbL93q8A0o=",
+            "https://media.istockphoto.com/id/1131441486/photo/fine-dining-restaurant-in-dubai.jpg?s=612x612&w=0&k=20&c=C7CINZkuXYxCklnTXSwBgxs50UyUn_n_WjFQZl6bOtE=",
+            "https://media.istockphoto.com/id/1163284610/photo/very-stylish-indian-gourmet-restaurant.jpg?s=612x612&w=0&k=20&c=-0Bz0mNjnrDoXApfo6P_xBrKmIMPZYJwQ5zAGEpzThI=",
+            "https://media.istockphoto.com/id/1312767715/photo/fine-dining-restaurant-interior.jpg?s=612x612&w=0&k=20&c=qMQbVCsZn9q4v2mBj7l83BewfTgnaJiuLXXKnicbrx4=",
+        ],
+    },
+    {
+        id:6,
+        name:"Heaven Spices",
+        address:"Khajpura, Patna",
+        image:"https://media.istockphoto.com/id/1059273012/photo/montmartre-in-paris-france.jpg?s=612x612&w=0&k=20&c=zM_ouiDaeRy21evIq872Oa1ivhZawuCQV2lXMNySk3U=",
+        rating:4.4,
+        totalNumberOfRatings:12,
+        menuImages:[
+            "https://media.istockphoto.com/id/526548484/vector/restaurant-cafe-menu-template-design.jpg?s=612x612&w=0&k=20&c=SYfOS5Qx-gcwBcSPefLBCMlJIWI1c-Kd1FeMrQc4W28=",
+            "https://media.istockphoto.com/id/538032970/vector/restaurant-cafe-menu-template-design.jpg?s=612x612&w=0&k=20&c=Vm08v4e4tCSWchmDwfHpE0FWu7MWnBgt_FIZcwjxc8U=",
+            "https://media.istockphoto.com/id/922873252/vector/bagel-menu-restaurant-food-template.jpg?s=612x612&w=0&k=20&c=W2o0VctnNDQRFAMUGM7wYpffEj1oIvCAyPVOWNog5sA=",
+            "https://media.istockphoto.com/id/1031400596/vector/burger-flyer-for-restaurant-vector-food-menu-for-bar-and-cafe-design-template-with-vintage.jpg?s=612x612&w=0&k=20&c=pDtkMZmM1MnsWhlkDE1vUSZ42iAAKVJt-YaQYlydp_0="
+        ],
+        photos:[
+            "https://media.istockphoto.com/id/1162736539/photo/interior-of-a-fine-dining-indian-restaurant.jpg?s=612x612&w=0&k=20&c=h7_CK_Ylxz0Nqjj7sa_f_xWIcfxD_hZe4XnBrxaowNs=",
+            "https://media.istockphoto.com/id/1312767689/photo/fine-dining-restaurant-interior.jpg?s=612x612&w=0&k=20&c=p5Eg5K_2usipfxxqJ4gSaoIkdmb_TsqlE-nfMuBiF1Y=",
+            "https://media.istockphoto.com/id/1804281240/photo/empty-restaurant-fine-dining.jpg?s=612x612&w=0&k=20&c=fmLU8hFki7PdUoBTWDzkzcW4uZH9hBol3jbL93q8A0o=",
+            "https://media.istockphoto.com/id/1131441486/photo/fine-dining-restaurant-in-dubai.jpg?s=612x612&w=0&k=20&c=C7CINZkuXYxCklnTXSwBgxs50UyUn_n_WjFQZl6bOtE=",
+            "https://media.istockphoto.com/id/1163284610/photo/very-stylish-indian-gourmet-restaurant.jpg?s=612x612&w=0&k=20&c=-0Bz0mNjnrDoXApfo6P_xBrKmIMPZYJwQ5zAGEpzThI=",
+            "https://media.istockphoto.com/id/1312767715/photo/fine-dining-restaurant-interior.jpg?s=612x612&w=0&k=20&c=qMQbVCsZn9q4v2mBj7l83BewfTgnaJiuLXXKnicbrx4=",
+        ],
+    },
+    {
+        id:7,
+        name:"Heaven Spices",
+        address:"Khajpura, Patna",
+        image:"https://media.istockphoto.com/id/813380370/photo/antwerp-city-in-belgium.jpg?s=612x612&w=0&k=20&c=DsKAVyRSw26sndMDKR5aFxVcvTdF_8szTQmGom3rutk=",
+        rating:4.4,
+        totalNumberOfRatings:12,
+        menuImages:[
+            "https://media.istockphoto.com/id/526548484/vector/restaurant-cafe-menu-template-design.jpg?s=612x612&w=0&k=20&c=SYfOS5Qx-gcwBcSPefLBCMlJIWI1c-Kd1FeMrQc4W28=",
+            "https://media.istockphoto.com/id/538032970/vector/restaurant-cafe-menu-template-design.jpg?s=612x612&w=0&k=20&c=Vm08v4e4tCSWchmDwfHpE0FWu7MWnBgt_FIZcwjxc8U=",
+            "https://media.istockphoto.com/id/922873252/vector/bagel-menu-restaurant-food-template.jpg?s=612x612&w=0&k=20&c=W2o0VctnNDQRFAMUGM7wYpffEj1oIvCAyPVOWNog5sA=",
+            "https://media.istockphoto.com/id/1031400596/vector/burger-flyer-for-restaurant-vector-food-menu-for-bar-and-cafe-design-template-with-vintage.jpg?s=612x612&w=0&k=20&c=pDtkMZmM1MnsWhlkDE1vUSZ42iAAKVJt-YaQYlydp_0="
+        ],
+        photos:[
+            "https://media.istockphoto.com/id/1162736539/photo/interior-of-a-fine-dining-indian-restaurant.jpg?s=612x612&w=0&k=20&c=h7_CK_Ylxz0Nqjj7sa_f_xWIcfxD_hZe4XnBrxaowNs=",
+            "https://media.istockphoto.com/id/1312767689/photo/fine-dining-restaurant-interior.jpg?s=612x612&w=0&k=20&c=p5Eg5K_2usipfxxqJ4gSaoIkdmb_TsqlE-nfMuBiF1Y=",
+            "https://media.istockphoto.com/id/1804281240/photo/empty-restaurant-fine-dining.jpg?s=612x612&w=0&k=20&c=fmLU8hFki7PdUoBTWDzkzcW4uZH9hBol3jbL93q8A0o=",
+            "https://media.istockphoto.com/id/1131441486/photo/fine-dining-restaurant-in-dubai.jpg?s=612x612&w=0&k=20&c=C7CINZkuXYxCklnTXSwBgxs50UyUn_n_WjFQZl6bOtE=",
+            "https://media.istockphoto.com/id/1163284610/photo/very-stylish-indian-gourmet-restaurant.jpg?s=612x612&w=0&k=20&c=-0Bz0mNjnrDoXApfo6P_xBrKmIMPZYJwQ5zAGEpzThI=",
+            "https://media.istockphoto.com/id/1312767715/photo/fine-dining-restaurant-interior.jpg?s=612x612&w=0&k=20&c=qMQbVCsZn9q4v2mBj7l83BewfTgnaJiuLXXKnicbrx4=",
+        ],
+    },
+]
+
+
+export const restaurantType : RestaurantTypeTypes[] = [
+    {
+        id:0,
+        type:"Pure veg",
+        image:require('assets/pureVeg.jpg')
+    },
+    {
+        id:1,
+        type:"Family Dining",
+   image:require('assets/familyDining.jpg')
+    },
+    {
+        id:2,
+        type:"Outdoor Dining",
+   image:require('assets/outdoor.jpg')
+    },
+    {
+        id:3,
+        type:"Cafe",
+   image:require('assets/cafe.jpg')
+    },
+    {
+        id:4,
+        type:"Breakfast",
+   image:require('assets/breakfast.jpg')
+    },
+    {
+        id:5,
+        type:"Drink & Dine",
+   image:require('assets/drinkAndDine.jpg')
+    },
+]
+
+export type RestaurantTypeTypes = {
+    id: number;
+    type: string;
+    image: ImageRequireSource; // Use 'any' for require() images, or better:
+    // image: ImageRequireSource; // More specific type from React Native
+  };
+  
+
 
 export const filtersOption = [
     'veg',
@@ -513,7 +713,16 @@ export const restaurantsItemFiltersOption = [
     'Sweets'
 ]
 
-
+export type DineOutRestaurant = {
+    id: number;
+    name: string;
+    address: string;
+    image: string;
+    rating: number;
+    totalNumberOfRatings: number;
+    menuImages: string[];
+    photos: string[];
+  };
 export type CustomizationOption = {
     name: string;
     price: number;
