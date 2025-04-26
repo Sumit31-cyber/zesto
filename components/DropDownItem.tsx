@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
 import React, { useMemo } from "react";
 import { COLORS, PADDING_HORIZONTAL } from "utils/constants";
 import Animated, {
@@ -186,7 +186,13 @@ const DropDownItem: React.FC<Props> = ({
             />
           </View>
         </View>
-        <View
+        <TouchableOpacity
+          onPress={() => {
+            router.navigate({
+              pathname: "/(protected)/cart",
+              params: { cartItemData: JSON.stringify(item) },
+            });
+          }}
           style={{
             backgroundColor: COLORS.primary,
             paddingHorizontal: 20,
@@ -203,7 +209,7 @@ const DropDownItem: React.FC<Props> = ({
           <CustomText variant="h7" color="white">
             {foodQuantity} items
           </CustomText>
-        </View>
+        </TouchableOpacity>
       </Pressable>
     </Animated.View>
   );

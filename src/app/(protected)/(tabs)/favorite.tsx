@@ -100,7 +100,7 @@ const Favorite = () => {
               alignItems: "center",
             }}
           >
-            <AntDesign name="arrowleft" size={24} color="white" />
+            <AntDesign name="arrowleft" size={RFValue(18)} color="white" />
           </TouchableOpacity>
         </View>
 
@@ -139,7 +139,7 @@ const Favorite = () => {
                 zIndex: 100,
               }}
             >
-              <AntDesign name="arrowleft" size={24} color="black" />
+              <AntDesign name="arrowleft" size={RFValue(18)} color="black" />
             </TouchableOpacity>
             <View
               style={{
