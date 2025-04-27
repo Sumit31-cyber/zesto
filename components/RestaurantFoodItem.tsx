@@ -138,7 +138,7 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
                 <View
                   style={{
                     width: BORDER_WIDTH,
-                    backgroundColor: COLORS.liteGray,
+                    backgroundColor: COLORS.gray,
                     height: 20,
                     marginHorizontal: 10,
                   }}
@@ -162,7 +162,7 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
             style={{
               flexDirection: "row",
               borderWidth: BORDER_WIDTH,
-              borderColor: COLORS.liteGray,
+              borderColor: COLORS.gray,
               borderRadius: 100,
               alignSelf: "flex-start",
               padding: 5,
@@ -280,7 +280,7 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
           </View>
         </View>
       </View>
-      <DashedLine style={{ borderColor: COLORS.liteGray }} />
+      <DashedLine style={{ borderColor: COLORS.gray }} />
     </View>
   );
 };

@@ -211,41 +211,7 @@ const DineOut = () => {
         bounces={false}
         nestedScrollEnabled
         showsVerticalScrollIndicator={false}
-        // keyExtractor={(item) => item.id}
       />
-      {/* <Animated.ScrollView
-        scrollEventThrottle={16}
-        onScroll={scrollHandler}
-        bounces={false}
-        // contentContainerStyle={{ flex: 1 }}
-      >
-        <View style={{ backgroundColor: "white" }}>
-          <SectionHeader title="In the limelight" />
-          <LimelightRestaurantCarousal />
-          <SectionHeader
-            title="What are you looking for"
-            style={{ marginTop: RFValue(30) }}
-          />
-          <RestaurantTypeSection />
-          <SectionHeader
-            title="Popular restaurants around you"
-            style={{ marginTop: RFValue(30) }}
-          />
-          <CustomText
-            variant="h7"
-            style={{
-              textTransform: "uppercase",
-              textAlign: "center",
-              color: COLORS.liteGray,
-              letterSpacing: 0.8,
-              marginBottom: RFValue(15),
-            }}
-          >
-            Featured
-          </CustomText>
-          <FeaturedRestaurantsSection />
-        </View>
-      </Animated.ScrollView> */}
     </View>
   );
 };

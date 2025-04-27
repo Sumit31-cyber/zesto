@@ -7,7 +7,7 @@ const Divider = () => {
     <View
       style={{
         height: BORDER_WIDTH,
-        backgroundColor: COLORS.liteGray,
+        backgroundColor: COLORS.gray,
         width: "100%",
       }}
     />

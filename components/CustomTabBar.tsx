@@ -97,7 +97,7 @@ const CustomTabBar: FC<BottomTabBarProps> = ({
             }
           };
 
-          const iconColor = isFocused ? COLORS.black : COLORS.liteGray;
+          const iconColor = isFocused ? COLORS.black : COLORS.gray;
           return (
             <Pressable
               onPress={onPress}

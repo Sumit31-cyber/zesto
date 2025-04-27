@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 5,
-    borderWidth: BORDER_WIDTH,
+    borderWidth: BORDER_WIDTH * 2,
     height: "100%",
     paddingHorizontal: RFValue(10),
     borderColor: COLORS.liteGray,

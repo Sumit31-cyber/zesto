@@ -11,7 +11,7 @@ export const COLORS = {
     primary: '#0fb758',
     gray:"#adb5bd",
     darkGray:"#7d8593",
-    liteGray:'#adb5bd',
+    liteGray:'#eceff2',
     black:"#141414"
 }
 

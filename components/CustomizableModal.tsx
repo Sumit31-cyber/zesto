@@ -335,7 +335,7 @@ const Header = ({ item }: { item: MenuItem }) => {
         style={{
           flexDirection: "row",
           borderWidth: BORDER_WIDTH,
-          borderColor: COLORS.liteGray,
+          borderColor: COLORS.gray,
           borderRadius: 100,
           padding: 5,
           marginLeft: "auto",
