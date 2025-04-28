@@ -10,7 +10,7 @@ import Animated, {
 import { RestaurantCart } from "utils/dataObject";
 import { Image } from "expo-image";
 import CustomText from "./customText";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import {
   _dropDownItemHeight,
   _dropDownItemMargin,
@@ -18,6 +18,9 @@ import {
 } from "./Dropdown";
 import { router } from "expo-router";
 import { wait } from "utils/functions";
+import { RFValue } from "react-native-responsive-fontsize";
+import { useDispatch } from "react-redux";
+import { removeAllItemFromRestaurant } from "redux/slice/cartSlice";
 
 export type ItemType = {
   id: number;
@@ -35,6 +38,7 @@ const DropDownItem: React.FC<Props> = ({
   dropdownItemLength,
   expanded,
 }) => {
+  const dispatch = useDispatch();
   const foodQuantity = useMemo(() => {
     const quantity = item.items.reduce((acc, curr) => acc + curr.quantity, 0);
 
@@ -209,6 +213,25 @@ const DropDownItem: React.FC<Props> = ({
           <CustomText variant="h7" color="white">
             {foodQuantity} items
           </CustomText>
+        </TouchableOpacity>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => {
+            dispatch(
+              removeAllItemFromRestaurant({ restaurantId: item.restaurant.id })
+            );
+          }}
+          style={{
+            backgroundColor: "#ff5f4d",
+            paddingHorizontal: RFValue(3),
+            paddingVertical: 6,
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius: 4,
+            marginLeft: 10,
+          }}
+        >
+          <MaterialIcons name="delete" size={RFValue(14)} color="white" />
         </TouchableOpacity>
       </Pressable>
     </Animated.View>
