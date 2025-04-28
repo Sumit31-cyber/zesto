@@ -76,11 +76,26 @@ const cartSlice = createSlice({
     clearAllCart: (state, action) => {
       state.carts = []
     },
-    clearRestaurantCart: (state, action) => {},
+    removeAllItemFromRestaurant : (state, action) => {
+      const { restaurantId } = action.payload;
+
+      console.log(restaurantId)
+      const existingRestaurant = state.carts.find(cart => cart.restaurant.id === restaurantId)
+
+      console.log(existingRestaurant)
+
+      if (existingRestaurant) {
+        console.log('Filtering')
+        state.carts = state.carts.filter(cart => cart.restaurant.id !== restaurantId);
+      }
+    },
+    clearRestaurantCart: (state, action) => {
+
+    },
   },
 });
 
-export const {addItemToCart,clearAllCart, removeItemFromCart} = cartSlice.actions;
+export const {addItemToCart,clearAllCart, removeItemFromCart,removeAllItemFromRestaurant} = cartSlice.actions;
 
 // Export the reducer
 export default cartSlice.reducer;

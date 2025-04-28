@@ -38,7 +38,7 @@ import { RFValue } from "react-native-responsive-fontsize";
 import { dineOutRestaurantsList, restaurantType } from "utils/dataObject";
 import { LinearGradient } from "expo-linear-gradient";
 import { AntDesign } from "@expo/vector-icons";
-import { headerHeight } from "./favorite";
+import { headerHeight } from "components/CustomHeader";
 
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
 

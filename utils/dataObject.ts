@@ -802,3 +802,19 @@ export type CustomizationOption = {
     favorites:RecommendedRestaurantDataTypes[]
   }
   
+
+  export interface OrderHistoryType {
+    restaurant:RecommendedRestaurantDataTypes;
+    foodItems:CartItem[];
+    totalItemAmount:number;
+    deliveryCharge : number;
+    deliveryTip:number;
+    otherCharges:number;
+    totalAmountPaid:number;
+    createdAt:string;
+  }
+
+  export interface OrderHistoryState {
+    orders: OrderHistoryType[];
+  }
+  

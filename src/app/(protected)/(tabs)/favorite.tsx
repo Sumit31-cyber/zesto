@@ -36,8 +36,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useSharedState } from "context/sharedContext";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-
-export const headerHeight = screenHeight * 0.06;
+import { headerHeight } from "components/CustomHeader";
 
 const Favorite = () => {
   const { favorites } = useSelector((state: RootState) => state.favorite);

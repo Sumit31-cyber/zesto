@@ -8,7 +8,6 @@ import {
   View,
 } from "react-native";
 import React, { useState } from "react";
-import { headerHeight } from "./(tabs)/favorite";
 import {
   AntDesign,
   Feather,
@@ -41,6 +40,10 @@ import Animated, {
 } from "react-native-reanimated";
 import { StatusBar } from "expo-status-bar";
 import Divider from "components/Divider";
+import { useDispatch } from "react-redux";
+import { addToOrderHistory } from "redux/slice/orderHistorySlice";
+import CustomHeader, { headerHeight } from "components/CustomHeader";
+import { removeAllItemFromRestaurant } from "redux/slice/cartSlice";
 
 const _boxBorderRadius = 14;
 const deliveryCharges = 48.0;
@@ -59,6 +62,34 @@ const Cart = () => {
   const [selectedTip, setSelectedTip] = useState<null | number>(null);
 
   const { top, bottom } = useSafeAreaInsets();
+  const dispatch = useDispatch();
+
+  const toPay = (
+    cartItemPrice +
+    otherCharges +
+    deliveryCharges +
+    (selectedTip ? selectedTip : 0)
+  ).toLocaleString();
+
+  const paymentHandler = () => {
+    dispatch(
+      addToOrderHistory({
+        restaurant: parsedCartData.restaurant,
+        foodItems: parsedCartData.items,
+        deliveryCharge: deliveryCharges,
+        otherCharges: otherCharges,
+        totalItemAmount: toPay,
+        totalAmountPaid: toPay,
+        deliveryTip: selectedTip,
+      })
+    );
+
+    dispatch(
+      removeAllItemFromRestaurant({
+        restaurantId: parsedCartData.restaurant.id,
+      })
+    );
+  };
 
   return (
     <View style={{ backgroundColor: "#eceff2", flex: 1 }}>
@@ -66,32 +97,9 @@ const Cart = () => {
       <PaymentSection
         selectedTip={selectedTip || 0}
         totalPrice={cartItemPrice}
+        onPayButtonPress={paymentHandler}
       />
-      <View
-        style={{
-          paddingTop: top,
-          //   paddingTop: top,
-          height: headerHeight + top,
-          width: "100%",
-          alignItems: "center",
-          paddingHorizontal: PADDING_HORIZONTAL,
-          flexDirection: "row",
-          gap: RFValue(8),
-          backgroundColor: "white",
-        }}
-      >
-        <TouchableOpacity
-          onPress={() => router.back()}
-          style={{
-            aspectRatio: 1,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <AntDesign name="arrowleft" size={RFValue(18)} color="black" />
-        </TouchableOpacity>
-        <CustomText variant="h6">{parsedCartData.restaurant.name}</CustomText>
-      </View>
+      <CustomHeader title={parsedCartData.restaurant.name} />
 
       <ScrollView
         contentContainerStyle={{
@@ -122,9 +130,11 @@ const styles = StyleSheet.create({});
 const PaymentSection = ({
   totalPrice,
   selectedTip = 0,
+  onPayButtonPress,
 }: {
   totalPrice: number;
   selectedTip: number;
+  onPayButtonPress: () => void;
 }) => {
   const toPay = (
     totalPrice +
@@ -132,7 +142,7 @@ const PaymentSection = ({
     deliveryCharges +
     selectedTip
   ).toLocaleString();
-  const { top, bottom } = useSafeAreaInsets();
+  const { bottom } = useSafeAreaInsets();
 
   return (
     <View
@@ -147,7 +157,7 @@ const PaymentSection = ({
         alignItems: "center",
         justifyContent: "space-between",
         paddingVertical: RFValue(16),
-        paddingBottom: bottom,
+        paddingBottom: bottom + RFValue(10),
       }}
     >
       <View style={{ flex: 1, gap: 10 }}>
@@ -165,7 +175,11 @@ const PaymentSection = ({
               style={{ height: RFValue(14), aspectRatio: 1 }}
             />
           </View>
-          <CustomText variant="h6" color={COLORS.darkGray}>
+          <CustomText
+            variant="h6"
+            color={COLORS.darkGray}
+            style={{ textTransform: "uppercase" }}
+          >
             Pay using
           </CustomText>
           <AntDesign
@@ -178,10 +192,13 @@ const PaymentSection = ({
           Google Pay
         </CustomText>
       </View>
-      <View
+      <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={onPayButtonPress}
         style={{
-          height: RFValue(50),
-          flex: 1,
+          height: RFValue(40),
+          paddingHorizontal: RFValue(30),
+          // flex: 1,
           backgroundColor: COLORS.primary,
           borderRadius: 14,
           alignItems: "center",
@@ -193,7 +210,7 @@ const PaymentSection = ({
             ₹{toPay}
           </CustomText>
         </View>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };
