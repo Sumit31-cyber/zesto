@@ -1,4 +1,5 @@
 import {
+  Pressable,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -39,8 +40,11 @@ import Animated, {
   ZoomOut,
 } from "react-native-reanimated";
 import { StatusBar } from "expo-status-bar";
+import Divider from "components/Divider";
 
 const _boxBorderRadius = 14;
+const deliveryCharges = 48.0;
+const otherCharges = 56.34;
 
 const Cart = () => {
   const { cartItemData } = useLocalSearchParams<{ cartItemData: string }>();
@@ -48,11 +52,21 @@ const Cart = () => {
     ? JSON.parse(cartItemData)
     : {};
 
+  const cartItemPrice = parsedCartData.items.reduce((acc, curr) => {
+    return curr.price + acc;
+  }, 0);
+
+  const [selectedTip, setSelectedTip] = useState<null | number>(null);
+
   const { top, bottom } = useSafeAreaInsets();
 
   return (
     <View style={{ backgroundColor: "#eceff2", flex: 1 }}>
       <StatusBar animated={true} style="dark" />
+      <PaymentSection
+        selectedTip={selectedTip || 0}
+        totalPrice={cartItemPrice}
+      />
       <View
         style={{
           paddingTop: top,
@@ -79,11 +93,24 @@ const Cart = () => {
         <CustomText variant="h6">{parsedCartData.restaurant.name}</CustomText>
       </View>
 
-      <View style={{ margin: PADDING_HORIZONTAL, gap: RFValue(10) }}>
+      <ScrollView
+        contentContainerStyle={{
+          gap: RFValue(10),
+          padding: PADDING_HORIZONTAL,
+          paddingBottom: RFValue(120),
+        }}
+      >
         <RenderCartItemSection cartItems={parsedCartData.items} />
         <CouponsSection />
-        <DeliveryInstructionSection />
-      </View>
+        <DeliveryInstructionSection
+          selectedTip={selectedTip}
+          setSelectedTip={setSelectedTip}
+        />
+        <BillSection
+          totalPrice={cartItemPrice}
+          selectedTip={selectedTip || 0}
+        />
+      </ScrollView>
     </View>
   );
 };
@@ -91,6 +118,233 @@ const Cart = () => {
 export default Cart;
 
 const styles = StyleSheet.create({});
+
+const PaymentSection = ({
+  totalPrice,
+  selectedTip = 0,
+}: {
+  totalPrice: number;
+  selectedTip: number;
+}) => {
+  const toPay = (
+    totalPrice +
+    otherCharges +
+    deliveryCharges +
+    selectedTip
+  ).toLocaleString();
+  const { top, bottom } = useSafeAreaInsets();
+
+  return (
+    <View
+      style={{
+        position: "absolute",
+        zIndex: 100,
+        width: "100%",
+        bottom: 0,
+        backgroundColor: "white",
+        padding: PADDING_HORIZONTAL,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        paddingVertical: RFValue(16),
+        paddingBottom: bottom,
+      }}
+    >
+      <View style={{ flex: 1, gap: 10 }}>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+          <View
+            style={{
+              borderWidth: BORDER_WIDTH,
+              borderColor: COLORS.liteGray,
+              padding: 3,
+              borderRadius: 10,
+            }}
+          >
+            <Image
+              source={require("assets/images/gpay.png")}
+              style={{ height: RFValue(14), aspectRatio: 1 }}
+            />
+          </View>
+          <CustomText variant="h6" color={COLORS.darkGray}>
+            Pay using
+          </CustomText>
+          <AntDesign
+            name="caretup"
+            color={COLORS.darkGray}
+            size={RFValue(10)}
+          />
+        </View>
+        <CustomText variant="h6" fontFamily="gilroySemiBold">
+          Google Pay
+        </CustomText>
+      </View>
+      <View
+        style={{
+          height: RFValue(50),
+          flex: 1,
+          backgroundColor: COLORS.primary,
+          borderRadius: 14,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <CustomText variant="h4" fontFamily="gilroyBold" color="white">
+            ₹{toPay}
+          </CustomText>
+        </View>
+      </View>
+    </View>
+  );
+};
+
+const BillSection = ({
+  totalPrice,
+  selectedTip = 0,
+}: {
+  totalPrice: number;
+  selectedTip: number;
+}) => {
+  const toPay = (
+    totalPrice +
+    otherCharges +
+    deliveryCharges +
+    selectedTip
+  ).toLocaleString();
+  return (
+    <View
+      style={{
+        paddingVertical: PADDING_HORIZONTAL,
+        backgroundColor: "white",
+        borderRadius: _boxBorderRadius,
+      }}
+    >
+      <View
+        style={{
+          flexDirection: "row",
+          gap: 10,
+          paddingHorizontal: PADDING_HORIZONTAL,
+        }}
+      >
+        <View
+          style={{
+            backgroundColor: COLORS.primary,
+            padding: RFValue(4),
+            borderRadius: 4,
+            alignSelf: "flex-start",
+          }}
+        >
+          <FontAwesome5 name="receipt" size={RFValue(8)} color="white" />
+        </View>
+        <View style={{ gap: 4 }}>
+          <CustomText variant="h7" fontFamily="gilroyMedium">
+            To Pay ₹{toPay}{" "}
+          </CustomText>
+          <CustomText variant="h7" color={COLORS.darkGray}>
+            Incl. all taxes & charges
+          </CustomText>
+        </View>
+        <AntDesign
+          name="up"
+          size={RFValue(10)}
+          style={{ marginLeft: "auto" }}
+        />
+      </View>
+      <Divider style={{ marginVertical: 14 }} />
+
+      <View style={{ paddingHorizontal: PADDING_HORIZONTAL, gap: 10 }}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <CustomText variant="h7" color={COLORS.darkGray}>
+            Item Total
+          </CustomText>
+          <CustomText variant="h7" fontFamily="gilroyMedium">
+            ₹{totalPrice}
+          </CustomText>
+        </View>
+
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <CustomText variant="h7" color={COLORS.darkGray}>
+            Delivery Free | 7 Kms
+          </CustomText>
+          <CustomText variant="h7" fontFamily="gilroyMedium">
+            ₹48.00
+          </CustomText>
+        </View>
+      </View>
+      <DashedLine
+        style={{ backgroundColor: COLORS.darkGray, marginVertical: 14 }}
+      />
+      <View style={{ paddingHorizontal: PADDING_HORIZONTAL, gap: 10 }}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <CustomText variant="h7" color={COLORS.darkGray}>
+            Delivery Tip
+          </CustomText>
+          <CustomText
+            variant="h7"
+            fontFamily="gilroyMedium"
+            color={selectedTip ? "black" : COLORS.primary}
+          >
+            {selectedTip ? ` ₹${selectedTip}.00` : "Add tip"}
+          </CustomText>
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <CustomText variant="h7" color={COLORS.darkGray}>
+            GST & Other Charges
+          </CustomText>
+          <CustomText variant="h7" fontFamily="gilroyMedium">
+            ₹{otherCharges}
+          </CustomText>
+        </View>
+      </View>
+      <DashedLine
+        style={{ backgroundColor: COLORS.darkGray, marginVertical: 14 }}
+      />
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          paddingHorizontal: PADDING_HORIZONTAL,
+        }}
+      >
+        <CustomText
+          variant="h7"
+          color={COLORS.darkGray}
+          fontFamily="gilroyBold"
+        >
+          To Pay
+        </CustomText>
+        <CustomText variant="h7" fontFamily="gilroyBold">
+          ₹{toPay}
+        </CustomText>
+      </View>
+    </View>
+  );
+};
 
 interface RenderCartItemSectionProp {
   cartItems: CartItem[];
@@ -335,12 +589,17 @@ const CouponsSection = () => {
     </View>
   );
 };
-const DeliveryInstructionSection = () => {
+const DeliveryInstructionSection = ({
+  selectedTip,
+  setSelectedTip,
+}: {
+  selectedTip: null | number;
+  setSelectedTip: (value: null | number) => void;
+}) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedDeliveryType, setSelectedDeliveryType] = useState(
     deliveryType[0]
   );
-  const [selectedTip, setSelectedTip] = useState<null | number>(null);
   return (
     <View
       style={{
@@ -360,6 +619,7 @@ const DeliveryInstructionSection = () => {
           {deliveryType.map((item, index) => {
             return (
               <TouchableOpacity
+                key={index}
                 activeOpacity={0.8}
                 onPress={() => setSelectedDeliveryType(item)}
               >
@@ -461,7 +721,8 @@ const DeliveryInstructionSection = () => {
                   </CustomText>
 
                   {selectedTip === item && (
-                    <View
+                    <Pressable
+                      onPress={() => setSelectedTip(null)}
                       style={{
                         backgroundColor: COLORS.primary,
                         padding: RFValue(2),
@@ -475,7 +736,7 @@ const DeliveryInstructionSection = () => {
                         size={RFValue(7)}
                         color={"white"}
                       />
-                    </View>
+                    </Pressable>
                   )}
                   {item === 30 && selectedTip !== item && (
                     <View
