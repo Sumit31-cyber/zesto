@@ -28,6 +28,8 @@ interface SharedContextType {
   selectedCustomizableItem: CurrentCartItem;
   setSelectedCustomizableItem: Dispatch<SetStateAction<CurrentCartItem>>;
   initializeCustomizableItem: (value: number) => void;
+  showSplashScreen: boolean;
+  setShowSplashScreen: (value: boolean) => void;
   //   scrollToTop: () => void;
 }
 
@@ -40,6 +42,7 @@ export const SharedStateProvider: FC<{ children: React.ReactNode }> = ({
   const scrollY = useSharedValue(1);
   const scrollYGlobal = useSharedValue(0);
   const expanded = useSharedValue(false);
+  const [showSplashScreen, setShowSplashScreen] = useState(true);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const [selectedCustomizableItem, setSelectedCustomizableItem] =
     useState<CurrentCartItem>({
@@ -65,6 +68,8 @@ export const SharedStateProvider: FC<{ children: React.ReactNode }> = ({
         setSelectedCustomizableItem,
         initializeCustomizableItem,
         expanded,
+        showSplashScreen,
+        setShowSplashScreen,
       }}
     >
       {children}

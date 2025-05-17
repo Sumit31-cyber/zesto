@@ -1,21 +1,17 @@
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import { View } from "react-native";
+import React, { useEffect } from "react";
 import { useAuth } from "@clerk/clerk-expo";
 import { Redirect } from "expo-router";
 import { COLORS, FONTS } from "utils/constants";
 import { Image } from "expo-image";
 import CustomText from "components/customText";
-import Animated, {
-  FadeIn,
-  FadeInDown,
-  SlideInDown,
-  SlideInUp,
-} from "react-native-reanimated";
-import AnimatedSplashScreen from "components/AnimatedSplashScreen";
+import Animated, { FadeOutDown, SlideInDown } from "react-native-reanimated";
+
+import { useSharedState } from "context/sharedContext";
 
 const Main = () => {
   const { isSignedIn, isLoaded } = useAuth();
-  const [isLoading, setIsLoading] = useState(true);
+  const { showSplashScreen, setShowSplashScreen } = useSharedState();
 
   useEffect(() => {
     console.log("Is SignedIn ", isSignedIn);
@@ -24,15 +20,15 @@ const Main = () => {
   useEffect(() => {
     setTimeout(() => {
       if (isLoaded) {
-        setIsLoading(false);
+        setShowSplashScreen(false);
       }
     }, 2000);
   }, [isLoaded]);
 
-  if (!isLoaded || isLoading) {
+  if (showSplashScreen) {
     return (
       <Animated.View
-        exiting={FadeInDown}
+        exiting={FadeOutDown}
         style={{
           flex: 1,
           backgroundColor: COLORS.primary,
@@ -72,12 +68,3 @@ const Main = () => {
 };
 
 export default Main;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.primary,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});

@@ -48,6 +48,10 @@ const SignInScreen = () => {
   });
 
   const handleSignIn = async () => {
+    if (!phoneNumber) {
+      Alert.alert("Please enter phone number to continue");
+      return;
+    }
     let phoneNumberWithCOuntryCode = `+91${phoneNumber}`;
     try {
       Keyboard.dismiss();
@@ -59,14 +63,21 @@ const SignInScreen = () => {
           phoneNumber: phoneNumberWithCOuntryCode,
         });
 
+        if (response.status === "complete") {
+          setActive({ session: response.createdSessionId });
+          router.replace("/(protected)/(tabs)/food");
+        } else {
+          Alert.alert("Signin failed");
+        }
+
         // const verification = await signUp.preparePhoneNumberVerification({
         //   strategy: "phone_code",
         // });
 
         setIsLoading(false);
-        if (response.status === "complete") {
-          router.replace("/(protected)");
-        }
+        // if (response.status === "complete") {
+        //   router.replace("/(protected)");
+        // }
         // router.navigate({
         //   pathname: "/(auth)/verification",
         //   params: {
@@ -84,7 +95,7 @@ const SignInScreen = () => {
   };
 
   if (isSignedIn) {
-    return <Redirect href={"/(protected)"} />;
+    return <Redirect href={"/(protected)/(tabs)/food"} />;
   }
   return (
     <Pressable

@@ -1,10 +1,17 @@
-import { StyleSheet, Text, TextStyle, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TextStyle,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { COLORS } from "utils/constants";
 import { SendIcon } from "assets/svgs/svgs";
 import CustomText from "./customText";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
+import { useAuth } from "@clerk/clerk-react";
 
 type Props = {
   titleStyle?: TextStyle;
@@ -16,6 +23,7 @@ const LocationHeader: React.FC<Props> = ({
   locationTextStyle,
   iconColor = "black",
 }) => {
+  const { signOut } = useAuth();
   return (
     <View
       style={{
@@ -67,7 +75,10 @@ const LocationHeader: React.FC<Props> = ({
           Mandir
         </CustomText>
       </View>
-      <View
+      <TouchableOpacity
+        onPress={async () => {
+          await signOut();
+        }}
         style={{
           height: 40,
           width: 60,
@@ -79,7 +90,7 @@ const LocationHeader: React.FC<Props> = ({
         }}
       >
         <FontAwesome name="user" size={24} color="white" />
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };
