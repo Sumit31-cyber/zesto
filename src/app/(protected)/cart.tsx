@@ -409,6 +409,7 @@ const RenderCartItemSection: React.FC<RenderCartItemSectionProp> = ({
                   {item.customizations?.map((customization, index) => {
                     return (
                       <CustomText
+                        key={index}
                         variant="h7"
                         fontSize={RFValue(7)}
                         color={COLORS.darkGray}
@@ -715,6 +716,7 @@ const DeliveryInstructionSection = ({
             {tipsData.map((item, index) => {
               return (
                 <TouchableOpacity
+                  key={index}
                   onPress={() => setSelectedTip(item)}
                   style={{
                     flex: 1,
@@ -801,6 +803,7 @@ const DeliveryInstructionSection = ({
             {instructions.map((item, index) => {
               return (
                 <View
+                  key={index}
                   style={{
                     borderWidth: BORDER_WIDTH,
                     width: screenWidth * 0.25,

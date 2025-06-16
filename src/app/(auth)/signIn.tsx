@@ -19,7 +19,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { Redirect, router } from "expo-router";
 import CustomButton from "components/CustomButton";
-import { useAuth, useSignUp } from "@clerk/clerk-expo";
+import { useAuth, useSignIn, useSignUp } from "@clerk/clerk-expo";
 
 const topContainerHeight = screenHeight * 0.4;
 const bottomContainerHeight = screenHeight * 0.6;
@@ -30,6 +30,7 @@ const SignInScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const { signUp, setActive, isLoaded } = useSignUp();
+  const { signIn, setActive: setSignInActive } = useSignIn();
   const { isSignedIn } = useAuth();
 
   const rStyle = useAnimatedStyle(() => {
@@ -49,50 +50,143 @@ const SignInScreen = () => {
 
   const handleSignIn = async () => {
     if (!phoneNumber) {
-      Alert.alert("Please enter phone number to continue");
+      Alert.alert(
+        "Missing Phone Number",
+        "Please enter your phone number to continue."
+      );
       return;
     }
-    let phoneNumberWithCOuntryCode = `+91${phoneNumber}`;
+
+    if (!isLoaded) {
+      Alert.alert("Please wait", "Authentication service is not ready yet.");
+      return;
+    }
+
+    // const phoneNumberWithCountryCode = `+91${phoneNumber}`;
+    const phoneNumberWithCountryCode = `+12${phoneNumber}`;
+    Keyboard.dismiss();
+    setIsLoading(true);
+
     try {
-      Keyboard.dismiss();
-      setIsLoading(true);
+      // Attempt sign-in
+      const signInResponse = await signIn?.create({
+        identifier: phoneNumberWithCountryCode,
+      });
 
-      if (!isLoaded) return;
-      if (phoneNumber != undefined) {
-        const response = await signUp.create({
-          phoneNumber: phoneNumberWithCOuntryCode,
-        });
+      console.log("SignIn status:", signInResponse?.status);
 
-        if (response.status === "complete") {
-          setActive({ session: response.createdSessionId });
-          router.replace("/(protected)/(tabs)/food");
-        } else {
-          Alert.alert("Signin failed");
+      if (signInResponse?.status === "complete") {
+        setActive({ session: signInResponse.createdSessionId });
+        router.replace("/(protected)/(tabs)/food");
+        return;
+      }
+
+      if (signInResponse?.status === "needs_first_factor") {
+        console.log("Preparing first factor...");
+        const phoneFactor = signInResponse.supportedFirstFactors?.find(
+          (factor) => factor.strategy === "phone_code"
+        );
+
+        if (!phoneFactor) {
+          throw new Error("Phone code strategy not supported for this number.");
         }
 
-        // const verification = await signUp.preparePhoneNumberVerification({
-        //   strategy: "phone_code",
-        // });
+        await signIn?.prepareFirstFactor({
+          strategy: "phone_code",
+          phoneNumberId: phoneFactor.phoneNumberId,
+        });
 
-        setIsLoading(false);
-        // if (response.status === "complete") {
-        //   router.replace("/(protected)");
-        // }
-        // router.navigate({
-        //   pathname: "/(auth)/verification",
-        //   params: {
-        //     phoneNumber: phoneNumberWithCOuntryCode,
-        //   },
-        // });
-      } else {
-        Alert.alert("Please enter correct phone number to continue");
+        const result = await signIn?.attemptFirstFactor({
+          strategy: "phone_code",
+          code: "424242", // Dev-only code
+        });
+
+        console.log("First factor result:", result);
+
+        if (result?.status === "complete") {
+          setActive({ session: result.createdSessionId });
+          router.replace("/(protected)/(tabs)/food");
+          return;
+        }
       }
-    } catch (error) {
-      Alert.alert(error instanceof Error ? error.message : String(error));
+    } catch (signInError) {
+      console.warn("SignIn error:", signInError);
+      console.log("Phone number not found, attempting registration...");
+
+      try {
+        const signUpResponse = await signUp?.create({
+          phoneNumber: phoneNumberWithCountryCode,
+        });
+
+        if (signUpResponse?.status === "complete") {
+          setActive({ session: signUpResponse.createdSessionId });
+          router.replace("/(protected)/(tabs)/food");
+        } else {
+          Alert.alert(
+            "Registration Incomplete",
+            "Please complete the registration."
+          );
+        }
+      } catch (signUpError) {
+        console.error("SignUp error:", signUpError);
+        Alert.alert(
+          "Registration failed",
+          signUpError instanceof Error
+            ? signUpError.message
+            : String(signUpError)
+        );
+      }
+    } finally {
       setIsLoading(false);
-      console.log(error);
     }
   };
+
+  // const handleSignIn = async () => {
+  //   if (!phoneNumber) {
+  //     Alert.alert("Please enter phone number to continue");
+  //     return;
+  //   }
+  //   let phoneNumberWithCOuntryCode = `+91${phoneNumber}`;
+  //   try {
+  //     Keyboard.dismiss();
+  //     setIsLoading(true);
+
+  //     if (!isLoaded) return;
+  //     if (phoneNumber != undefined) {
+  //       const response = await signUp.create({
+  //         phoneNumber: phoneNumberWithCOuntryCode,
+  //       });
+
+  //       if (response.status === "complete") {
+  //         setActive({ session: response.createdSessionId });
+  //         router.replace("/(protected)/(tabs)/food");
+  //       } else {
+  //         Alert.alert("Signin failed");
+  //       }
+
+  //       // const verification = await signUp.preparePhoneNumberVerification({
+  //       //   strategy: "phone_code",
+  //       // });
+
+  //       setIsLoading(false);
+  //       // if (response.status === "complete") {
+  //       //   router.replace("/(protected)");
+  //       // }
+  //       // router.navigate({
+  //       //   pathname: "/(auth)/verification",
+  //       //   params: {
+  //       //     phoneNumber: phoneNumberWithCOuntryCode,
+  //       //   },
+  //       // });
+  //     } else {
+  //       Alert.alert("Please enter correct phone number to continue");
+  //     }
+  //   } catch (error) {
+  //     Alert.alert(error instanceof Error ? error.message : String(error));
+  //     setIsLoading(false);
+  //     console.log(error);
+  //   }
+  // };
 
   if (isSignedIn) {
     return <Redirect href={"/(protected)/(tabs)/food"} />;

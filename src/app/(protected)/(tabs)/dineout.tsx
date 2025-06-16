@@ -6,7 +6,7 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   BOTTOM_TAB_HEIGHT,
   COLORS,
@@ -39,6 +39,7 @@ import { dineOutRestaurantsList, restaurantType } from "utils/dataObject";
 import { LinearGradient } from "expo-linear-gradient";
 import { AntDesign } from "@expo/vector-icons";
 import { headerHeight } from "components/CustomHeader";
+import { useFocusEffect } from "expo-router";
 
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
 
@@ -54,14 +55,14 @@ const DineOut = () => {
   });
 
   // React to changes
-  useAnimatedReaction(
-    () => shouldChangeState.value,
-    (current, previous) => {
-      if (current !== previous) {
-        runOnJS(setChangeTextColor)(current);
-      }
-    }
-  );
+  // useAnimatedReaction(
+  //   () => shouldChangeState.value,
+  //   (current, previous) => {
+  //     if (current !== previous) {
+  //       runOnJS(setChangeTextColor)(current);
+  //     }
+  //   }
+  // );
 
   const clampedValue = useSharedValue(0);
 
@@ -147,10 +148,7 @@ const DineOut = () => {
         flex: 1,
       }}
     >
-      <StatusBar
-        animated={true}
-        barStyle={changeTextColor ? "dark-content" : "light-content"}
-      />
+      <StatusBar animated={true} barStyle={"dark-content"} />
       <Animated.View
         onLayout={(event) => {
           setHeaderHeight(event.nativeEvent.layout.height);
@@ -173,10 +171,10 @@ const DineOut = () => {
         >
           <LocationHeader
             locationTextStyle={{
-              color: changeTextColor ? "black" : "white",
+              color: "black",
             }}
-            titleStyle={{ color: changeTextColor ? "black" : "white" }}
-            iconColor={changeTextColor ? "black" : "white"}
+            titleStyle={{ color: "black" }}
+            iconColor={"black"}
           />
         </View>
         <SearchBar
@@ -287,7 +285,7 @@ const HeaderSection = () => {
     <ImageBackground
       onTouchEnd={() => {}}
       source={{
-        uri: "https://images.unsplash.com/photo-1624735793547-3b38a04fa422?q=80&w=3637&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        uri: "https://images.unsplash.com/photo-1675950277858-431e1d3fdb51?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fHJlc3RhdXJhbnRzJTIwb3V0ZG9vcnxlbnwwfHwwfHx8MA%3D%3D",
       }}
       style={{
         height: screenHeight * 0.45,

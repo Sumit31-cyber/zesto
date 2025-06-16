@@ -23,7 +23,7 @@ const LocationHeader: React.FC<Props> = ({
   locationTextStyle,
   iconColor = "black",
 }) => {
-  const { signOut } = useAuth();
+  const { signOut, userId } = useAuth();
   return (
     <View
       style={{
@@ -77,7 +77,8 @@ const LocationHeader: React.FC<Props> = ({
       </View>
       <TouchableOpacity
         onPress={async () => {
-          await signOut();
+          // await signOut();
+          console.log(userId);
         }}
         style={{
           height: 40,
