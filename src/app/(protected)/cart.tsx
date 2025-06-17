@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   AntDesign,
   Feather,
@@ -40,29 +40,47 @@ import Animated, {
 } from "react-native-reanimated";
 import { StatusBar } from "expo-status-bar";
 import Divider from "components/Divider";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToOrderHistory } from "redux/slice/orderHistorySlice";
 import CustomHeader, { headerHeight } from "components/CustomHeader";
-import { removeAllItemFromRestaurant } from "redux/slice/cartSlice";
+import {
+  addItemToCart,
+  removeAllItemFromRestaurant,
+  removeItemFromCart,
+  selectCart,
+  selectRestaurantCart,
+} from "redux/slice/cartSlice";
+import { Restaurant } from "types/types";
+import { RootState } from "redux/store";
 
 const _boxBorderRadius = 14;
-const deliveryCharges = 48.0;
 const otherCharges = 56.34;
 
 const Cart = () => {
-  const { cartItemData } = useLocalSearchParams<{ cartItemData: string }>();
-  const parsedCartData: RestaurantCart = cartItemData
-    ? JSON.parse(cartItemData)
-    : {};
+  const { restaurantId } = useLocalSearchParams<{ restaurantId: string }>();
+  const { carts } = useSelector((state: RootState) => state.cart);
 
-  const cartItemPrice = parsedCartData.items.reduce((acc, curr) => {
-    return curr.price + acc;
-  }, 0);
+  const parsedCartData: RestaurantCart | undefined = carts.find(
+    (item) => item.restaurant.id === restaurantId
+  );
+
+  if (!parsedCartData) {
+    return null;
+  }
 
   const [selectedTip, setSelectedTip] = useState<null | number>(null);
 
   const { top, bottom } = useSafeAreaInsets();
   const dispatch = useDispatch();
+  const deliveryCharges = Number(parsedCartData.restaurant.deliveryFee);
+  console.log(deliveryCharges);
+
+  const cartItemPrice = parsedCartData.items.reduce((acc, curr) => {
+    const itemPrice = Number(curr.price);
+    const itemQuantity = Number(curr.quantity);
+    const itemTotal = itemPrice * itemQuantity;
+    return acc + itemTotal;
+  }, 0);
 
   const toPay = (
     cartItemPrice +
@@ -98,6 +116,7 @@ const Cart = () => {
         selectedTip={selectedTip || 0}
         totalPrice={cartItemPrice}
         onPayButtonPress={paymentHandler}
+        totalAmountToPay={toPay}
       />
       <CustomHeader title={parsedCartData.restaurant.name} />
 
@@ -108,7 +127,10 @@ const Cart = () => {
           paddingBottom: RFValue(120),
         }}
       >
-        <RenderCartItemSection cartItems={parsedCartData.items} />
+        <RenderCartItemSection
+          cartItems={parsedCartData.items}
+          restaurant={parsedCartData.restaurant}
+        />
         <CouponsSection />
         <DeliveryInstructionSection
           selectedTip={selectedTip}
@@ -117,6 +139,8 @@ const Cart = () => {
         <BillSection
           totalPrice={cartItemPrice}
           selectedTip={selectedTip || 0}
+          totalAmountToPay={toPay}
+          deliveryFee={deliveryCharges}
         />
       </ScrollView>
     </View>
@@ -131,17 +155,13 @@ const PaymentSection = ({
   totalPrice,
   selectedTip = 0,
   onPayButtonPress,
+  totalAmountToPay,
 }: {
   totalPrice: number;
   selectedTip: number;
   onPayButtonPress: () => void;
+  totalAmountToPay: string;
 }) => {
-  const toPay = (
-    totalPrice +
-    otherCharges +
-    deliveryCharges +
-    selectedTip
-  ).toLocaleString();
   const { bottom } = useSafeAreaInsets();
 
   return (
@@ -206,8 +226,13 @@ const PaymentSection = ({
         }}
       >
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <CustomText variant="h4" fontFamily="gilroyBold" color="white">
-            ₹{toPay}
+          <CustomText
+            variant="h4"
+            fontFamily="gilroyBold"
+            color="white"
+            style={{ fontVariant: ["tabular-nums"] }}
+          >
+            ₹{totalAmountToPay}
           </CustomText>
         </View>
       </TouchableOpacity>
@@ -218,16 +243,14 @@ const PaymentSection = ({
 const BillSection = ({
   totalPrice,
   selectedTip = 0,
+  totalAmountToPay,
+  deliveryFee,
 }: {
   totalPrice: number;
   selectedTip: number;
+  totalAmountToPay: string;
+  deliveryFee: number;
 }) => {
-  const toPay = (
-    totalPrice +
-    otherCharges +
-    deliveryCharges +
-    selectedTip
-  ).toLocaleString();
   return (
     <View
       style={{
@@ -254,8 +277,12 @@ const BillSection = ({
           <FontAwesome5 name="receipt" size={RFValue(8)} color="white" />
         </View>
         <View style={{ gap: 4 }}>
-          <CustomText variant="h7" fontFamily="gilroyMedium">
-            To Pay ₹{toPay}{" "}
+          <CustomText
+            variant="h7"
+            fontFamily="gilroyMedium"
+            style={{ fontVariant: ["tabular-nums"] }}
+          >
+            To Pay ₹{totalAmountToPay}{" "}
           </CustomText>
           <CustomText variant="h7" color={COLORS.darkGray}>
             Incl. all taxes & charges
@@ -296,7 +323,7 @@ const BillSection = ({
             Delivery Free | 7 Kms
           </CustomText>
           <CustomText variant="h7" fontFamily="gilroyMedium">
-            ₹48.00
+            {deliveryFee}
           </CustomText>
         </View>
       </View>
@@ -355,8 +382,12 @@ const BillSection = ({
         >
           To Pay
         </CustomText>
-        <CustomText variant="h7" fontFamily="gilroyBold">
-          ₹{toPay}
+        <CustomText
+          variant="h7"
+          fontFamily="gilroyBold"
+          style={{ fontVariant: ["tabular-nums"] }}
+        >
+          ₹{totalAmountToPay}
         </CustomText>
       </View>
     </View>
@@ -365,10 +396,19 @@ const BillSection = ({
 
 interface RenderCartItemSectionProp {
   cartItems: CartItem[];
+  restaurant: Restaurant;
 }
 const RenderCartItemSection: React.FC<RenderCartItemSectionProp> = ({
   cartItems,
+  restaurant,
 }) => {
+  const dispatch = useDispatch();
+
+  const totalCartItems = useMemo(() => {
+    return cartItems.reduce((curr, acc) => {
+      return curr + acc.quantity;
+    }, 0);
+  }, [cartItems]);
   return (
     <View
       style={{
@@ -396,7 +436,7 @@ const RenderCartItemSection: React.FC<RenderCartItemSectionProp> = ({
                   <Image
                     style={{ height: RFValue(10), aspectRatio: 1 }}
                     source={
-                      item.isVeg
+                      item.isVegetarian
                         ? require("assets/images/vegIcon.png")
                         : require("assets/images/nonvegIcon.png")
                     }
@@ -406,7 +446,7 @@ const RenderCartItemSection: React.FC<RenderCartItemSectionProp> = ({
                   </CustomText>
                 </View>
                 <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-                  {item.customizations?.map((customization, index) => {
+                  {item.addons?.map((customization, index) => {
                     return (
                       <CustomText
                         key={index}
@@ -415,9 +455,7 @@ const RenderCartItemSection: React.FC<RenderCartItemSectionProp> = ({
                         color={COLORS.darkGray}
                       >
                         {customization.name}
-                        {index !== (item.customizations?.length ?? 0) - 1
-                          ? " + "
-                          : " "}
+                        {index !== (item.addons?.length ?? 0) - 1 ? " + " : " "}
                       </CustomText>
                     );
                   })}
@@ -434,6 +472,19 @@ const RenderCartItemSection: React.FC<RenderCartItemSectionProp> = ({
               >
                 <View
                   style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <CustomText
+                    variant="h7"
+                    style={{ fontVariant: ["tabular-nums"] }}
+                  >
+                    ₹{item.price * item.quantity}
+                  </CustomText>
+                </View>
+                <View
+                  style={{
                     flexDirection: "row",
                     height: RFValue(20),
                     borderWidth: BORDER_WIDTH,
@@ -442,7 +493,22 @@ const RenderCartItemSection: React.FC<RenderCartItemSectionProp> = ({
                     alignItems: "center",
                   }}
                 >
-                  <View
+                  <TouchableOpacity
+                    onPress={() => {
+                      dispatch(
+                        removeItemFromCart({
+                          restaurant: restaurant,
+                          item: {
+                            ...item,
+                          },
+                        })
+                      );
+
+                      if (totalCartItems <= 1) {
+                        router.back();
+                      }
+                    }}
+                    activeOpacity={0.8}
                     style={{
                       aspectRatio: 1,
                       height: "100%",
@@ -455,7 +521,7 @@ const RenderCartItemSection: React.FC<RenderCartItemSectionProp> = ({
                       size={RFValue(10)}
                       color={COLORS.primary}
                     />
-                  </View>
+                  </TouchableOpacity>
                   <View
                     style={{
                       width: RFValue(14),
@@ -467,7 +533,19 @@ const RenderCartItemSection: React.FC<RenderCartItemSectionProp> = ({
                       {item.quantity}
                     </CustomText>
                   </View>
-                  <View
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    onPress={() => {
+                      dispatch(
+                        addItemToCart({
+                          restaurant: restaurant,
+                          item: {
+                            ...item,
+                            quantity: 1,
+                          },
+                        })
+                      );
+                    }}
                     style={{
                       aspectRatio: 1,
                       height: "100%",
@@ -480,16 +558,7 @@ const RenderCartItemSection: React.FC<RenderCartItemSectionProp> = ({
                       size={RFValue(10)}
                       color={COLORS.primary}
                     />
-                  </View>
-                </View>
-                <View
-                  style={{
-                    width: screenWidth * 0.1,
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <CustomText variant="h7">₹{item.price}</CustomText>
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>

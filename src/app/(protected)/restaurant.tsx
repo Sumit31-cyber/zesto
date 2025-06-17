@@ -12,10 +12,14 @@ import React, { useMemo, useState } from "react";
 import { BORDER_WIDTH, COLORS, PADDING_HORIZONTAL } from "utils/constants";
 import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
-import { RecommendedRestaurantDataTypes } from "types/types";
+import {
+  RecommendedRestaurantDataTypes,
+  Restaurant,
+  RestaurantDetail,
+} from "types/types";
 import CustomText from "components/customText";
 import { Image } from "expo-image";
-import { recommendedListData, restaurantItemsData } from "utils/dataObject";
+import { restaurantItemsData } from "utils/dataObject";
 import Animated, {
   Extrapolation,
   interpolate,
@@ -29,39 +33,25 @@ import { RFValue } from "react-native-responsive-fontsize";
 import RestaurantFoodItem from "components/RestaurantFoodItem";
 import FilterBar from "components/FilterBar";
 import CustomizableModal from "components/CustomizableModal";
+import { useQuery } from "@tanstack/react-query";
+import { getRestaurantDetail } from "utils/ApiManager";
 
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
 const _imageHeaderHeight = RFValue(220);
+
 const RestaurantScreen = () => {
   const { restaurantId } = useLocalSearchParams() as {
     restaurantId: string;
   };
 
-  const restaurantData: RecommendedRestaurantDataTypes | undefined =
-    useMemo(() => {
-      const response = recommendedListData.find(
-        (item) => String(item.id) == restaurantId
-      );
-
-      return response;
-    }, [restaurantId]);
+  const { data, isLoading, error, isError } = useQuery<RestaurantDetail>({
+    queryKey: ["restaurant_details", restaurantId], // Include restaurantId in query key
+    queryFn: () => getRestaurantDetail(restaurantId), // Add return statement
+    enabled: !!restaurantId, // Only run query if restaurantId exists
+  });
 
   const restaurantScreenGlobalScrollY = useSharedValue(0);
   const { top } = useSafeAreaInsets();
-  // const restaurantData = JSON.parse(
-  //   restaurant
-  // ) as RecommendedRestaurantDataTypes;
-  const {
-    address,
-    discount,
-    discountAmount,
-    distance,
-    id,
-    imageUrl,
-    name,
-    time,
-    rating,
-  } = restaurantData || {};
 
   const [headerHeight, setHeaderHeight] = useState(0);
 
@@ -91,7 +81,21 @@ const RestaurantScreen = () => {
     };
   });
 
-  if (!restaurantData) {
+  if (isLoading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "white",
+        }}
+      >
+        <ActivityIndicator />
+      </View>
+    );
+  }
+  if (!data) {
     return (
       <View
         style={{
@@ -110,7 +114,7 @@ const RestaurantScreen = () => {
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: "white" }}>
       <Animated.View
         onLayout={(event) => {
           setHeaderHeight(event.nativeEvent.layout.height);
@@ -155,7 +159,7 @@ const RestaurantScreen = () => {
                 fontFamily="gilroySemiBold"
                 color={COLORS.black}
               >
-                {name}
+                {data.name}
               </CustomText>
               <View
                 style={{ flexDirection: "row", gap: 5, alignItems: "center" }}
@@ -165,14 +169,14 @@ const RestaurantScreen = () => {
                   color={COLORS.darkGray}
                   fontFamily="gilroyMedium"
                 >
-                  {rating}
+                  {4.5}
                 </CustomText>
                 <CustomText
                   variant="h7"
                   color={COLORS.darkGray}
                   fontFamily="gilroyMedium"
                 >
-                  ({distance})
+                  (12km)
                 </CustomText>
                 <Text style={{ fontSize: RFValue(4), color: COLORS.darkGray }}>
                   {"\u2B24"}
@@ -182,7 +186,7 @@ const RestaurantScreen = () => {
                   color={COLORS.darkGray}
                   fontFamily="gilroyMedium"
                 >
-                  {time}
+                  {data.estimatedDeliveryTime}min
                 </CustomText>
               </View>
             </View>
@@ -222,7 +226,7 @@ const RestaurantScreen = () => {
         bounces={false}
         contentContainerStyle={{ backgroundColor: "white" }}
       >
-        <HeaderSection restaurantData={restaurantData} />
+        <HeaderSection restaurantData={data} />
 
         <View
           style={{
@@ -231,13 +235,13 @@ const RestaurantScreen = () => {
             paddingHorizontal: PADDING_HORIZONTAL,
           }}
         >
-          {restaurantItemsData.map((item, index) => {
+          {data.menuItems.map((item, index) => {
             return (
               <RestaurantFoodItem
                 key={index}
                 item={item}
                 index={index}
-                restaurant={restaurantData}
+                restaurant={data}
               />
             );
           })}
@@ -254,7 +258,7 @@ const styles = StyleSheet.create({});
 const HeaderSection = ({
   restaurantData,
 }: {
-  restaurantData: RecommendedRestaurantDataTypes;
+  restaurantData: RestaurantDetail;
 }) => {
   const { top } = useSafeAreaInsets();
   return (
@@ -266,7 +270,8 @@ const HeaderSection = ({
       }}
     >
       <Image
-        source={{ uri: restaurantData.imageUrl }}
+        source={{ uri: restaurantData.logoUrl }}
+        transition={300}
         style={{
           height: _imageHeaderHeight,
           width: "100%",
@@ -322,21 +327,22 @@ const HeaderSection = ({
                 style={{ flexDirection: "row", gap: 5, alignItems: "center" }}
               >
                 <CustomText variant="h6" color={COLORS.black}>
-                  {restaurantData.time}
+                  {restaurantData.estimatedDeliveryTime}
                 </CustomText>
                 <Text style={{ fontSize: RFValue(4), color: COLORS.black }}>
                   {"\u2B24"}
                 </Text>
                 <CustomText variant="h6" color={COLORS.black}>
-                  {restaurantData.distance}
+                  4.5KM
                 </CustomText>
               </View>
               <CustomText
                 variant="h7"
                 color={COLORS.darkGray}
                 numberOfLines={2}
+                style={{ textTransform: "capitalize" }}
               >
-                {restaurantData.address}
+                {restaurantData.address.addressLine1}
               </CustomText>
             </View>
           </View>
@@ -360,7 +366,7 @@ const HeaderSection = ({
             >
               <AntDesign name="star" size={RFValue(10)} color="white" />
               <CustomText variant="h7" color={"white"}>
-                {restaurantData.rating}
+                4.5
               </CustomText>
             </View>
             <CustomText variant="h7" color={COLORS.darkGray}>

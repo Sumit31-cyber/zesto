@@ -8,7 +8,7 @@ import { Entypo } from "@expo/vector-icons";
 import { RFValue } from "react-native-responsive-fontsize";
 import { useDispatch } from "react-redux";
 import { addItemToCart, removeItemFromCart } from "redux/slice/cartSlice";
-import { RecommendedRestaurantDataTypes } from "types/types";
+import { RecommendedRestaurantDataTypes, Restaurant } from "types/types";
 import {
   BottomSheetModal,
   useBottomSheet,
@@ -20,7 +20,7 @@ const MiniFoodItem = ({
   item,
 }: {
   item: CartItem;
-  restaurant: RecommendedRestaurantDataTypes;
+  restaurant: Restaurant;
 }) => {
   const dispatch = useDispatch();
   const { dismissAll } = useBottomSheetModal();
@@ -29,7 +29,7 @@ const MiniFoodItem = ({
       <Image
         style={{ height: 20, aspectRatio: 1 }}
         source={
-          item.isVeg
+          item.isVegetarian
             ? require("assets/images/vegIcon.png")
             : require("assets/images/nonvegIcon.png")
         }
@@ -38,12 +38,12 @@ const MiniFoodItem = ({
         <CustomText variant="h6">{item.name}</CustomText>
         <CustomText variant="h7">₹{item.cartPrice?.toFixed(2)}</CustomText>
         <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-          {item.customizations?.map((cus, index) => {
+          {item.addons?.map((cus, index) => {
             return (
               <CustomText key={index} variant="h7" color={COLORS.darkGray}>
                 {cus.name}{" "}
-                {item.customizations?.length != undefined &&
-                item.customizations?.length - 1 != index
+                {item.addons?.length != undefined &&
+                item.addons?.length - 1 != index
                   ? ","
                   : null}
               </CustomText>
@@ -81,7 +81,7 @@ const MiniFoodItem = ({
                     price: item.cartPrice
                       ? item.cartPrice / item.quantity
                       : item.price,
-                    customizations: item.customizations,
+                    addons: item.addons,
                   },
                   restaurant: restaurant,
                 })

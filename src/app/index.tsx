@@ -8,6 +8,7 @@ import CustomText from "components/customText";
 import Animated, { FadeOutDown, SlideInDown } from "react-native-reanimated";
 
 import { useSharedState } from "context/sharedContext";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const Main = () => {
   const { isSignedIn, isLoaded } = useAuth();

@@ -4,7 +4,7 @@ import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import { useSharedState } from "context/sharedContext";
 import ModalBackdrop from "./ModalBackdrop";
 import { RFValue } from "react-native-responsive-fontsize";
-import { MenuItem, CustomizationOption } from "utils/dataObject";
+import { CustomizationOption } from "utils/dataObject";
 import { Image } from "expo-image";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BORDER_WIDTH, COLORS, PADDING_HORIZONTAL } from "utils/constants";
@@ -14,7 +14,12 @@ import DashedLine from "./DashedLine";
 import Animated, { ZoomIn, ZoomOut } from "react-native-reanimated";
 import { useSelector } from "react-redux";
 import { selectRestaurantCartItem } from "redux/slice/cartSlice";
-import { RecommendedRestaurantDataTypes } from "types/types";
+import {
+  ItemAddon,
+  MenuItem,
+  RecommendedRestaurantDataTypes,
+  Restaurant,
+} from "types/types";
 
 const calculatePrice = (
   basePrice: number,
@@ -37,7 +42,7 @@ const CustomizableModal = ({
   menuItem: MenuItem;
   modalRef: RefObject<BottomSheetModal>;
   onAddToCartPress: () => void;
-  restaurant: RecommendedRestaurantDataTypes;
+  restaurant: Restaurant;
 }) => {
   const { bottom } = useSafeAreaInsets();
   const {
@@ -70,57 +75,52 @@ const CustomizableModal = ({
       >
         <Header item={menuItem} />
 
-        <FlatList
-          data={menuItem.customizationOptions}
-          keyExtractor={(_, index) => index.toString()}
-          bounces={false}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: RFValue(50) }}
-          renderItem={({ item }) => (
-            <View
-              style={{
-                marginHorizontal: PADDING_HORIZONTAL,
-                marginVertical: PADDING_HORIZONTAL,
-                backgroundColor: "white",
-                borderRadius: 10,
-                shadowColor: "#fff",
-                shadowOffset: { width: 0, height: 1 },
-                shadowOpacity: 0.07,
-                shadowRadius: 1,
-                elevation: 5,
-              }}
+        <View
+          style={{
+            marginHorizontal: PADDING_HORIZONTAL,
+            marginVertical: PADDING_HORIZONTAL,
+            backgroundColor: "white",
+            borderRadius: 10,
+            shadowColor: "#111",
+            shadowOffset: { width: 0, height: 1 },
+            shadowOpacity: 0.07,
+            shadowRadius: 1,
+            elevation: 5,
+            marginBottom: RFValue(50),
+          }}
+        >
+          <View
+            style={{
+              paddingVertical: PADDING_HORIZONTAL,
+              paddingHorizontal: PADDING_HORIZONTAL,
+              gap: 4,
+            }}
+          >
+            <CustomText
+              variant="h6"
+              fontFamily="gilroyBold"
+              color={COLORS.black}
             >
-              <View
-                style={{
-                  paddingVertical: PADDING_HORIZONTAL,
-                  paddingHorizontal: PADDING_HORIZONTAL,
-                  gap: 4,
-                }}
-              >
-                <CustomText
-                  variant="h6"
-                  fontFamily="gilroyBold"
-                  color={COLORS.black}
-                >
-                  {item.type}
-                </CustomText>
-                <CustomText
-                  variant="h7"
-                  color={COLORS.black}
-                  style={{ textTransform: "capitalize" }}
-                >
-                  Select your {item.type}
-                </CustomText>
-              </View>
-              <DashedLine />
-              <View style={{ gap: 10, paddingVertical: 10 }}>
-                {item.options.map((cus, index) => (
-                  <OptionItems key={index} item={cus} menuItem={menuItem} />
-                ))}
-              </View>
-            </View>
-          )}
-        />
+              Addons
+            </CustomText>
+          </View>
+          <DashedLine />
+          <FlatList
+            data={menuItem.addons}
+            keyExtractor={(_, index) => index.toString()}
+            bounces={false}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              marginVertical: PADDING_HORIZONTAL,
+              gap: PADDING_HORIZONTAL,
+            }}
+            renderItem={({ item, index }) => (
+              <>
+                <OptionItems key={index} item={item} menuItem={menuItem} />
+              </>
+            )}
+          />
+        </View>
 
         <View
           style={{
@@ -234,7 +234,7 @@ const CustomizableModal = ({
 export default CustomizableModal;
 
 const OptionItems = memo(
-  ({ item, menuItem }: { item: CustomizationOption; menuItem: MenuItem }) => {
+  ({ item, menuItem }: { item: ItemAddon; menuItem: MenuItem }) => {
     const { selectedCustomizableItem, setSelectedCustomizableItem } =
       useSharedState();
 
@@ -245,26 +245,26 @@ const OptionItems = memo(
     }, [selectedCustomizableItem.selectedOptions, item.name]);
 
     const handleSelection = () => {
-      if (!exists) {
-        const updatedOptions = [
-          item,
-          ...selectedCustomizableItem.selectedOptions,
-        ];
-        setSelectedCustomizableItem((prev) => ({
-          ...prev,
-          selectedOptions: updatedOptions,
-          price: calculatePrice(menuItem.price, prev.quantity, updatedOptions),
-        }));
-      } else {
-        const updatedOptions = selectedCustomizableItem.selectedOptions.filter(
-          (opt) => opt.name !== item.name
-        );
-        setSelectedCustomizableItem((prev) => ({
-          ...prev,
-          selectedOptions: updatedOptions,
-          price: calculatePrice(menuItem.price, prev.quantity, updatedOptions),
-        }));
-      }
+      // if (!exists) {
+      //   const updatedOptions = [
+      //     item,
+      //     ...selectedCustomizableItem.selectedOptions,
+      //   ];
+      //   setSelectedCustomizableItem((prev) => ({
+      //     ...prev,
+      //     selectedOptions: updatedOptions,
+      //     price: calculatePrice(menuItem.price, prev.quantity, updatedOptions),
+      //   }));
+      // } else {
+      //   const updatedOptions = selectedCustomizableItem.selectedOptions.filter(
+      //     (opt) => opt.name !== item.name
+      //   );
+      //   setSelectedCustomizableItem((prev) => ({
+      //     ...prev,
+      //     selectedOptions: updatedOptions,
+      //     price: calculatePrice(menuItem.price, prev.quantity, updatedOptions),
+      //   }));
+      // }
     };
 
     return (
@@ -328,7 +328,7 @@ const Header = ({ item }: { item: MenuItem }) => {
     >
       <Image
         style={{ height: RFValue(40), aspectRatio: 1, borderRadius: 10 }}
-        source={{ uri: item.image }}
+        source={{ uri: item.imageUrl }}
       />
       <CustomText variant="h6">{item.name}</CustomText>
       <View

@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { FC, useCallback, useMemo, useRef, useState } from "react";
-import { MenuItem, RestaurantDetails } from "utils/dataObject";
+import { RestaurantDetails } from "utils/dataObject";
 import { Image } from "expo-image";
 import { RFValue } from "react-native-responsive-fontsize";
 import DashedLine from "./DashedLine";
@@ -11,7 +11,7 @@ import { useSharedState } from "context/sharedContext";
 import CustomizableModal from "./CustomizableModal";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useDispatch, useSelector } from "react-redux";
-import { RecommendedRestaurantDataTypes } from "types/types";
+import { MenuItem, Restaurant } from "types/types";
 import { addItemToCart, removeItemFromCart } from "redux/slice/cartSlice";
 import { RootState } from "redux/store";
 import RepeatModal from "./RepeatModal";
@@ -19,7 +19,7 @@ import RepeatModal from "./RepeatModal";
 interface Props {
   item: MenuItem;
   index: number;
-  restaurant: RecommendedRestaurantDataTypes;
+  restaurant: Restaurant;
 }
 
 const _imageSize = RFValue(120);
@@ -28,6 +28,7 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const repeatModalRef = useRef<BottomSheetModal>(null);
   const dispatch = useDispatch();
+  const isCustomizable = item.addons && item.addons?.length > 0;
   const {
     selectedCustomizableItem,
     setSelectedCustomizableItem,
@@ -56,12 +57,12 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
     return {
       ...sameFoodItems[0],
       quantity: totalQuantity,
-      variants: sameFoodItems, // Include all variants if needed
+      variants: sameFoodItems,
     };
   }, [carts, restaurant.name, item.id]);
 
   const handleAddToCardButtonPress = useCallback(() => {
-    if (item.isCustomizable) {
+    if (isCustomizable) {
       if (cart && cart?.quantity != 0) {
         repeatModalRef.current?.present();
       } else {
@@ -74,7 +75,7 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
           item: {
             ...item,
             quantity: selectedCustomizableItem.quantity,
-            customizations: [],
+            addons: [],
           },
           restaurant: restaurant,
         })
@@ -96,7 +97,7 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
                 ...item,
                 price: selectedCustomizableItem.price,
                 quantity: selectedCustomizableItem.quantity,
-                customizations: selectedCustomizableItem.selectedOptions,
+                addons: selectedCustomizableItem.selectedOptions,
               },
               restaurant: restaurant,
             })
@@ -128,12 +129,13 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
             <Image
               style={{ height: 20, aspectRatio: 1 }}
               source={
-                item.isVeg
+                item.isVegetarian
                   ? require("assets/images/vegIcon.png")
                   : require("assets/images/nonvegIcon.png")
               }
             />
-            {item.isBestSeller && (
+            {/* //TODO : Fix this (default true) */}
+            {true && (
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <View
                   style={{
@@ -182,8 +184,14 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
           }}
         >
           <Image
-            source={{ uri: item.image }}
-            style={{ width: _imageSize, aspectRatio: 1, borderRadius: 20 }}
+            source={{ uri: item.imageUrl }}
+            transition={300}
+            style={{
+              width: _imageSize,
+              aspectRatio: 1,
+              borderRadius: 20,
+              backgroundColor: "#d8f3dc50",
+            }}
           />
           <View
             style={{
@@ -225,16 +233,23 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
                 </CustomText>
                 <TouchableOpacity
                   onPress={() => {
-                    if (cart.quantity === 1) {
-                      dispatch(
-                        removeItemFromCart({
-                          restaurant: restaurant,
-                          item: cart,
-                        })
-                      );
-                    } else {
-                      repeatModalRef.current?.present();
-                    }
+                    dispatch(
+                      removeItemFromCart({
+                        restaurant: restaurant,
+                        item: cart,
+                      })
+                    );
+                    // if (cart.quantity === 1) {
+                    //   dispatch(
+                    //     removeItemFromCart({
+                    //       restaurant: restaurant,
+                    //       item: cart,
+                    //     })
+                    //   );
+                    // } else {
+                    //   // repeatModalRef.current?.present();
+                    //   console.log("This ");
+                    // }
                   }}
                   style={{
                     height: "100%",
@@ -271,8 +286,7 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
                 </CustomText>
               </TouchableOpacity>
             )}
-
-            {item.isCustomizable && (
+            {item.addons && item.addons.length > 0 && (
               <CustomText variant="h7" color={COLORS.darkGray}>
                 customizable
               </CustomText>

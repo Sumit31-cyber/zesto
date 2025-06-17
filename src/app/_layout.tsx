@@ -10,6 +10,10 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { Provider } from "react-redux";
 import { store } from "redux/store";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+export const queryClient = new QueryClient();
+
 export default function RootLayout() {
   const [loaded] = useFonts({
     aeonikRegular: require("assets/fonts/AeonikRegular.otf"),
@@ -39,15 +43,17 @@ export default function RootLayout() {
 
   return (
     <Provider store={store}>
-      <ClerkProvider tokenCache={tokenCache}>
-        <SharedStateProvider>
-          <GestureHandlerRootView>
-            <BottomSheetModalProvider>
-              <Slot />
-            </BottomSheetModalProvider>
-          </GestureHandlerRootView>
-        </SharedStateProvider>
-      </ClerkProvider>
+      <QueryClientProvider client={queryClient}>
+        <ClerkProvider tokenCache={tokenCache}>
+          <SharedStateProvider>
+            <GestureHandlerRootView>
+              <BottomSheetModalProvider>
+                <Slot />
+              </BottomSheetModalProvider>
+            </GestureHandlerRootView>
+          </SharedStateProvider>
+        </ClerkProvider>
+      </QueryClientProvider>
     </Provider>
   );
 }

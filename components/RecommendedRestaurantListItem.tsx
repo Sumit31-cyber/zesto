@@ -6,7 +6,11 @@ import {
   View,
 } from "react-native";
 import React, { useEffect, useMemo, useRef } from "react";
-import { RecommendedRestaurantDataTypes } from "types/types";
+import {
+  RecommendedRestaurantDataTypes,
+  Restaurant,
+  RestaurantsResponse,
+} from "types/types";
 import { RFValue } from "react-native-responsive-fontsize";
 import { Image } from "expo-image";
 import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -23,7 +27,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "redux/store";
 
 type Props = {
-  item: RecommendedRestaurantDataTypes;
+  item: Restaurant;
   index: number;
   onPress: () => void;
 };
@@ -72,7 +76,7 @@ const RecommendedRestaurantListItem: React.FC<Props> = ({
       >
         <Image
           contentFit="cover"
-          source={{ uri: item.imageUrl }}
+          source={{ uri: item.logoUrl }}
           style={{
             height: RFValue(120),
             width: "100%",
@@ -128,7 +132,7 @@ const RecommendedRestaurantListItem: React.FC<Props> = ({
 
             <View style={{ marginTop: "auto" }}>
               <CustomText variant="h6" fontFamily="gilroyBold" color="white">
-                {item.discount}
+                10% OFF
               </CustomText>
               <CustomText
                 variant="h7"
@@ -139,7 +143,7 @@ const RecommendedRestaurantListItem: React.FC<Props> = ({
                   opacity: 0.9,
                 }}
               >
-                {item.discountAmount}
+                UPTO₹40
               </CustomText>
             </View>
           </LinearGradient>
@@ -170,14 +174,14 @@ const RecommendedRestaurantListItem: React.FC<Props> = ({
             <AntDesign name="star" size={RFValue(10)} color="white" />
           </View>
           <CustomText variant="h7" fontFamily="gilroyMedium">
-            {item.rating}
+            {4.5}
           </CustomText>
           <CustomText variant="h7" fontFamily="gilroyMedium">
-            ({item.distance})
+            (1.5 KM)
           </CustomText>
           <Text style={{ fontSize: RFValue(4) }}>{"\u2B24"}</Text>
           <CustomText variant="h7" fontFamily="gilroyMedium">
-            {item.time}
+            {item.estimatedDeliveryTime} Mins
           </CustomText>
         </View>
         <CustomText
@@ -187,7 +191,7 @@ const RecommendedRestaurantListItem: React.FC<Props> = ({
           color={COLORS.darkGray}
           style={{ lineHeight: RFValue(14) }}
         >
-          {item.address}
+          {item.address.addressLine1}
         </CustomText>
       </View>
     </Pressable>

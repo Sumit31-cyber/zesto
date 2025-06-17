@@ -165,7 +165,7 @@ const DropDownItem: React.FC<Props> = ({
         }}
       >
         <Image
-          source={{ uri: item.restaurant.imageUrl }}
+          source={{ uri: item.restaurant.logoUrl }}
           style={{ height: "85%", aspectRatio: 1, borderRadius: 100 }}
         />
         <View
@@ -194,7 +194,7 @@ const DropDownItem: React.FC<Props> = ({
           onPress={() => {
             router.navigate({
               pathname: "/(protected)/cart",
-              params: { cartItemData: JSON.stringify(item) },
+              params: { restaurantId: item.restaurant.id },
             });
           }}
           style={{

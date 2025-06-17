@@ -1,12 +1,16 @@
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import React, { RefObject, useMemo } from "react";
-import { MenuItem } from "utils/dataObject";
+
 import {
   BottomSheetFlatList,
   BottomSheetModal,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
-import { RecommendedRestaurantDataTypes } from "types/types";
+import {
+  MenuItem,
+  RecommendedRestaurantDataTypes,
+  Restaurant,
+} from "types/types";
 import ModalBackdrop from "./ModalBackdrop";
 import { RFValue } from "react-native-responsive-fontsize";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -26,7 +30,7 @@ const RepeatModal = ({
 }: {
   foodItem: MenuItem;
   modalRef: RefObject<BottomSheetModal>;
-  restaurant: RecommendedRestaurantDataTypes;
+  restaurant: Restaurant;
   onAddNewCustomizable: () => void;
 }) => {
   const { bottom } = useSafeAreaInsets();
