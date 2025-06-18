@@ -203,20 +203,6 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
                 }}
               >
                 <TouchableOpacity
-                  onPress={handleAddToCardButtonPress}
-                  style={{
-                    height: "100%",
-                    paddingHorizontal: RFValue(6),
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Entypo name="plus" size={24} color="white" />
-                </TouchableOpacity>
-                <CustomText variant="h4" fontFamily="gilroyBold" color="white">
-                  {cart.quantity}
-                </CustomText>
-                <TouchableOpacity
                   onPress={() => {
                     dispatch(
                       removeItemFromCart({
@@ -224,17 +210,6 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
                         item: cart,
                       })
                     );
-                    // if (cart.quantity === 1) {
-                    //   dispatch(
-                    //     removeItemFromCart({
-                    //       restaurant: restaurant,
-                    //       item: cart,
-                    //     })
-                    //   );
-                    // } else {
-                    //   // repeatModalRef.current?.present();
-                    //   console.log("This ");
-                    // }
                   }}
                   style={{
                     height: "100%",
@@ -244,6 +219,21 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
                   }}
                 >
                   <Entypo name="minus" size={24} color="white" />
+                </TouchableOpacity>
+                <CustomText variant="h4" fontFamily="gilroyBold" color="white">
+                  {cart.quantity}
+                </CustomText>
+
+                <TouchableOpacity
+                  onPress={handleAddToCardButtonPress}
+                  style={{
+                    height: "100%",
+                    paddingHorizontal: RFValue(6),
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Entypo name="plus" size={24} color="white" />
                 </TouchableOpacity>
               </View>
             ) : (
