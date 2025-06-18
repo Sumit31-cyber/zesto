@@ -60,11 +60,11 @@ const Cart = () => {
   const { restaurantId } = useLocalSearchParams<{ restaurantId: string }>();
   const { carts } = useSelector((state: RootState) => state.cart);
 
-  const parsedCartData: RestaurantCart | undefined = carts.find(
+  const cartData: RestaurantCart | undefined = carts.find(
     (item) => item.restaurant.id === restaurantId
   );
 
-  if (!parsedCartData) {
+  if (!cartData) {
     return null;
   }
 
@@ -72,10 +72,10 @@ const Cart = () => {
 
   const { top, bottom } = useSafeAreaInsets();
   const dispatch = useDispatch();
-  const deliveryCharges = Number(parsedCartData.restaurant.deliveryFee);
+  const deliveryCharges = Number(cartData.restaurant.deliveryFee);
   console.log(deliveryCharges);
 
-  const cartItemPrice = parsedCartData.items.reduce((acc, curr) => {
+  const cartItemPrice = cartData.items.reduce((acc, curr) => {
     const itemPrice = Number(curr.price);
     const itemQuantity = Number(curr.quantity);
     const itemTotal = itemPrice * itemQuantity;
@@ -92,8 +92,8 @@ const Cart = () => {
   const paymentHandler = () => {
     dispatch(
       addToOrderHistory({
-        restaurant: parsedCartData.restaurant,
-        foodItems: parsedCartData.items,
+        restaurant: cartData.restaurant,
+        foodItems: cartData.items,
         deliveryCharge: deliveryCharges,
         otherCharges: otherCharges,
         totalItemAmount: toPay,
@@ -104,7 +104,7 @@ const Cart = () => {
 
     dispatch(
       removeAllItemFromRestaurant({
-        restaurantId: parsedCartData.restaurant.id,
+        restaurantId: cartData.restaurant.id,
       })
     );
   };
@@ -118,7 +118,7 @@ const Cart = () => {
         onPayButtonPress={paymentHandler}
         totalAmountToPay={toPay}
       />
-      <CustomHeader title={parsedCartData.restaurant.name} />
+      <CustomHeader title={cartData.restaurant.name} />
 
       <ScrollView
         contentContainerStyle={{
@@ -128,8 +128,8 @@ const Cart = () => {
         }}
       >
         <RenderCartItemSection
-          cartItems={parsedCartData.items}
-          restaurant={parsedCartData.restaurant}
+          cartItems={cartData.items}
+          restaurant={cartData.restaurant}
         />
         <CouponsSection />
         <DeliveryInstructionSection

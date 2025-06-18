@@ -21,6 +21,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "redux/store";
 import MiniFoodItem from "./MiniFoodItem";
 import { Entypo } from "@expo/vector-icons";
+import { RestaurantCart } from "utils/dataObject";
 
 const RepeatModal = ({
   foodItem,
@@ -36,19 +37,27 @@ const RepeatModal = ({
   const { bottom } = useSafeAreaInsets();
   const { carts } = useSelector((state: RootState) => state.cart);
 
-  const cart = useMemo(() => {
-    const existingRestaurant = carts.find(
-      (cart) => cart.restaurant.name === restaurant.name
-    );
+  const cartData: RestaurantCart | undefined = carts.find(
+    (item) => item.restaurant.id === restaurant.id
+  );
 
-    if (!existingRestaurant) return null;
+  const foodWithSameId = cartData?.items.filter(
+    (option) => option.id === foodItem.id
+  );
 
-    const foodWithSameId = existingRestaurant.items.filter(
-      (option) => option.id === foodItem.id
-    );
+  // const cart = useMemo(() => {
+  //   const existingRestaurant = carts.find(
+  //     (cart) => cart.restaurant.name === restaurant.name
+  //   );
 
-    return foodWithSameId;
-  }, [carts, restaurant.name, foodItem.id]);
+  //   if (!existingRestaurant) return null;
+
+  //   const foodWithSameId = existingRestaurant.items.filter(
+  //     (option) => option.id === foodItem.id
+  //   );
+
+  //   return foodWithSameId;
+  // }, [carts, restaurant.name, foodItem.id]);
 
   return (
     <BottomSheetModal
@@ -79,7 +88,7 @@ const RepeatModal = ({
         <View style={{ paddingHorizontal: PADDING_HORIZONTAL }}>
           <FlatList
             keyExtractor={(item, index) => `item.id-${index}`}
-            data={cart}
+            data={foodWithSameId}
             renderItem={({ item, index }) => (
               <MiniFoodItem key={index} restaurant={restaurant} item={item} />
             )}
