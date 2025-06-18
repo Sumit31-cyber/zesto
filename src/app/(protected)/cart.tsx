@@ -60,43 +60,45 @@ const Cart = () => {
   const { restaurantId } = useLocalSearchParams<{ restaurantId: string }>();
   const { carts } = useSelector((state: RootState) => state.cart);
 
-  const parsedCartData: RestaurantCart | undefined = carts.find(
+  // Find cart data for the specific restaurant
+  const cartData: RestaurantCart | undefined = carts.find(
     (item) => item.restaurant.id === restaurantId
   );
 
-  if (!parsedCartData) {
-    return null;
+  console.log(JSON.stringify(cartData, null, 2));
+
+  if (!cartData) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <CustomText variant="h6">No items in cart</CustomText>
+      </View>
+    );
   }
 
   const [selectedTip, setSelectedTip] = useState<null | number>(null);
 
   const { top, bottom } = useSafeAreaInsets();
   const dispatch = useDispatch();
-  const deliveryCharges = Number(parsedCartData.restaurant.deliveryFee);
-  console.log(deliveryCharges);
+  const deliveryCharges = Number(cartData.restaurant.deliveryFee) || 0;
 
-  const cartItemPrice = parsedCartData.items.reduce((acc, curr) => {
-    const itemPrice = Number(curr.price);
-    const itemQuantity = Number(curr.quantity);
-    const itemTotal = itemPrice * itemQuantity;
-    return acc + itemTotal;
+  // Fixed cart calculation - sum all cartPrice values
+  const cartItemPrice = cartData.items.reduce((acc, curr) => {
+    return acc + Number(curr.cartPrice || 0);
   }, 0);
 
-  const toPay = (
-    cartItemPrice +
-    otherCharges +
-    deliveryCharges +
-    (selectedTip ? selectedTip : 0)
-  ).toLocaleString();
+  // Fixed total calculation
+  const totalAmount =
+    cartItemPrice + otherCharges + deliveryCharges + (selectedTip || 0);
+  const toPay = totalAmount.toFixed(2);
 
   const paymentHandler = () => {
     dispatch(
       addToOrderHistory({
-        restaurant: parsedCartData.restaurant,
-        foodItems: parsedCartData.items,
+        restaurant: cartData.restaurant,
+        foodItems: cartData.items,
         deliveryCharge: deliveryCharges,
         otherCharges: otherCharges,
-        totalItemAmount: toPay,
+        totalItemAmount: cartItemPrice.toFixed(2),
         totalAmountPaid: toPay,
         deliveryTip: selectedTip,
       })
@@ -104,7 +106,7 @@ const Cart = () => {
 
     dispatch(
       removeAllItemFromRestaurant({
-        restaurantId: parsedCartData.restaurant.id,
+        restaurantId: cartData.restaurant.id,
       })
     );
   };
@@ -118,7 +120,7 @@ const Cart = () => {
         onPayButtonPress={paymentHandler}
         totalAmountToPay={toPay}
       />
-      <CustomHeader title={parsedCartData.restaurant.name} />
+      <CustomHeader title={cartData.restaurant.name} />
 
       <ScrollView
         contentContainerStyle={{
@@ -128,8 +130,8 @@ const Cart = () => {
         }}
       >
         <RenderCartItemSection
-          cartItems={parsedCartData.items}
-          restaurant={parsedCartData.restaurant}
+          cartItems={cartData.items}
+          restaurant={cartData.restaurant}
         />
         <CouponsSection />
         <DeliveryInstructionSection
@@ -148,8 +150,6 @@ const Cart = () => {
 };
 
 export default Cart;
-
-const styles = StyleSheet.create({});
 
 const PaymentSection = ({
   totalPrice,
@@ -218,7 +218,6 @@ const PaymentSection = ({
         style={{
           height: RFValue(40),
           paddingHorizontal: RFValue(30),
-          // flex: 1,
           backgroundColor: COLORS.primary,
           borderRadius: 14,
           alignItems: "center",
@@ -308,7 +307,7 @@ const BillSection = ({
             Item Total
           </CustomText>
           <CustomText variant="h7" fontFamily="gilroyMedium">
-            ₹{totalPrice}
+            ₹{totalPrice.toFixed(2)}
           </CustomText>
         </View>
 
@@ -320,10 +319,10 @@ const BillSection = ({
           }}
         >
           <CustomText variant="h7" color={COLORS.darkGray}>
-            Delivery Free | 7 Kms
+            Delivery Fee | 7 Kms
           </CustomText>
           <CustomText variant="h7" fontFamily="gilroyMedium">
-            {deliveryFee}
+            ₹{deliveryFee.toFixed(2)}
           </CustomText>
         </View>
       </View>
@@ -346,7 +345,7 @@ const BillSection = ({
             fontFamily="gilroyMedium"
             color={selectedTip ? "black" : COLORS.primary}
           >
-            {selectedTip ? ` ₹${selectedTip}.00` : "Add tip"}
+            {selectedTip ? `₹${selectedTip}.00` : "Add tip"}
           </CustomText>
         </View>
         <View
@@ -360,7 +359,7 @@ const BillSection = ({
             GST & Other Charges
           </CustomText>
           <CustomText variant="h7" fontFamily="gilroyMedium">
-            ₹{otherCharges}
+            ₹{otherCharges.toFixed(2)}
           </CustomText>
         </View>
       </View>
@@ -398,6 +397,7 @@ interface RenderCartItemSectionProp {
   cartItems: CartItem[];
   restaurant: Restaurant;
 }
+
 const RenderCartItemSection: React.FC<RenderCartItemSectionProp> = ({
   cartItems,
   restaurant,
@@ -409,6 +409,7 @@ const RenderCartItemSection: React.FC<RenderCartItemSectionProp> = ({
       return curr + acc.quantity;
     }, 0);
   }, [cartItems]);
+
   return (
     <View
       style={{
@@ -419,9 +420,14 @@ const RenderCartItemSection: React.FC<RenderCartItemSectionProp> = ({
     >
       <View style={{ gap: RFValue(10) }}>
         {cartItems.map((item, index) => {
+          // Create unique key combining item id and addons
+          const addonIds =
+            item.addons?.map((addon) => addon.id).join("-") || "no-addons";
+          const uniqueKey = `${item.id}_${addonIds}_${index}`;
+
           return (
             <View
-              key={`${item.id}_${index}`}
+              key={uniqueKey}
               style={{
                 flexDirection: "row",
                 gap: RFValue(20),
@@ -445,21 +451,24 @@ const RenderCartItemSection: React.FC<RenderCartItemSectionProp> = ({
                     {item.name}
                   </CustomText>
                 </View>
-                <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-                  {item.addons?.map((customization, index) => {
-                    return (
-                      <CustomText
-                        key={index}
-                        variant="h7"
-                        fontSize={RFValue(7)}
-                        color={COLORS.darkGray}
-                      >
-                        {customization.name}
-                        {index !== (item.addons?.length ?? 0) - 1 ? " + " : " "}
-                      </CustomText>
-                    );
-                  })}
-                </View>
+                {/* Display addons if they exist */}
+                {item.addons && item.addons.length > 0 && (
+                  <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+                    {item.addons.map((addon, addonIndex) => {
+                      return (
+                        <CustomText
+                          key={addon.id}
+                          variant="h7"
+                          fontSize={RFValue(7)}
+                          color={COLORS.darkGray}
+                        >
+                          {addon.name}
+                          {addonIndex !== item.addons!.length - 1 ? " + " : " "}
+                        </CustomText>
+                      );
+                    })}
+                  </View>
+                )}
               </View>
               <View
                 style={{
@@ -467,7 +476,6 @@ const RenderCartItemSection: React.FC<RenderCartItemSectionProp> = ({
                   alignItems: "center",
                   gap: 8,
                   justifyContent: "space-evenly",
-                  // flex: 1,
                 }}
               >
                 <View
@@ -480,7 +488,7 @@ const RenderCartItemSection: React.FC<RenderCartItemSectionProp> = ({
                     variant="h7"
                     style={{ fontVariant: ["tabular-nums"] }}
                   >
-                    ₹{item.price * item.quantity}
+                    ₹{Number(item.cartPrice).toFixed(2)}
                   </CustomText>
                 </View>
                 <View
@@ -596,7 +604,11 @@ const RenderCartItemSection: React.FC<RenderCartItemSectionProp> = ({
             Cooking Instructions
           </CustomText>
         </View>
-        <View
+        <TouchableOpacity
+          onPress={() => {
+            // Navigate back to menu to add more items
+            router.back();
+          }}
           style={{
             flexDirection: "row",
             alignItems: "center",
@@ -618,7 +630,7 @@ const RenderCartItemSection: React.FC<RenderCartItemSectionProp> = ({
           >
             Add More Items
           </CustomText>
-        </View>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -643,7 +655,7 @@ const CouponsSection = () => {
         Savings Corner
       </CustomText>
 
-      <View
+      <TouchableOpacity
         style={{
           flexDirection: "row",
           marginTop: PADDING_HORIZONTAL,
@@ -672,10 +684,11 @@ const CouponsSection = () => {
           color="black"
           style={{ marginLeft: "auto" }}
         />
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };
+
 const DeliveryInstructionSection = ({
   selectedTip,
   setSelectedTip,
@@ -687,6 +700,7 @@ const DeliveryInstructionSection = ({
   const [selectedDeliveryType, setSelectedDeliveryType] = useState(
     deliveryType[0]
   );
+
   return (
     <View
       style={{
@@ -711,7 +725,6 @@ const DeliveryInstructionSection = ({
                 onPress={() => setSelectedDeliveryType(item)}
               >
                 <View
-                  key={item}
                   style={{
                     flexDirection: "row",
                     gap: 10,
@@ -739,7 +752,7 @@ const DeliveryInstructionSection = ({
                           backgroundColor: COLORS.primary,
                           borderRadius: 100,
                         }}
-                      ></Animated.View>
+                      />
                     )}
                   </View>
                   <View style={{ gap: 3 }}>
@@ -751,7 +764,7 @@ const DeliveryInstructionSection = ({
                     </CustomText>
                   </View>
                 </View>
-                {index != deliveryType.length - 1 && (
+                {index !== deliveryType.length - 1 && (
                   <DashedLine style={{ marginVertical: PADDING_HORIZONTAL }} />
                 )}
               </TouchableOpacity>
@@ -759,6 +772,7 @@ const DeliveryInstructionSection = ({
           })}
         </Animated.View>
       )}
+
       {activeIndex === 1 && (
         <Animated.View
           entering={FadeIn}
@@ -770,7 +784,7 @@ const DeliveryInstructionSection = ({
         >
           <CustomText variant="h7" fontFamily="gilroyMedium">
             Delivering in the rain is tough. Your tip, big or small, boosts your
-            rider's spirits and keeps then going.
+            rider's spirits and keeps them going.
           </CustomText>
 
           <View
@@ -834,7 +848,6 @@ const DeliveryInstructionSection = ({
                         alignSelf: "flex-end",
                         justifyContent: "center",
                         alignItems: "center",
-                        // paddingVertical: RFValue(2),
                         flex: 1,
                       }}
                     >
@@ -854,6 +867,7 @@ const DeliveryInstructionSection = ({
           </View>
         </Animated.View>
       )}
+
       {activeIndex === 2 && (
         <Animated.View
           entering={FadeIn}
@@ -871,7 +885,7 @@ const DeliveryInstructionSection = ({
           >
             {instructions.map((item, index) => {
               return (
-                <View
+                <TouchableOpacity
                   key={index}
                   style={{
                     borderWidth: BORDER_WIDTH,
@@ -882,7 +896,7 @@ const DeliveryInstructionSection = ({
                     borderColor: COLORS.gray,
                   }}
                 >
-                  <View style={{}}>{item.icon}</View>
+                  <View>{item.icon}</View>
                   <View>
                     <CustomText
                       variant="h7"
@@ -892,7 +906,7 @@ const DeliveryInstructionSection = ({
                       {item.title}
                     </CustomText>
                   </View>
-                </View>
+                </TouchableOpacity>
               );
             })}
           </ScrollView>
@@ -936,3 +950,5 @@ const instructions = [
     icon: <FontAwesome5 name="user-secret" size={iconSize} color={iconColor} />,
   },
 ];
+
+const styles = StyleSheet.create({});

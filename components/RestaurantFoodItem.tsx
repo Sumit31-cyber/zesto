@@ -25,7 +25,8 @@ interface Props {
 const _imageSize = RFValue(120);
 const _addButtonHeight = RFValue(30);
 const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
-  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  // const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const { addonsModalRef } = useSharedState();
   const repeatModalRef = useRef<BottomSheetModal>(null);
   const dispatch = useDispatch();
   const isCustomizable = item.addons && item.addons?.length > 0;
@@ -33,6 +34,7 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
     selectedCustomizableItem,
     setSelectedCustomizableItem,
     initializeCustomizableItem,
+    setActiveAddonsMenuId,
   } = useSharedState();
   const { carts } = useSelector((state: RootState) => state.cart);
 
@@ -63,11 +65,12 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
 
   const handleAddToCardButtonPress = useCallback(() => {
     if (isCustomizable) {
+      setActiveAddonsMenuId(item.id);
       if (cart && cart?.quantity != 0) {
         repeatModalRef.current?.present();
       } else {
-        bottomSheetModalRef.current?.present();
-        initializeCustomizableItem(item.price);
+        addonsModalRef.current?.present();
+        // initializeCustomizableItem(item.price);
       }
     } else {
       dispatch(
@@ -85,32 +88,13 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
 
   return (
     <View style={{}}>
-      <CustomizableModal
-        modalRef={bottomSheetModalRef}
-        menuItem={item}
-        restaurant={restaurant}
-        onAddToCartPress={() => {
-          bottomSheetModalRef.current?.dismiss();
-          dispatch(
-            addItemToCart({
-              item: {
-                ...item,
-                price: selectedCustomizableItem.price,
-                quantity: selectedCustomizableItem.quantity,
-                addons: selectedCustomizableItem.selectedOptions,
-              },
-              restaurant: restaurant,
-            })
-          );
-        }}
-      />
       <RepeatModal
         modalRef={repeatModalRef}
         foodItem={item}
         restaurant={restaurant}
         onAddNewCustomizable={() => {
           repeatModalRef?.current?.dismiss();
-          bottomSheetModalRef?.current?.present();
+          addonsModalRef?.current?.present();
           initializeCustomizableItem(item.price);
         }}
       />

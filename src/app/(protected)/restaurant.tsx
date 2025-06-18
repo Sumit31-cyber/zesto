@@ -115,6 +115,7 @@ const RestaurantScreen = () => {
 
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
+      <CustomizableModal restaurant={data} />
       <Animated.View
         onLayout={(event) => {
           setHeaderHeight(event.nativeEvent.layout.height);

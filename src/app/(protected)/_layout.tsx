@@ -1,4 +1,5 @@
 import { useAuth } from "@clerk/clerk-expo";
+import CustomizableModal from "components/CustomizableModal";
 import { Redirect, Slot, Stack } from "expo-router";
 
 export default function ProtectedLayout() {

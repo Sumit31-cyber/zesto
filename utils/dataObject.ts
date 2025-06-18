@@ -1,5 +1,9 @@
 import { ImageRequireSource } from "react-native";
-import { RecommendedRestaurantDataTypes, Restaurant } from "types/types";
+import {
+  ItemAddon,
+  RecommendedRestaurantDataTypes,
+  Restaurant,
+} from "types/types";
 
 export const foodType = [
   {
@@ -795,7 +799,7 @@ export interface CartItem {
   quantity: number;
   cartPrice?: number;
   isBestSeller?: boolean;
-  addons?: CustomizationOption[];
+  addons?: ItemAddon[];
 }
 
 export interface RestaurantDetails {

@@ -46,13 +46,13 @@ const cartSlice = createSlice({
           const existingItem = existingRestaurant.items[existingItemIndex];
           existingItem.quantity += item.quantity;
           existingItem.cartPrice = existingItem.cartPrice
-            ? existingItem.cartPrice + item.price
+            ? Number(existingItem.cartPrice) + Number(item.price)
             : item.price;
         } else {
           existingRestaurant.items.push({
             ...item,
             quantity: item.quantity,
-            cartPrice: item.price,
+            cartPrice: item.cartPrice,
             addons: item.addons || [],
           });
         }
@@ -63,7 +63,7 @@ const cartSlice = createSlice({
             {
               ...item,
               quantity: item.quantity,
-              cartPrice: item.price,
+              cartPrice: item.cartPrice,
               addons: item.addons || [],
             },
           ],

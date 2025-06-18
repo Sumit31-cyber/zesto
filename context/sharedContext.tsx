@@ -3,21 +3,19 @@ import {
   createContext,
   Dispatch,
   FC,
-  PropsWithChildren,
-  Ref,
   RefObject,
   SetStateAction,
   useContext,
   useRef,
   useState,
 } from "react";
-import Animated, { SharedValue, useSharedValue } from "react-native-reanimated";
-import { CustomizationOption } from "utils/dataObject";
+import { SharedValue, useSharedValue } from "react-native-reanimated";
+import { ItemAddon, Restaurant } from "types/types"; // Fixed: Import ItemAddon from types
 
 interface CurrentCartItem {
   quantity: number;
   price: number;
-  selectedOptions: CustomizationOption[];
+  selectedOptions: ItemAddon[]; // Fixed: Use ItemAddon[] instead of CustomizationOption[]
 }
 
 interface SharedContextType {
@@ -25,17 +23,21 @@ interface SharedContextType {
   scrollYGlobal: SharedValue<number>;
   expanded: SharedValue<boolean>;
   bottomSheetModalRef: RefObject<BottomSheetModal>;
+  addonsModalRef: RefObject<BottomSheetModal>;
   selectedCustomizableItem: CurrentCartItem;
   setSelectedCustomizableItem: Dispatch<SetStateAction<CurrentCartItem>>;
   initializeCustomizableItem: (value: number) => void;
   showSplashScreen: boolean;
   setShowSplashScreen: (value: boolean) => void;
+  activeAddonsMenuId: string;
+  setActiveAddonsMenuId: Dispatch<SetStateAction<string>>;
   //   scrollToTop: () => void;
 }
 
 const SharedStateContext = createContext<SharedContextType | undefined>(
   undefined
 );
+
 export const SharedStateProvider: FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
@@ -43,7 +45,9 @@ export const SharedStateProvider: FC<{ children: React.ReactNode }> = ({
   const scrollYGlobal = useSharedValue(0);
   const expanded = useSharedValue(false);
   const [showSplashScreen, setShowSplashScreen] = useState(true);
+  const [activeAddonsMenuId, setActiveAddonsMenuId] = useState("");
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const addonsModalRef = useRef<BottomSheetModal>(null);
   const [selectedCustomizableItem, setSelectedCustomizableItem] =
     useState<CurrentCartItem>({
       quantity: 1,
@@ -52,12 +56,13 @@ export const SharedStateProvider: FC<{ children: React.ReactNode }> = ({
     });
 
   const initializeCustomizableItem = (price: number) => {
-    setSelectedCustomizableItem((prev) => ({
+    setSelectedCustomizableItem({
       quantity: 1,
       selectedOptions: [],
       price,
-    }));
+    });
   };
+
   return (
     <SharedStateContext.Provider
       value={{
@@ -70,6 +75,9 @@ export const SharedStateProvider: FC<{ children: React.ReactNode }> = ({
         expanded,
         showSplashScreen,
         setShowSplashScreen,
+        addonsModalRef,
+        activeAddonsMenuId,
+        setActiveAddonsMenuId,
       }}
     >
       {children}
@@ -80,10 +88,8 @@ export const SharedStateProvider: FC<{ children: React.ReactNode }> = ({
 export const useSharedState = () => {
   const context = useContext(SharedStateContext);
 
-  if (context == undefined) {
-    throw new Error(
-      "useSharedState must be used within a useSharedStateProvider"
-    );
+  if (context === undefined) {
+    throw new Error("useSharedState must be used within a SharedStateProvider");
   }
 
   return context;
