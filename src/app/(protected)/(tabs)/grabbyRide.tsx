@@ -1,11 +1,21 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import CustomText from "components/customText";
+import { clearAllPersistedData } from "redux/store";
 
 const GrabbyRide = () => {
   return (
     <View style={{ flex: 1, backgroundColor: "#0fb758" }}>
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <TouchableOpacity
+          onPress={() => {
+            clearAllPersistedData();
+          }}
+        >
+          <CustomText variant="h1" fontFamily="gilroyExtraBold" color="red">
+            Clear
+          </CustomText>
+        </TouchableOpacity>
         <CustomText variant="h2" fontFamily="gilroyThin" color="white">
           Gilroy Thin
         </CustomText>

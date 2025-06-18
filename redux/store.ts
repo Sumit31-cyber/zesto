@@ -27,7 +27,7 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: ["persist/PERSIST"],
+        ignoredActions: ["persist/PERSIST", "persist/PURGE"],
       },
     }),
 });
@@ -35,3 +35,12 @@ const store = configureStore({
 const persistor = persistStore(store);
 
 export { store, persistor };
+
+export const clearAllPersistedData = async () => {
+  try {
+    await persistor.purge();
+    console.log("All persisted data cleared successfully");
+  } catch (error) {
+    console.error("Error clearing persisted data:", error);
+  }
+};

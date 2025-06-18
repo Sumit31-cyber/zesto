@@ -102,7 +102,7 @@ const OrderHistoryCart: React.FC<Props> = ({ item, index }) => {
           color={COLORS.darkGray}
           numberOfLines={1}
         >
-          {item.restaurant.address}
+          {item.restaurant.address.addressLine1}
         </CustomText>
         <CustomText
           variant="h6"

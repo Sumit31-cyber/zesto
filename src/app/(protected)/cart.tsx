@@ -65,7 +65,9 @@ const Cart = () => {
     (item) => item.restaurant.id === restaurantId
   );
 
-  console.log(JSON.stringify(cartData, null, 2));
+  const [selectedTip, setSelectedTip] = useState<null | number>(null);
+
+  const dispatch = useDispatch();
 
   if (!cartData) {
     return (
@@ -74,11 +76,6 @@ const Cart = () => {
       </View>
     );
   }
-
-  const [selectedTip, setSelectedTip] = useState<null | number>(null);
-
-  const { top, bottom } = useSafeAreaInsets();
-  const dispatch = useDispatch();
   const deliveryCharges = Number(cartData.restaurant.deliveryFee) || 0;
 
   // Fixed cart calculation - sum all cartPrice values
@@ -92,23 +89,28 @@ const Cart = () => {
   const toPay = totalAmount.toFixed(2);
 
   const paymentHandler = () => {
-    dispatch(
-      addToOrderHistory({
-        restaurant: cartData.restaurant,
-        foodItems: cartData.items,
-        deliveryCharge: deliveryCharges,
-        otherCharges: otherCharges,
-        totalItemAmount: cartItemPrice.toFixed(2),
-        totalAmountPaid: toPay,
-        deliveryTip: selectedTip,
-      })
-    );
+    try {
+      dispatch(
+        addToOrderHistory({
+          restaurant: cartData.restaurant,
+          foodItems: cartData.items,
+          deliveryCharge: deliveryCharges,
+          otherCharges: otherCharges,
+          totalItemAmount: cartItemPrice.toFixed(2),
+          totalAmountPaid: toPay,
+          deliveryTip: selectedTip,
+        })
+      );
 
-    dispatch(
-      removeAllItemFromRestaurant({
-        restaurantId: cartData.restaurant.id,
-      })
-    );
+      dispatch(
+        removeAllItemFromRestaurant({
+          restaurantId: cartData.restaurant.id,
+        })
+      );
+      router.back();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (

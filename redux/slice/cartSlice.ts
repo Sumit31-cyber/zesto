@@ -112,16 +112,20 @@ const cartSlice = createSlice({
 
       console.log(restaurantId);
       const existingRestaurant = state.carts.find(
-        (cart) => cart.restaurant.id === restaurantId
+        (cart) => cart.restaurant.id == restaurantId
       );
 
       console.log(existingRestaurant);
 
       if (existingRestaurant) {
         console.log("Filtering");
-        state.carts = state.carts.filter(
-          (cart) => cart.restaurant.id !== restaurantId
+        const filteredItem = state.carts.filter(
+          (cart) => cart.restaurant.id != restaurantId
         );
+
+        state.carts = filteredItem;
+
+        console.log(filteredItem);
       }
     },
     clearRestaurantCart: (state, action) => {},

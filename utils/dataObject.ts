@@ -827,11 +827,11 @@ export interface FavoriteItem {
   id: number;
 }
 export interface FavoriteState {
-  favorites: RecommendedRestaurantDataTypes[];
+  favorites: Restaurant[];
 }
 
 export interface OrderHistoryType {
-  restaurant: RecommendedRestaurantDataTypes;
+  restaurant: Restaurant;
   foodItems: CartItem[];
   totalItemAmount: number;
   deliveryCharge: number;
