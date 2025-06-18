@@ -118,6 +118,7 @@ const CustomizableModal = ({
       onChange={(value) => {
         if (value === -1) {
           setSelectedAddons(null);
+          setQuantity(1);
         }
       }}
       backdropComponent={ModalBackdrop}

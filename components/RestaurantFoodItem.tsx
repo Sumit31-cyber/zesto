@@ -78,6 +78,7 @@ const RestaurantFoodItem: FC<Props> = ({ item, index, restaurant }) => {
           item: {
             ...item,
             quantity: selectedCustomizableItem.quantity,
+            cartPrice: item.price * selectedCustomizableItem.quantity,
             addons: [],
           },
           restaurant: restaurant,
