@@ -268,6 +268,19 @@ export interface FavoriteState {
   favorites: Restaurant[];
 }
 
+export enum OrderStatus {
+  "pending", // Order placed but not yet accepted
+  "accepted", // Restaurant accepted the order
+  "preparing", // Food is being prepared
+  "ready", // Order is ready for pickup
+  "picked_up", // Delivery partner picked up the order
+  "in_transit", // Order is on the way
+  "delivered", // Order successfully delivered
+  "declined", // Restaurant declined the order
+  "cancelled", // User or system cancelled the order
+  "failed", // Order failed due to payment or other issues
+}
+
 export interface OrderHistoryType {
   restaurant: Restaurant;
   foodItems: CartItem[];
@@ -277,6 +290,7 @@ export interface OrderHistoryType {
   otherCharges: number;
   totalAmountPaid: number;
   createdAt: string;
+  status: OrderStatus;
 }
 
 export interface OrderHistoryState {

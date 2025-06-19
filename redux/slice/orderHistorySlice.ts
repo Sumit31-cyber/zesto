@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "redux/store";
 import dayjs from "dayjs";
-import { OrderHistoryState } from "types/types";
+import { OrderHistoryState, OrderHistoryType, OrderStatus } from "types/types";
 
 const now = dayjs();
 const initialState: OrderHistoryState = {
@@ -23,7 +23,8 @@ const orderHistorySlice = createSlice({
         deliveryTip,
       } = action.payload;
       const formattedDate = now.format("MMMM DD, h:mmA");
-      state.orders.push({
+
+      const newOrder: OrderHistoryType = {
         totalAmountPaid,
         deliveryCharge,
         foodItems,
@@ -32,7 +33,9 @@ const orderHistorySlice = createSlice({
         restaurant,
         deliveryTip,
         createdAt: formattedDate,
-      });
+        status: OrderStatus.pending,
+      };
+      state.orders = [newOrder, ...state.orders];
     },
 
     clearOrderHistory: (state) => {
