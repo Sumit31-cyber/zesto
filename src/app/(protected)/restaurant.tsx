@@ -1,6 +1,5 @@
 import {
   ActivityIndicator,
-  Alert,
   Button,
   SectionList,
   StyleSheet,
@@ -8,18 +7,13 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { BORDER_WIDTH, COLORS, PADDING_HORIZONTAL } from "utils/constants";
 import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
-import {
-  RecommendedRestaurantDataTypes,
-  Restaurant,
-  RestaurantDetail,
-} from "types/types";
+import { RestaurantDetail } from "types/types";
 import CustomText from "components/customText";
 import { Image } from "expo-image";
-import { restaurantItemsData } from "utils/dataObject";
 import Animated, {
   Extrapolation,
   interpolate,
@@ -45,8 +39,8 @@ const RestaurantScreen = () => {
   };
 
   const { data, isLoading, error, isError } = useQuery<RestaurantDetail>({
-    queryKey: ["restaurant_details", restaurantId], // Include restaurantId in query key
-    queryFn: () => getRestaurantDetail(restaurantId), // Add return statement
+    queryKey: ["restaurant_details", restaurantId],
+    queryFn: () => getRestaurantDetail(restaurantId),
     enabled: !!restaurantId, // Only run query if restaurantId exists
   });
 

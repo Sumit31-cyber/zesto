@@ -1,12 +1,11 @@
 import {
   FlatList,
-  ScrollView,
   SectionList,
   StatusBar,
   StyleSheet,
   View,
 } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   BOTTOM_TAB_HEIGHT,
   COLORS,
@@ -17,11 +16,8 @@ import {
 import LocationHeader from "components/LocationHeader";
 import Animated, {
   interpolate,
-  runOnJS,
-  useAnimatedReaction,
   useAnimatedScrollHandler,
   useAnimatedStyle,
-  useDerivedValue,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
@@ -30,7 +26,6 @@ import SearchBar from "components/SearchBar";
 import { Image, ImageBackground } from "expo-image";
 import { useSharedState } from "context/sharedContext";
 import LottieView from "lottie-react-native";
-import Divider from "components/Divider";
 import CustomText from "components/customText";
 import LimelightRestaurantCarousal from "components/LimelightRestaurantCarousal";
 import SectionHeader from "components/SectionHeader";
@@ -39,36 +34,18 @@ import { dineOutRestaurantsList, restaurantType } from "utils/dataObject";
 import { LinearGradient } from "expo-linear-gradient";
 import { AntDesign } from "@expo/vector-icons";
 import { headerHeight } from "components/CustomHeader";
-import { useFocusEffect } from "expo-router";
 
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
 
 const DineOut = () => {
   const { top } = useSafeAreaInsets();
-  const [headerHeight, setHeaderHeight] = useState(0);
   const [locationSectionHeight, setLocationSectionHeight] = useState(0);
   const { scrollY, scrollYGlobal } = useSharedState();
-  const [changeTextColor, setChangeTextColor] = useState(false);
-
-  const shouldChangeState = useDerivedValue(() => {
-    return scrollYGlobal.value > 10;
-  });
-
-  // React to changes
-  // useAnimatedReaction(
-  //   () => shouldChangeState.value,
-  //   (current, previous) => {
-  //     if (current !== previous) {
-  //       runOnJS(setChangeTextColor)(current);
-  //     }
-  //   }
-  // );
 
   const clampedValue = useSharedValue(0);
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
-      // "worklet";
       const currentScrollY = event.contentOffset.y;
       const diff = currentScrollY - scrollYGlobal.value;
 
@@ -78,9 +55,6 @@ const DineOut = () => {
       );
 
       const isScrollingDown = currentScrollY > scrollYGlobal.value;
-
-      // Handle text color change
-      // runOnJS(setChangeTextColor)(currentScrollY < 10);
 
       if (currentScrollY < 200) {
         scrollYGlobal.value = currentScrollY;
@@ -150,9 +124,6 @@ const DineOut = () => {
     >
       <StatusBar animated={true} barStyle={"dark-content"} />
       <Animated.View
-        onLayout={(event) => {
-          setHeaderHeight(event.nativeEvent.layout.height);
-        }}
         style={[
           absoluteHeaderStyle,
           {

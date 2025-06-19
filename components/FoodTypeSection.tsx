@@ -1,12 +1,6 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import React from "react";
-import {
-  BORDER_WIDTH,
-  COLORS,
-  PADDING_HORIZONTAL,
-  screenHeight,
-  screenWidth,
-} from "utils/constants";
+import { COLORS, screenWidth } from "utils/constants";
 import { foodType } from "utils/dataObject";
 import { Image } from "expo-image";
 import { FoodTypesProps } from "types/types";

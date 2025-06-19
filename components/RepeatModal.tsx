@@ -6,11 +6,7 @@ import {
   BottomSheetModal,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
-import {
-  MenuItem,
-  RecommendedRestaurantDataTypes,
-  Restaurant,
-} from "types/types";
+import { MenuItem, Restaurant, RestaurantCart } from "types/types";
 import ModalBackdrop from "./ModalBackdrop";
 import { RFValue } from "react-native-responsive-fontsize";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -21,7 +17,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "redux/store";
 import MiniFoodItem from "./MiniFoodItem";
 import { Entypo } from "@expo/vector-icons";
-import { RestaurantCart } from "utils/dataObject";
 
 const RepeatModal = ({
   foodItem,

@@ -3,7 +3,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "redux/store";
 import CustomHeader from "components/CustomHeader";
-import { OrderHistoryType } from "utils/dataObject";
+
 import { BORDER_WIDTH, COLORS, PADDING_HORIZONTAL } from "utils/constants";
 import CustomText from "components/customText";
 import { AntDesign } from "@expo/vector-icons";
@@ -15,6 +15,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useSharedState } from "context/sharedContext";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { OrderHistoryType } from "types/types";
 
 const Reorder = () => {
   const { orders } = useSelector((state: RootState) => state.orderHistory);
@@ -114,7 +115,7 @@ const OrderHistoryCart: React.FC<Props> = ({ item, index }) => {
           Rs. {item.totalAmountPaid}
         </CustomText>
       </View>
-      <DashedLine style={{ marginVertical: RFValue(4) }} />
+      <DashedLine style={{}} />
       <View style={{ padding: PADDING_HORIZONTAL, gap: 10 }}>
         {item.foodItems.map((fItem, index) => {
           return (

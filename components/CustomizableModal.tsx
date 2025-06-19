@@ -1,12 +1,5 @@
-import {
-  ActivityIndicator,
-  Alert,
-  FlatList,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import React, { memo, RefObject, useCallback, useMemo, useState } from "react";
+import { FlatList, TouchableOpacity, View } from "react-native";
+import React, { memo, useState } from "react";
 import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import { useSharedState } from "context/sharedContext";
 import ModalBackdrop from "./ModalBackdrop";
@@ -18,13 +11,10 @@ import CustomText from "./customText";
 import { Entypo, Feather } from "@expo/vector-icons";
 import DashedLine from "./DashedLine";
 import Animated, { ZoomIn, ZoomOut } from "react-native-reanimated";
-import { useDispatch, useSelector } from "react-redux";
-import { addItemToCart, selectRestaurantCartItem } from "redux/slice/cartSlice";
-import { ItemAddon, MenuItem, Restaurant, RestaurantDetail } from "types/types";
-import { useQuery } from "@tanstack/react-query";
-import { getRestaurantDetail } from "utils/ApiManager";
+import { useDispatch } from "react-redux";
+import { addItemToCart } from "redux/slice/cartSlice";
+import { ItemAddon, MenuItem, RestaurantDetail } from "types/types";
 
-// Fixed: Use ItemAddon instead of CustomizationOption and handle string price conversion
 const calculatePrice = (
   basePrice: number,
   quantity: number,

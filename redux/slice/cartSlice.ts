@@ -1,19 +1,6 @@
-import {
-  CartItem,
-  CartState,
-  CustomizationOption,
-  RestaurantDetails,
-} from "utils/dataObject";
-
 import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import {
-  MenuItem,
-  RecommendedRestaurantDataTypes,
-  Restaurant,
-} from "types/types";
+import { CartItem, CartState, Restaurant } from "types/types";
 import { RootState } from "redux/store";
-import * as Crypto from "expo-crypto";
-import { Alert } from "react-native";
 
 const initialState: CartState = {
   carts: [],

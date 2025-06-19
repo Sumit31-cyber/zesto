@@ -237,6 +237,52 @@ interface MenuItem {
   addons?: ItemAddon[];
 }
 
+export interface CartItem {
+  id: string;
+  restaurantId: string;
+  categoryId: string;
+  name: string;
+  description?: string;
+  price: number;
+  imageUrl: string;
+  isVegetarian: boolean;
+  isAvailable: boolean;
+  quantity: number;
+  cartPrice?: number;
+  isBestSeller?: boolean;
+  addons?: ItemAddon[];
+}
+
+export interface RestaurantCart {
+  restaurant: Restaurant;
+  items: CartItem[];
+}
+export interface CartState {
+  carts: RestaurantCart[];
+}
+
+export interface FavoriteItem {
+  id: number;
+}
+export interface FavoriteState {
+  favorites: Restaurant[];
+}
+
+export interface OrderHistoryType {
+  restaurant: Restaurant;
+  foodItems: CartItem[];
+  totalItemAmount: number;
+  deliveryCharge: number;
+  deliveryTip: number;
+  otherCharges: number;
+  totalAmountPaid: number;
+  createdAt: string;
+}
+
+export interface OrderHistoryState {
+  orders: OrderHistoryType[];
+}
+
 // Export all types
 export type {
   DayOfWeek,

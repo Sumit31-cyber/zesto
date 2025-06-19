@@ -7,7 +7,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
-import { RestaurantCart } from "utils/dataObject";
+
 import { Image } from "expo-image";
 import CustomText from "./customText";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
@@ -21,6 +21,7 @@ import { wait } from "utils/functions";
 import { RFValue } from "react-native-responsive-fontsize";
 import { useDispatch } from "react-redux";
 import { removeAllItemFromRestaurant } from "redux/slice/cartSlice";
+import { RestaurantCart } from "types/types";
 
 export type ItemType = {
   id: number;

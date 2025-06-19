@@ -6,7 +6,7 @@ import {
   View,
 } from "react-native";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Restaurant } from "types/types";
+import { FavoriteItem, Restaurant } from "types/types";
 import { RFValue } from "react-native-responsive-fontsize";
 import { Image } from "expo-image";
 import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -38,7 +38,7 @@ const RecommendedRestaurantListItem: React.FC<Props> = ({
   const [isAnimationReady, setIsAnimationReady] = useState(false);
 
   const isFavorite = favorites.some(
-    (option) => String(option.id) === String(item.id)
+    (option: FavoriteItem) => String(option.id) === String(item.id)
   );
 
   const handleFavoriteToggle = useCallback(() => {

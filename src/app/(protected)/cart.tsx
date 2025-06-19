@@ -25,7 +25,7 @@ import {
 } from "utils/constants";
 import CustomText from "components/customText";
 import { router, useLocalSearchParams } from "expo-router";
-import { CartItem, RestaurantCart } from "utils/dataObject";
+
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Image } from "expo-image";
 import AnimatedSegmentControl from "components/AnimatedSegmentControl";
@@ -50,7 +50,7 @@ import {
   selectCart,
   selectRestaurantCart,
 } from "redux/slice/cartSlice";
-import { Restaurant } from "types/types";
+import { CartItem, Restaurant, RestaurantCart } from "types/types";
 import { RootState } from "redux/store";
 
 const _boxBorderRadius = 14;

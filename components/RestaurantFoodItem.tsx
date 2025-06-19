@@ -1,6 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { FC, useCallback, useMemo, useRef, useState } from "react";
-import { RestaurantDetails } from "utils/dataObject";
 import { Image } from "expo-image";
 import { RFValue } from "react-native-responsive-fontsize";
 import DashedLine from "./DashedLine";

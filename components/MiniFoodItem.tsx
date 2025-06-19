@@ -1,6 +1,5 @@
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import React from "react";
-import { CartItem } from "utils/dataObject";
 import { Image } from "expo-image";
 import CustomText from "./customText";
 import { BORDER_WIDTH, COLORS } from "utils/constants";
@@ -8,7 +7,7 @@ import { Entypo } from "@expo/vector-icons";
 import { RFValue } from "react-native-responsive-fontsize";
 import { useDispatch } from "react-redux";
 import { addItemToCart, removeItemFromCart } from "redux/slice/cartSlice";
-import { Restaurant } from "types/types";
+import { CartItem, Restaurant } from "types/types";
 import { useBottomSheetModal } from "@gorhom/bottom-sheet";
 
 const MiniFoodItem = ({
