@@ -6,7 +6,6 @@ import {
   View,
 } from "react-native";
 import React from "react";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { COLORS } from "utils/constants";
 import { SendIcon } from "assets/svgs/svgs";
 import CustomText from "./customText";
@@ -79,6 +78,7 @@ const LocationHeader: React.FC<Props> = ({
         onPress={async () => {
           // await signOut();
           console.log(userId);
+          // emit("event1", { hello: "Name" });
         }}
         style={{
           height: 40,

@@ -52,14 +52,18 @@ import {
 } from "redux/slice/cartSlice";
 import { CartItem, Restaurant, RestaurantCart } from "types/types";
 import { RootState } from "redux/store";
-
+import io, { Socket } from "socket.io-client";
+import { useSocket } from "utils/CustomHook/useSocket";
+import { useSharedState } from "context/sharedContext";
+import { useAuth } from "@clerk/clerk-expo";
 const _boxBorderRadius = 14;
 const otherCharges = 56.34;
 
 const Cart = () => {
   const { restaurantId } = useLocalSearchParams<{ restaurantId: string }>();
   const { carts } = useSelector((state: RootState) => state.cart);
-
+  const { userId } = useAuth();
+  const { socketClient } = useSharedState();
   // Find cart data for the specific restaurant
   const cartData: RestaurantCart | undefined = carts.find(
     (item) => item.restaurant.id === restaurantId
@@ -78,17 +82,16 @@ const Cart = () => {
   }
   const deliveryCharges = Number(cartData.restaurant.deliveryFee) || 0;
 
-  // Fixed cart calculation - sum all cartPrice values
   const cartItemPrice = cartData.items.reduce((acc, curr) => {
     return acc + Number(curr.cartPrice || 0);
   }, 0);
 
-  // Fixed total calculation
   const totalAmount =
     cartItemPrice + otherCharges + deliveryCharges + (selectedTip || 0);
   const toPay = totalAmount.toFixed(2);
 
   const paymentHandler = () => {
+    console.log(userId);
     try {
       dispatch(
         addToOrderHistory({
@@ -102,11 +105,17 @@ const Cart = () => {
         })
       );
 
-      dispatch(
-        removeAllItemFromRestaurant({
-          restaurantId: cartData.restaurant.id,
-        })
-      );
+      // socketClient?.emit("new_order", {
+      //   fromUserId: userId,
+      //   toUserId: cartData.restaurant.ownerId,
+      //   message: JSON.stringify(cartData),
+      // });
+
+      // dispatch(
+      //   removeAllItemFromRestaurant({
+      //     restaurantId: cartData.restaurant.id,
+      //   })
+      // );
       router.back();
     } catch (err) {
       console.log(err);

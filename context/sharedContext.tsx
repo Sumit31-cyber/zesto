@@ -11,6 +11,7 @@ import {
 } from "react";
 import { SharedValue, useSharedValue } from "react-native-reanimated";
 import { ItemAddon, Restaurant } from "types/types"; // Fixed: Import ItemAddon from types
+import { io, Socket } from "socket.io-client";
 
 interface CurrentCartItem {
   quantity: number;
@@ -31,6 +32,8 @@ interface SharedContextType {
   setShowSplashScreen: (value: boolean) => void;
   activeAddonsMenuId: string;
   setActiveAddonsMenuId: Dispatch<SetStateAction<string>>;
+  socketClient: Socket | null;
+  setSocketClient: Dispatch<SetStateAction<Socket | null>>;
   //   scrollToTop: () => void;
 }
 
@@ -48,6 +51,7 @@ export const SharedStateProvider: FC<{ children: React.ReactNode }> = ({
   const [activeAddonsMenuId, setActiveAddonsMenuId] = useState("");
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const addonsModalRef = useRef<BottomSheetModal>(null);
+  const [socketClient, setSocketClient] = useState<Socket | null>(null);
   const [selectedCustomizableItem, setSelectedCustomizableItem] =
     useState<CurrentCartItem>({
       quantity: 1,
@@ -78,6 +82,8 @@ export const SharedStateProvider: FC<{ children: React.ReactNode }> = ({
         addonsModalRef,
         activeAddonsMenuId,
         setActiveAddonsMenuId,
+        socketClient,
+        setSocketClient,
       }}
     >
       {children}

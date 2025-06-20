@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const BASE_URL = "http://localhost:3000/api/v1/";
+export const SOCKET_URL = "http://localhost:3000/";
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL, // Replace with your API base URL
