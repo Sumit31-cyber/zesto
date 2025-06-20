@@ -299,6 +299,30 @@ export interface OrderHistoryState {
   orders: OrderHistoryType[];
 }
 
+type ReactNativeFile = {
+  uri: string;
+  name: string;
+  type: string;
+};
+
+interface ImageResponse {
+  data: [
+    {
+      format: string;
+      height: number;
+      publicId: string;
+      url: string;
+      width: number;
+    }
+  ];
+  success: boolean;
+}
+
+interface LocationCoordinateType {
+  longitude: number | null;
+  latitude: number | null;
+}
+
 // Export all types
 export type {
   DayOfWeek,
@@ -316,4 +340,7 @@ export type {
   RestaurantApiResponse,
   MenuItem,
   ItemAddon,
+  ReactNativeFile,
+  ImageResponse,
+  LocationCoordinateType,
 };

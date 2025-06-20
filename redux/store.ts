@@ -4,12 +4,14 @@ import { reduxPersistStorage } from "utils/MMKVStorage";
 import cartReducer from "redux/slice/cartSlice";
 import FavoriteReducer from "redux/slice/favoriteSlice";
 import OrderHistoryReducer from "redux/slice/orderHistorySlice";
+import userReducer from "redux/slice/userSlice";
 
 // Combine reducers
 const rootReducer = combineReducers({
   cart: cartReducer,
   favorite: FavoriteReducer,
   orderHistory: OrderHistoryReducer,
+  user: userReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
@@ -17,7 +19,7 @@ export type RootState = ReturnType<typeof rootReducer>;
 const persistConfig = {
   key: "root",
   storage: reduxPersistStorage,
-  whitelist: ["cart", "favorite", "orderHistory"],
+  whitelist: ["cart", "favorite", "orderHistory", "user"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

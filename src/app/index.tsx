@@ -9,14 +9,25 @@ import Animated, { FadeOutDown, SlideInDown } from "react-native-reanimated";
 
 import { useSharedState } from "context/sharedContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useDispatch } from "react-redux";
+import { getUserInformation } from "utils/ApiManager";
+import { setUser } from "redux/slice/userSlice";
 
 const Main = () => {
-  const { isSignedIn, isLoaded } = useAuth();
+  const { isSignedIn, userId, isLoaded } = useAuth();
   const { showSplashScreen, setShowSplashScreen } = useSharedState();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     console.log("Is SignedIn ", isSignedIn);
   }, [isSignedIn]);
+
+  const getUser = async () => {
+    if (userId) {
+      const userInformation = await getUserInformation(userId);
+      dispatch(setUser(userInformation.user));
+    }
+  };
 
   useEffect(() => {
     setTimeout(() => {
@@ -25,6 +36,12 @@ const Main = () => {
       }
     }, 2000);
   }, [isLoaded]);
+
+  useEffect(() => {
+    if (isSignedIn) {
+      getUser();
+    }
+  }, [isSignedIn]);
 
   if (showSplashScreen) {
     return (

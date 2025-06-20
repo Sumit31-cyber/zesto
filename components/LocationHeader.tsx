@@ -11,6 +11,8 @@ import { SendIcon } from "assets/svgs/svgs";
 import CustomText from "./customText";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { useAuth } from "@clerk/clerk-react";
+import { useSelector } from "react-redux";
+import { selectUserAddresses } from "redux/slice/userSlice";
 
 type Props = {
   titleStyle?: TextStyle;
@@ -23,6 +25,7 @@ const LocationHeader: React.FC<Props> = ({
   iconColor = "black",
 }) => {
   const { signOut, userId } = useAuth();
+  const userAddress = useSelector(selectUserAddresses);
   return (
     <View
       style={{
@@ -70,8 +73,7 @@ const LocationHeader: React.FC<Props> = ({
           numberOfLines={1}
           style={[{ opacity: 0.8, ...locationTextStyle }]}
         >
-          Mitra Mandal Colony, Nagar Nigam Colony, PhulwariSharif, near Shiv
-          Mandir
+          {userAddress[0].addressLine1}
         </CustomText>
       </View>
       <TouchableOpacity

@@ -93,17 +93,18 @@ const Cart = () => {
   const paymentHandler = () => {
     console.log(userId);
     try {
-      dispatch(
-        addToOrderHistory({
-          restaurant: cartData.restaurant,
-          foodItems: cartData.items,
-          deliveryCharge: deliveryCharges,
-          otherCharges: otherCharges,
-          totalItemAmount: cartItemPrice.toFixed(2),
-          totalAmountPaid: toPay,
-          deliveryTip: selectedTip,
-        })
-      );
+      router.navigate("/(protected)/createUserInformationScreen");
+      // dispatch(
+      //   addToOrderHistory({
+      //     restaurant: cartData.restaurant,
+      //     foodItems: cartData.items,
+      //     deliveryCharge: deliveryCharges,
+      //     otherCharges: otherCharges,
+      //     totalItemAmount: cartItemPrice.toFixed(2),
+      //     totalAmountPaid: toPay,
+      //     deliveryTip: selectedTip,
+      //   })
+      // );
 
       // socketClient?.emit("new_order", {
       //   fromUserId: userId,
@@ -116,7 +117,7 @@ const Cart = () => {
       //     restaurantId: cartData.restaurant.id,
       //   })
       // );
-      router.back();
+      // router.back();
     } catch (err) {
       console.log(err);
     }

@@ -32,7 +32,7 @@ const CustomHeader = ({ title }: { title: string }) => {
           alignItems: "center",
         }}
       >
-        <AntDesign name="arrowleft" size={RFValue(18)} color="black" />
+        <AntDesign name="arrowleft" size={RFValue(16)} color="black" />
       </TouchableOpacity>
       <CustomText variant="h6">{title}</CustomText>
     </View>
