@@ -6,10 +6,12 @@ import { RFValue } from "react-native-responsive-fontsize";
 import { router } from "expo-router";
 import { AntDesign } from "@expo/vector-icons";
 import CustomText from "./customText";
+import { useSharedState } from "context/sharedContext";
 
 export const headerHeight = screenHeight * 0.06;
 const CustomHeader = ({ title }: { title: string }) => {
   const { top } = useSafeAreaInsets();
+  const { scrollY } = useSharedState();
   return (
     <View
       style={{
@@ -25,7 +27,10 @@ const CustomHeader = ({ title }: { title: string }) => {
     >
       <TouchableOpacity
         activeOpacity={0.6}
-        onPress={() => router.back()}
+        onPress={() => {
+          router.back();
+          scrollY.value = 1;
+        }}
         style={{
           aspectRatio: 1,
           justifyContent: "center",

@@ -37,7 +37,7 @@ const OrderHistoryCard = ({
       case "cancelled":
         return "#F44336";
       default:
-        return "#9E9E9E";
+        return "#6d30ef";
     }
   };
 
@@ -111,13 +111,14 @@ const OrderHistoryCard = ({
         <View
           style={[
             styles.statusBadge,
-            { backgroundColor: getStatusColor(order.status) },
+            { backgroundColor: `${getStatusColor(order.status)}20` },
           ]}
         >
           <CustomText
             variant="h7"
-            fontFamily="gilroyBold"
+            fontFamily="gilroySemiBold"
             style={styles.statusText}
+            color={getStatusColor(order.status)}
           >
             {getStatusText(order.status).toUpperCase()}
           </CustomText>
@@ -157,23 +158,64 @@ const OrderHistoryCard = ({
 
       {/* Order Actions */}
       <View style={styles.actions}>
-        <TouchableOpacity activeOpacity={0.8} style={styles.actionButton}>
-          <CustomText
-            variant="h7"
-            fontFamily="gilroyMedium"
-            style={styles.actionButtonText}
+        {order.status === "pending" ? (
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={{
+              flex: 1,
+              paddingVertical: 14,
+              borderRadius: 8,
+              marginHorizontal: 4,
+              alignItems: "center",
+              backgroundColor: "#ef233c10",
+            }}
           >
-            View Details
-          </CustomText>
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          style={[styles.actionButton, styles.reorderButton]}
-        >
-          <CustomText variant="h7" fontFamily="gilroyMedium" color="white">
-            Reorder
-          </CustomText>
-        </TouchableOpacity>
+            <CustomText variant="h7" fontFamily="gilroyMedium" color="#ef233c">
+              Cancel Order
+            </CustomText>
+          </TouchableOpacity>
+        ) : (
+          <View
+            style={{
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "row",
+            }}
+          >
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={[
+                styles.actionButton,
+                { borderWidth: StyleSheet.hairlineWidth },
+              ]}
+            >
+              <CustomText
+                variant="h7"
+                fontFamily="gilroyMedium"
+                style={styles.actionButtonText}
+              >
+                View Details
+              </CustomText>
+            </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={[
+                styles.actionButton,
+                styles.reorderButton,
+                { backgroundColor: `${COLORS.primary}20` },
+              ]}
+            >
+              <CustomText
+                variant="h7"
+                fontFamily="gilroyMedium"
+                color={COLORS.primary}
+              >
+                Reorder
+              </CustomText>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     </TouchableOpacity>
   );
@@ -232,12 +274,11 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   statusBadge: {
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    borderRadius: 6,
   },
   statusText: {
-    color: "#fff",
     top: 1.5,
   },
   itemsContainer: {
@@ -312,8 +353,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 12,
     borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "#ddd",
     marginHorizontal: 4,
     alignItems: "center",
   },
