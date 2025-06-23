@@ -277,10 +277,8 @@ export enum OrderStatus {
   "confirmed",
   "preparing",
   "ready_for_pickup",
-  "on_the_way",
   "delivered",
-  "cancelled",
-  "refunded",
+  "declined",
 }
 
 export interface OrderHistoryType {
@@ -323,6 +321,21 @@ interface LocationCoordinateType {
   latitude: number | null;
 }
 
+interface OrderItem {
+  menuItemId: string;
+  quantity: number;
+  addons?: string[];
+}
+
+interface OrderData {
+  userId: string;
+  restaurantId: string;
+  addressId: string;
+  deliveryTip: number;
+  otherCharges: number;
+  items: OrderItem[];
+}
+
 // Export all types
 export type {
   DayOfWeek,
@@ -343,4 +356,6 @@ export type {
   ReactNativeFile,
   ImageResponse,
   LocationCoordinateType,
+  OrderItem,
+  OrderData,
 };

@@ -50,17 +50,26 @@ import {
   selectCart,
   selectRestaurantCart,
 } from "redux/slice/cartSlice";
-import { CartItem, Restaurant, RestaurantCart } from "types/types";
+import {
+  CartItem,
+  OrderData,
+  OrderItem,
+  Restaurant,
+  RestaurantCart,
+} from "types/types";
 import { RootState } from "redux/store";
 import io, { Socket } from "socket.io-client";
 import { useSocket } from "utils/CustomHook/useSocket";
 import { useSharedState } from "context/sharedContext";
 import { useAuth } from "@clerk/clerk-expo";
+import { selectUser } from "redux/slice/userSlice";
+import { placeOrder } from "utils/ApiManager";
 const _boxBorderRadius = 14;
 const otherCharges = 56.34;
 
 const Cart = () => {
   const { restaurantId } = useLocalSearchParams<{ restaurantId: string }>();
+  const userInformation = useSelector(selectUser);
   const { carts } = useSelector((state: RootState) => state.cart);
   const { userId } = useAuth();
   const { socketClient } = useSharedState();
@@ -90,10 +99,79 @@ const Cart = () => {
     cartItemPrice + otherCharges + deliveryCharges + (selectedTip || 0);
   const toPay = totalAmount.toFixed(2);
 
-  const paymentHandler = () => {
-    console.log(userId);
+  function convertCartToOrderData(
+    cartItems: CartItem[],
+    userId: string,
+    addressId: string
+  ): OrderData {
+    const restaurantId = cartItems[0].restaurantId;
+
+    const items: OrderItem[] = cartItems.map((item) => {
+      if (!item.id) {
+        throw new Error("Menu item ID is missing");
+      }
+
+      if (!item.quantity || item.quantity <= 0) {
+        throw new Error(`Invalid quantity for item ${item.id}`);
+      }
+
+      const orderItem: OrderItem = {
+        menuItemId: item.id,
+        quantity: item.quantity,
+      };
+
+      if (item.addons && item.addons.length > 0) {
+        orderItem.addons = item.addons.map((addon) => {
+          if (!addon.id) {
+            throw new Error("Addon ID is missing");
+          }
+          return addon.id;
+        });
+      }
+
+      return orderItem;
+    });
+
+    return {
+      userId,
+      restaurantId,
+      addressId,
+      items,
+      deliveryTip: selectedTip || 0,
+      otherCharges: otherCharges,
+    };
+  }
+  const paymentHandler = async () => {
     try {
-      router.navigate("/(protected)/createUserInformationScreen");
+      console.log(userInformation);
+      if (userInformation) {
+        const orderInfo = convertCartToOrderData(
+          cartData.items,
+          userInformation?.id,
+          userInformation?.addresses[0].id
+        );
+        console.log(JSON.stringify(orderInfo, null, 2));
+
+        const response = await placeOrder(orderInfo);
+
+        if (response.success) {
+          router.back();
+          dispatch(
+            addToOrderHistory({
+              restaurant: cartData.restaurant,
+              foodItems: cartData.items,
+              deliveryCharge: deliveryCharges,
+              otherCharges: otherCharges,
+              totalItemAmount: cartItemPrice.toFixed(2),
+              totalAmountPaid: toPay,
+              deliveryTip: selectedTip,
+            })
+          );
+        }
+      } else {
+        router.navigate("/(protected)/createUserInformationScreen");
+      }
+
       // dispatch(
       //   addToOrderHistory({
       //     restaurant: cartData.restaurant,
@@ -105,13 +183,11 @@ const Cart = () => {
       //     deliveryTip: selectedTip,
       //   })
       // );
-
       // socketClient?.emit("new_order", {
       //   fromUserId: userId,
       //   toUserId: cartData.restaurant.ownerId,
       //   message: JSON.stringify(cartData),
       // });
-
       // dispatch(
       //   removeAllItemFromRestaurant({
       //     restaurantId: cartData.restaurant.id,

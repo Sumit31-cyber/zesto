@@ -13,6 +13,7 @@ import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { useAuth } from "@clerk/clerk-react";
 import { useSelector } from "react-redux";
 import { selectUserAddresses } from "redux/slice/userSlice";
+import { clearAllPersistedData } from "redux/store";
 
 type Props = {
   titleStyle?: TextStyle;
@@ -73,13 +74,14 @@ const LocationHeader: React.FC<Props> = ({
           numberOfLines={1}
           style={[{ opacity: 0.8, ...locationTextStyle }]}
         >
-          {userAddress[0].addressLine1}
+          {userAddress[0]?.addressLine1}
         </CustomText>
       </View>
       <TouchableOpacity
         onPress={async () => {
-          // await signOut();
-          console.log(userId);
+          clearAllPersistedData();
+          await signOut();
+          // console.log(userId);
           // emit("event1", { hello: "Name" });
         }}
         style={{

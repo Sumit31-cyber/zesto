@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ReactNativeFile } from "types/types";
+import { OrderData, ReactNativeFile } from "types/types";
 
 const BASE_URL = "http://localhost:3000/api/v1/";
 export const SOCKET_URL = "http://localhost:3000/";
@@ -171,11 +171,56 @@ const uploadImage = async (localUri: string, name: string, type: string) => {
   return res.data;
 };
 
+const placeOrder = async (orderInfo: OrderData) => {
+  try {
+    const {
+      addressId,
+      items,
+      restaurantId,
+      userId,
+      deliveryTip,
+      otherCharges,
+    } = orderInfo;
+
+    let formdata = new FormData();
+
+    formdata.append("userId", userId);
+    formdata.append("restaurantId", restaurantId);
+    formdata.append("items", JSON.stringify(items));
+    formdata.append("deliveryTip", String(deliveryTip));
+    formdata.append("otherCharges", String(otherCharges));
+    formdata.append("addressId", addressId);
+
+    const res = await axiosInstance.post("/user/order", formdata, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return res.data;
+  } catch (err) {
+    if (err instanceof Error) {
+      throw new Error(err.message);
+    }
+    console.log(err);
+  }
+};
+const getOrderHistory = async (userId: string) => {
+  let formdata = new FormData();
+
+  formdata.append("userId", userId);
+  const res = await axiosInstance.post("/user/orders", formdata, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+  return res.data;
+};
+
 const searchRestaurant = async () => {};
 const addRestaurantToFavorite = async () => {};
-const placeOrder = async () => {};
 const cancelOrder = async () => {};
-const getOrderHistory = async () => {};
 
 export {
   getRestaurants,

@@ -8,7 +8,6 @@ import CustomText from "components/customText";
 import Animated, { FadeOutDown, SlideInDown } from "react-native-reanimated";
 
 import { useSharedState } from "context/sharedContext";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
 import { getUserInformation } from "utils/ApiManager";
 import { setUser } from "redux/slice/userSlice";

@@ -83,6 +83,7 @@ const SignInScreen = () => {
 
       if (signInResponse?.status === "needs_first_factor") {
         console.log("Preparing first factor...");
+
         const phoneFactor = signInResponse.supportedFirstFactors?.find(
           (factor) => factor.strategy === "phone_code"
         );
