@@ -1,7 +1,7 @@
 import {
+  Pressable,
   StyleSheet,
   Text,
-  TextInput,
   TextInputProps,
   TouchableOpacity,
   View,
@@ -15,10 +15,9 @@ import {
   screenHeight,
 } from "utils/constants";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
-import RollingBar from "react-native-rolling-bar";
 import RollingContent from "react-native-rolling-bar";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
-import LottieView from "lottie-react-native";
+import { router } from "expo-router";
 
 type PropsType = {
   onClosePress?: () => void;
@@ -41,11 +40,14 @@ const SearchBar = ({ value, onClosePress, ...props }: PropsType) => {
           alignItems: "center",
           paddingHorizontal: 14,
           borderWidth: BORDER_WIDTH,
-          borderColor: COLORS.darkGray,
+          borderColor: COLORS.grayBackgroundColor,
           marginVertical: 10,
         }}
       >
-        <View
+        <Pressable
+          onPress={() => {
+            // router.navigate("/restaurantSearchScreen");
+          }}
           style={{
             flex: 1,
             flexDirection: "row",
@@ -95,15 +97,6 @@ const SearchBar = ({ value, onClosePress, ...props }: PropsType) => {
                 </RollingContent>
               </Animated.View>
             )}
-            <TextInput
-              value={value}
-              style={{
-                fontFamily: FONTS.Regular,
-                fontSize: FONT_SIZE.h2,
-                flex: 1,
-              }}
-              {...props}
-            />
           </View>
 
           {showCloseButton && (
@@ -120,7 +113,7 @@ const SearchBar = ({ value, onClosePress, ...props }: PropsType) => {
             }}
           />
           <FontAwesome name="microphone" size={24} color={COLORS.primary} />
-        </View>
+        </Pressable>
       </View>
     </View>
   );

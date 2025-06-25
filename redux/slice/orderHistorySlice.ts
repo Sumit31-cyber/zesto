@@ -1,9 +1,12 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "redux/store";
 import dayjs from "dayjs";
 import { OrderHistoryState, OrderHistoryType, OrderStatus } from "types/types";
+import {
+  OrderHistory,
+  OrderHistoryItemTypes,
+} from "@/app/(protected)/(tabs)/reorder";
 
-const now = dayjs();
 const initialState: OrderHistoryState = {
   orders: [],
 };
@@ -12,30 +15,21 @@ const orderHistorySlice = createSlice({
   name: "orderHistory",
   initialState,
   reducers: {
+    setInitialOrders: (state, action) => {
+      console.log(JSON.stringify(action.payload, null, 2));
+      state.orders = action.payload;
+    },
     addToOrderHistory: (state, action) => {
-      const {
-        restaurant,
-        foodItems,
-        deliveryCharge,
-        otherCharges,
-        totalItemAmount,
-        totalAmountPaid,
-        deliveryTip,
-      } = action.payload;
-      const formattedDate = now.format("MMMM DD, h:mmA");
+      const { order } = action.payload;
+      state.orders = [order, ...state.orders];
+    },
 
-      const newOrder: OrderHistoryType = {
-        totalAmountPaid,
-        deliveryCharge,
-        foodItems,
-        totalItemAmount,
-        otherCharges,
-        restaurant,
-        deliveryTip,
-        createdAt: formattedDate,
-        status: OrderStatus.pending,
-      };
-      state.orders = [newOrder, ...state.orders];
+    changeOrderStatus: (state, action) => {
+      const { orderId, newStatus } = action.payload;
+      const existingOrder = state.orders.find((item) => item.id === orderId);
+      if (existingOrder) {
+        existingOrder.status = newStatus;
+      }
     },
 
     clearOrderHistory: (state) => {
@@ -44,10 +38,14 @@ const orderHistorySlice = createSlice({
   },
 });
 
-export const { addToOrderHistory, clearOrderHistory } =
-  orderHistorySlice.actions;
+export const {
+  addToOrderHistory,
+  changeOrderStatus,
+  clearOrderHistory,
+  setInitialOrders,
+} = orderHistorySlice.actions;
 
 // Export the reducer
 export default orderHistorySlice.reducer;
 
-export const selectOrderHistory = (state: RootState) => state.cart;
+export const selectOrderHistory = (state: RootState) => state.orderHistory;

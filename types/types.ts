@@ -1,3 +1,4 @@
+import { OrderHistory } from "@/app/(protected)/(tabs)/reorder";
 import React, { ReactElement } from "react";
 import { SectionListData as RNSectionListData } from "react-native";
 
@@ -294,7 +295,7 @@ export interface OrderHistoryType {
 }
 
 export interface OrderHistoryState {
-  orders: OrderHistoryType[];
+  orders: OrderHistory[];
 }
 
 type ReactNativeFile = {

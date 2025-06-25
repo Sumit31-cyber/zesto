@@ -3,12 +3,15 @@ import { useSharedState } from "context/sharedContext";
 import { Redirect, Stack } from "expo-router";
 import { useEffect } from "react";
 import { Alert } from "react-native";
+import { useDispatch } from "react-redux";
+import { changeOrderStatus } from "redux/slice/orderHistorySlice";
 import { io } from "socket.io-client";
 import { SOCKET_URL } from "utils/ApiManager";
 
 export default function ProtectedLayout() {
   const { isSignedIn, userId } = useAuth();
   const { setSocketClient } = useSharedState();
+  const dispatch = useDispatch();
 
   if (!isSignedIn) {
     return <Redirect href={"/(auth)/signIn"} />;
@@ -23,8 +26,12 @@ export default function ProtectedLayout() {
     });
 
     newSocket.on("order_status", (data) => {
-      console.log(data);
-      Alert.alert(data.message);
+      dispatch(
+        changeOrderStatus({
+          orderId: data.orderId,
+          newStatus: data.newStatus,
+        })
+      );
     });
     setSocketClient(newSocket);
 

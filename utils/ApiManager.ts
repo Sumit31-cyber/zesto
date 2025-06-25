@@ -1,4 +1,6 @@
 import axios from "axios";
+import { setInitialOrders } from "redux/slice/orderHistorySlice";
+import { store } from "redux/store";
 import { OrderData, ReactNativeFile } from "types/types";
 
 const BASE_URL = "http://localhost:3000/api/v1/";
@@ -206,16 +208,25 @@ const placeOrder = async (orderInfo: OrderData) => {
   }
 };
 const getOrderHistory = async (userId: string) => {
-  let formdata = new FormData();
+  try {
+    let formdata = new FormData();
 
-  formdata.append("userId", userId);
-  const res = await axiosInstance.post("/user/orders", formdata, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+    formdata.append("userId", userId);
+    const res = await axiosInstance.post("/user/orders", formdata, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
 
-  return res.data;
+    console.log(JSON.stringify(res.data.data.orders, null, 2));
+    store.dispatch(setInitialOrders(res.data.data.orders));
+    return res.data;
+  } catch (err) {
+    if (err instanceof Error) {
+      throw new Error(err.message);
+    }
+    console.log(err);
+  }
 };
 
 const searchRestaurant = async () => {};

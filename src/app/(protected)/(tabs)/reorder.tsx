@@ -101,7 +101,7 @@ const Reorder = () => {
       enabled: !!userId, // Only run query if userId exists
     });
 
-  console.log(JSON.stringify(data?.data, null, 2));
+  // console.log(orders);
 
   const { scrollYGlobal, scrollY } = useSharedState();
   const { bottom } = useSafeAreaInsets();
@@ -127,7 +127,7 @@ const Reorder = () => {
         // bounces={false}
         onScroll={scrollHandler}
         scrollEventThrottle={16}
-        data={data?.data.orders}
+        data={orders}
         onRefresh={refetch}
         refreshing={isRefetching}
         contentContainerStyle={{

@@ -1,9 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
-import {
-  OrderHistory,
-  OrderHistoryItemTypes,
-} from "@/app/(protected)/(tabs)/reorder";
+import { OrderHistory } from "@/app/(protected)/(tabs)/reorder";
 import { Image } from "expo-image";
 import CustomText from "./customText";
 import { COLORS } from "utils/constants";
@@ -89,6 +86,7 @@ const OrderHistoryCard = ({
       onPress={() => onPress && onPress(order)}
     >
       {/* Header */}
+
       <View style={styles.header}>
         <View style={styles.restaurantInfo}>
           <Image

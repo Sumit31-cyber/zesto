@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -73,6 +74,7 @@ const Cart = () => {
   const { carts } = useSelector((state: RootState) => state.cart);
   const { userId } = useAuth();
   const { socketClient } = useSharedState();
+  const [placingOrder, setPlacingOrder] = useState(false);
   // Find cart data for the specific restaurant
   const cartData: RestaurantCart | undefined = carts.find(
     (item) => item.restaurant.id === restaurantId
@@ -143,59 +145,39 @@ const Cart = () => {
   }
   const paymentHandler = async () => {
     try {
-      console.log(userInformation);
       if (userInformation) {
+        setPlacingOrder(true);
         const orderInfo = convertCartToOrderData(
           cartData.items,
           userInformation?.id,
           userInformation?.addresses[0].id
         );
-        console.log(JSON.stringify(orderInfo, null, 2));
 
         const response = await placeOrder(orderInfo);
 
+        console.log(JSON.stringify(response, null, 2));
+
         if (response.success) {
+          setPlacingOrder(false);
           router.back();
           dispatch(
             addToOrderHistory({
-              restaurant: cartData.restaurant,
-              foodItems: cartData.items,
-              deliveryCharge: deliveryCharges,
-              otherCharges: otherCharges,
-              totalItemAmount: cartItemPrice.toFixed(2),
-              totalAmountPaid: toPay,
-              deliveryTip: selectedTip,
+              order: response.order,
             })
           );
+
+          socketClient?.emit("new_order", {
+            customerId: userId,
+            restaurantOwnerId: cartData.restaurant.ownerId,
+            orderId: response.order.id,
+          });
         }
       } else {
         router.navigate("/(protected)/createUserInformationScreen");
       }
-
-      // dispatch(
-      //   addToOrderHistory({
-      //     restaurant: cartData.restaurant,
-      //     foodItems: cartData.items,
-      //     deliveryCharge: deliveryCharges,
-      //     otherCharges: otherCharges,
-      //     totalItemAmount: cartItemPrice.toFixed(2),
-      //     totalAmountPaid: toPay,
-      //     deliveryTip: selectedTip,
-      //   })
-      // );
-      // socketClient?.emit("new_order", {
-      //   fromUserId: userId,
-      //   toUserId: cartData.restaurant.ownerId,
-      //   message: JSON.stringify(cartData),
-      // });
-      // dispatch(
-      //   removeAllItemFromRestaurant({
-      //     restaurantId: cartData.restaurant.id,
-      //   })
-      // );
-      // router.back();
     } catch (err) {
       console.log(err);
+      setPlacingOrder(false);
     }
   };
 
@@ -207,6 +189,7 @@ const Cart = () => {
         totalPrice={cartItemPrice}
         onPayButtonPress={paymentHandler}
         totalAmountToPay={toPay}
+        placingOrder={placingOrder}
       />
       <CustomHeader title={cartData.restaurant.name} />
 
@@ -244,11 +227,13 @@ const PaymentSection = ({
   selectedTip = 0,
   onPayButtonPress,
   totalAmountToPay,
+  placingOrder,
 }: {
   totalPrice: number;
   selectedTip: number;
   onPayButtonPress: () => void;
   totalAmountToPay: string;
+  placingOrder: boolean;
 }) => {
   const { bottom } = useSafeAreaInsets();
 
@@ -303,6 +288,7 @@ const PaymentSection = ({
       <TouchableOpacity
         activeOpacity={0.8}
         onPress={onPayButtonPress}
+        disabled={placingOrder}
         style={{
           height: RFValue(40),
           paddingHorizontal: RFValue(30),
@@ -310,17 +296,22 @@ const PaymentSection = ({
           borderRadius: 14,
           alignItems: "center",
           justifyContent: "center",
+          width: screenWidth * 0.4,
         }}
       >
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <CustomText
-            variant="h4"
-            fontFamily="gilroyBold"
-            color="white"
-            style={{ fontVariant: ["tabular-nums"] }}
-          >
-            ₹{totalAmountToPay}
-          </CustomText>
+        <View style={{ alignItems: "center" }}>
+          {placingOrder ? (
+            <ActivityIndicator color={"white"} />
+          ) : (
+            <CustomText
+              variant="h4"
+              fontFamily="gilroyBold"
+              color="white"
+              style={{ fontVariant: ["tabular-nums"] }}
+            >
+              ₹{totalAmountToPay}
+            </CustomText>
+          )}
         </View>
       </TouchableOpacity>
     </View>
