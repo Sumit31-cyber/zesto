@@ -21,8 +21,19 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "redux/store";
 
+interface RequiredRestaurantAddressTypes {
+  id: string;
+  addressLine1: string;
+}
+interface RequiredRestaurantItemTypes {
+  id: string;
+  name: string;
+  logoUrl: string;
+  estimatedDeliveryTime: string;
+  address: RequiredRestaurantAddressTypes;
+}
 type Props = {
-  item: Restaurant;
+  item: RequiredRestaurantItemTypes;
   index: number;
   onPress: () => void;
 };

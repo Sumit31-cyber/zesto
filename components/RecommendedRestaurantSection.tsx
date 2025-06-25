@@ -78,7 +78,7 @@ const RecommendedRestaurantSection = () => {
         style={{ marginTop: RFValue(10), gap: RFValue(18) }}
         scrollEnabled={false}
         showsVerticalScrollIndicator={false}
-        renderItem={({ item, index }: { item: Restaurant; index: number }) => {
+        renderItem={({ item, index }) => {
           return (
             <RecommendedRestaurantListItem
               key={index}

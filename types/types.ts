@@ -263,7 +263,7 @@ export interface CartState {
 }
 
 export interface FavoriteItem {
-  id: number;
+  id: string;
 }
 export interface FavoriteState {
   favorites: Restaurant[];

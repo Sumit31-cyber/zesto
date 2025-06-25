@@ -46,7 +46,7 @@ const SearchBar = ({ value, onClosePress, ...props }: PropsType) => {
       >
         <Pressable
           onPress={() => {
-            // router.navigate("/restaurantSearchScreen");
+            router.navigate("/restaurantSearchScreen");
           }}
           style={{
             flex: 1,

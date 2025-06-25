@@ -229,7 +229,25 @@ const getOrderHistory = async (userId: string) => {
   }
 };
 
-const searchRestaurant = async () => {};
+const searchRestaurant = async (query: string) => {
+  try {
+    let formdata = new FormData();
+
+    formdata.append("query", query);
+    const res = await axiosInstance.post("/user/search/restaurant", formdata, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return res.data;
+  } catch (err) {
+    if (err instanceof Error) {
+      throw new Error(err.message);
+    }
+    console.log(err);
+  }
+};
 const addRestaurantToFavorite = async () => {};
 const cancelOrder = async () => {};
 
