@@ -171,7 +171,7 @@ const Favorite = () => {
         contentContainerStyle={{ paddingBottom: screenHeight * 0.3 }}
         renderItem={({ item, index }) => {
           return (
-            <Animated.View
+            <View
               style={{
                 paddingHorizontal: PADDING_HORIZONTAL,
                 marginTop: PADDING_HORIZONTAL,
@@ -188,7 +188,7 @@ const Favorite = () => {
                   });
                 }}
               />
-            </Animated.View>
+            </View>
           );
         }}
       />

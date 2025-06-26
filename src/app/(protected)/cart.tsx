@@ -296,7 +296,7 @@ const PaymentSection = ({
           borderRadius: 14,
           alignItems: "center",
           justifyContent: "center",
-          width: screenWidth * 0.4,
+          minWidth: screenWidth * 0.4,
         }}
       >
         <View style={{ alignItems: "center" }}>

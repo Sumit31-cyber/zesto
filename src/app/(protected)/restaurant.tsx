@@ -7,8 +7,13 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
-import { BORDER_WIDTH, COLORS, PADDING_HORIZONTAL } from "utils/constants";
+import React, { useEffect, useState } from "react";
+import {
+  BORDER_WIDTH,
+  COLORS,
+  PADDING_HORIZONTAL,
+  screenWidth,
+} from "utils/constants";
 import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { RestaurantDetail } from "types/types";
@@ -17,9 +22,12 @@ import { Image } from "expo-image";
 import Animated, {
   Extrapolation,
   interpolate,
+  SlideInDown,
+  SlideOutDown,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
+  withRepeat,
   withTiming,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -29,6 +37,10 @@ import FilterBar from "components/FilterBar";
 import CustomizableModal from "components/CustomizableModal";
 import { useQuery } from "@tanstack/react-query";
 import { getRestaurantDetail } from "utils/ApiManager";
+import { useSelector } from "react-redux";
+import { selectRestaurantCart } from "redux/slice/cartSlice";
+import { ArrowRight, Scale } from "lucide-react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
 const _imageHeaderHeight = RFValue(220);
@@ -38,6 +50,11 @@ const RestaurantScreen = () => {
     restaurantId: string;
   };
 
+  const restaurantCart = useSelector(selectRestaurantCart(restaurantId));
+  const totalRestaurantCartItems = restaurantCart.reduce((curr, acc) => {
+    return acc.quantity + curr;
+  }, 0);
+
   const { data, isLoading, error, isError } = useQuery<RestaurantDetail>({
     queryKey: ["restaurant_details", restaurantId],
     queryFn: () => getRestaurantDetail(restaurantId),
@@ -45,15 +62,29 @@ const RestaurantScreen = () => {
   });
 
   const restaurantScreenGlobalScrollY = useSharedValue(0);
-  const { top } = useSafeAreaInsets();
+  const { top, bottom } = useSafeAreaInsets();
 
   const [headerHeight, setHeaderHeight] = useState(0);
+  const textScale = useSharedValue(1);
 
+  useEffect(() => {
+    textScale.value = withRepeat(withTiming(0.9, { duration: 1000 }), -1, true);
+  }, []);
+
+  const rScaleStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          scale: textScale.value,
+        },
+      ],
+    };
+  }, []);
   const rStyle = useAnimatedStyle(() => {
     return {
       opacity: withTiming(restaurantScreenGlobalScrollY.value > 10 ? 1 : 0),
     };
-  });
+  }, []);
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
@@ -215,7 +246,91 @@ const RestaurantScreen = () => {
           }}
         ></View>
       </Animated.View>
-      <Animated.ScrollView
+      <Animated.FlatList
+        onScroll={scrollHandler}
+        showsVerticalScrollIndicator={false}
+        scrollEventThrottle={16}
+        bounces={false}
+        contentContainerStyle={{
+          backgroundColor: "white",
+          paddingBottom: RFValue(60),
+        }}
+        ListHeaderComponent={<HeaderSection restaurantData={data} />}
+        data={data.menuItems}
+        renderItem={({ item, index }) => {
+          return (
+            <View
+              style={{
+                paddingHorizontal: PADDING_HORIZONTAL,
+                marginTop: index === 0 ? RFValue(45) : 0,
+              }}
+            >
+              <RestaurantFoodItem
+                key={index}
+                item={item}
+                index={index}
+                restaurant={data}
+              />
+            </View>
+          );
+        }}
+      />
+      {restaurantCart?.length > 0 && (
+        <Animated.View
+          entering={SlideInDown.duration(800)}
+          exiting={SlideOutDown.duration(1000)}
+          onTouchEnd={() => {
+            router.navigate({
+              pathname: "/(protected)/cart",
+              params: { restaurantId: restaurantId },
+            });
+          }}
+          style={{
+            width: screenWidth,
+            position: "absolute",
+            backgroundColor: COLORS.primary,
+            bottom: 0,
+            justifyContent: "center",
+            alignItems: "center",
+            gap: RFValue(5),
+            paddingBottom: bottom ? bottom : RFValue(8),
+            paddingTop: RFValue(8),
+          }}
+        >
+          <LinearGradient
+            colors={["#0f8643", `#42e689`]}
+            style={[StyleSheet.absoluteFill]}
+          ></LinearGradient>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: RFValue(5),
+            }}
+          >
+            <CustomText variant="h6" fontFamily="gilroyBold" color="white">
+              {totalRestaurantCartItems} items added
+            </CustomText>
+            <View
+              style={{
+                backgroundColor: "white",
+                borderRadius: 100,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <ArrowRight size={RFValue(10)} color={COLORS.primary} />
+            </View>
+          </View>
+          <Animated.View style={[rScaleStyle]}>
+            <CustomText variant="h6" fontFamily="gilroyMedium" color="white">
+              Congratulations you get an extra 15% OFF!
+            </CustomText>
+          </Animated.View>
+        </Animated.View>
+      )}
+      {/* <Animated.ScrollView
         onScroll={scrollHandler}
         scrollEventThrottle={16}
         bounces={false}
@@ -241,7 +356,7 @@ const RestaurantScreen = () => {
             );
           })}
         </View>
-      </Animated.ScrollView>
+      </Animated.ScrollView> */}
     </View>
   );
 };
