@@ -171,6 +171,10 @@ const Cart = () => {
             restaurantOwnerId: cartData.restaurant.ownerId,
             orderId: response.order.id,
           });
+
+          router.replace({
+            pathname: "/orderPlacedScreen",
+          });
         }
       } else {
         router.navigate("/(protected)/createUserInformationScreen");

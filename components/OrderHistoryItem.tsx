@@ -180,7 +180,7 @@ const OrderHistoryCard = ({
             .map((item, index) => ({ id: index }))
             .map((item, index) => {
               return (
-                <View>
+                <View key={item.id}>
                   <Star
                     size={RFValue(14)}
                     fill={COLORS.liteGray}
