@@ -266,7 +266,7 @@ export interface FavoriteItem {
   id: string;
 }
 export interface FavoriteState {
-  favorites: Restaurant[];
+  favorites: RestaurantListItemType[];
 }
 
 export interface UserState {
@@ -337,6 +337,18 @@ interface OrderData {
   items: OrderItem[];
 }
 
+interface RestaurantAddressListItemType {
+  id: string;
+  addressLine1: string;
+}
+interface RestaurantListItemType {
+  id: string;
+  name: string;
+  logoUrl: string;
+  estimatedDeliveryTime: string;
+  address: RestaurantAddressListItemType;
+}
+
 // Export all types
 export type {
   DayOfWeek,
@@ -359,4 +371,6 @@ export type {
   LocationCoordinateType,
   OrderItem,
   OrderData,
+  RestaurantAddressListItemType,
+  RestaurantListItemType,
 };

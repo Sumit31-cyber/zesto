@@ -163,7 +163,7 @@ const Favorite = () => {
         data={favorites}
         bounces={false}
         scrollEnabled={favorites.length > 0}
-        itemLayoutAnimation={LinearTransition}
+        // itemLayoutAnimation={LinearTransition}
         ListHeaderComponent={
           <>{favorites.length > 0 && <ListHeaderComponent />}</>
         }

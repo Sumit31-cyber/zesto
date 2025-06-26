@@ -6,7 +6,7 @@ import {
   View,
 } from "react-native";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { FavoriteItem, Restaurant } from "types/types";
+import { FavoriteItem, Restaurant, RestaurantListItemType } from "types/types";
 import { RFValue } from "react-native-responsive-fontsize";
 import { Image } from "expo-image";
 import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -21,19 +21,8 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "redux/store";
 
-interface RequiredRestaurantAddressTypes {
-  id: string;
-  addressLine1: string;
-}
-interface RequiredRestaurantItemTypes {
-  id: string;
-  name: string;
-  logoUrl: string;
-  estimatedDeliveryTime: string;
-  address: RequiredRestaurantAddressTypes;
-}
 type Props = {
-  item: RequiredRestaurantItemTypes;
+  item: RestaurantListItemType;
   index: number;
   onPress: () => void;
 };
