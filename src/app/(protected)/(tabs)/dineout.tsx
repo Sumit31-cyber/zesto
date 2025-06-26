@@ -3,6 +3,8 @@ import {
   SectionList,
   StatusBar,
   StyleSheet,
+  Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 import React, { useState } from "react";
@@ -34,6 +36,7 @@ import { dineOutRestaurantsList, restaurantType } from "utils/dataObject";
 import { LinearGradient } from "expo-linear-gradient";
 import { AntDesign } from "@expo/vector-icons";
 import { headerHeight } from "components/CustomHeader";
+import ScaleTouchable from "components/ScaleTouchableOpacity";
 
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
 
@@ -139,6 +142,7 @@ const DineOut = () => {
           onLayout={(event) => {
             setLocationSectionHeight(event.nativeEvent.layout.height);
           }}
+          style={{ alignItems: "center" }}
         >
           <LocationHeader
             locationTextStyle={{
@@ -200,43 +204,125 @@ const RestaurantTypeSection = () => {
         data={restaurantType.slice(0, 6)}
         keyExtractor={(item) => item.id.toString()}
         numColumns={COLUMNS}
-        columnWrapperStyle={{
-          marginBottom: GAP,
-        }}
-        renderItem={({ item }) => (
-          <View
-            style={{
-              flex: 1,
-              marginLeft: GAP,
-              height: screenHeight * 0.2, // Square items
-              maxWidth: (screenWidth - (COLUMNS + 1) * GAP) / COLUMNS,
-              overflow: "hidden",
-            }}
-          >
-            <View
-              style={[
-                StyleSheet.absoluteFill,
-                { zIndex: 100, borderRadius: 8, overflow: "hidden" },
-              ]}
+        columnWrapperStyle={
+          COLUMNS > 1
+            ? {
+                justifyContent: "space-between",
+                marginBottom: GAP,
+                paddingHorizontal: PADDING_HORIZONTAL,
+              }
+            : undefined
+        }
+        renderItem={({ item, index }) => {
+          const itemWidth =
+            COLUMNS > 1
+              ? (screenWidth - PADDING_HORIZONTAL * 2 - GAP * (COLUMNS - 1)) /
+                COLUMNS
+              : screenWidth - PADDING_HORIZONTAL * 2;
+
+          return (
+            <ScaleTouchable
+              style={{
+                height: screenHeight * 0.2,
+                width: itemWidth,
+                borderRadius: 8,
+
+                justifyContent: "center",
+                alignItems: "center",
+              }}
             >
-              <LinearGradient
-                colors={["transparent", "rgba(0,0,0,0.8)", "rgba(0,0,0,0.9)"]}
-                style={{
-                  marginTop: "auto",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
+              <View
+                style={[
+                  StyleSheet.absoluteFill,
+                  { zIndex: 100, borderRadius: 8, overflow: "hidden" },
+                ]}
               >
-                <CustomText
-                  variant="h7"
-                  fontFamily="gilroySemiBold"
-                  color="white"
-                  style={{ paddingVertical: RFValue(15) }}
+                <LinearGradient
+                  colors={["transparent", "rgba(0,0,0,0.8)", "rgba(0,0,0,0.9)"]}
+                  style={{
+                    marginTop: "auto",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
                 >
-                  {item.type}
-                </CustomText>
-              </LinearGradient>
-            </View>
+                  <CustomText
+                    variant="h7"
+                    fontFamily="gilroySemiBold"
+                    color="white"
+                    style={{ paddingVertical: RFValue(15) }}
+                  >
+                    {item.type}
+                  </CustomText>
+                </LinearGradient>
+              </View>
+              <Image
+                style={{
+                  height: screenHeight * 0.2,
+                  width: itemWidth,
+                  borderRadius: 8,
+                }}
+                source={item.image}
+              />
+            </ScaleTouchable>
+          );
+        }}
+      />
+      {/* <FlatList
+        data={restaurantType.slice(0, 6)}
+        keyExtractor={(item) => item.id.toString()}
+        numColumns={COLUMNS}
+        ItemSeparatorComponent={() => <View style={{ height: GAP }} />}
+        columnWrapperStyle={
+          COLUMNS > 1
+            ? {
+                justifyContent: "space-around",
+                marginBottom: GAP,
+              }
+            : undefined
+        }
+        contentContainerStyle={{
+          padding: PADDING_HORIZONTAL,
+        }}
+        renderItem={({ item }) => {
+          const availableWidth = screenWidth - PADDING_HORIZONTAL * 2;
+          const itemWidth =
+            COLUMNS > 1
+              ? (availableWidth - GAP * (COLUMNS - 1)) / COLUMNS
+              : availableWidth;
+          return (
+            <ScaleTouchable
+              style={{
+                flex: 1,
+                marginLeft: GAP,
+                height: screenHeight * 0.2, // Square items
+                maxWidth: (screenWidth - (COLUMNS + 1) * GAP) / COLUMNS,
+                overflow: "hidden",
+              }}
+            >
+              <View
+                style={[
+                  StyleSheet.absoluteFill,
+                  { zIndex: 100, borderRadius: 8, overflow: "hidden" },
+                ]}
+              >
+                <LinearGradient
+                  colors={["transparent", "rgba(0,0,0,0.8)", "rgba(0,0,0,0.9)"]}
+                  style={{
+                    marginTop: "auto",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <CustomText
+                    variant="h7"
+                    fontFamily="gilroySemiBold"
+                    color="white"
+                    style={{ paddingVertical: RFValue(15) }}
+                  >
+                    {item.type}
+                  </CustomText>
+                </LinearGradient>
+              </View>
             <Image
               style={{
                 flex: 1,
@@ -244,9 +330,10 @@ const RestaurantTypeSection = () => {
               }}
               source={item.image}
             />
-          </View>
-        )}
-      />
+            </ScaleTouchable>
+          );
+        }}
+      /> */}
     </>
   );
 };
@@ -268,7 +355,7 @@ const HeaderSection = () => {
     >
       <View
         style={{
-          paddingTop: headerHeight,
+          paddingTop: headerHeight * 3.5,
           flex: 1,
           alignItems: "center",
         }}
