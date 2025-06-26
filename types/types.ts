@@ -1,4 +1,3 @@
-import { OrderHistory } from "@/app/(protected)/(tabs)/reorder";
 import React, { ReactElement } from "react";
 import { SectionListData as RNSectionListData } from "react-native";
 
@@ -349,6 +348,79 @@ interface RestaurantListItemType {
   address: RestaurantAddressListItemType;
 }
 
+interface OrderHistoryResponse {
+  success: boolean;
+  message: string;
+  data: OrderHistoryData;
+}
+
+interface OrderHistoryData {
+  orders: OrderHistory[];
+  totalOrders: number;
+}
+
+interface OrderHistory {
+  id: string;
+  userId: string;
+  restaurantId: string;
+  status: string;
+  total: string;
+  addressId: string;
+  createdAt: string;
+  restaurant: OrderHistoryRestaurant;
+  address: OrderHistoryAddress;
+  items: OrderHistoryItemTypes[];
+}
+
+interface OrderHistoryRestaurant {
+  id: string;
+  name: string;
+  logoUrl: string;
+  phone: string;
+  address: OrderHistoryAddress;
+}
+
+interface OrderHistoryAddress {
+  id: string;
+  city: string;
+  state: string;
+  addressLine1: string;
+}
+
+interface OrderHistoryItemTypes {
+  id: string;
+  orderId: string;
+  menuItemId: string;
+  quantity: number;
+  itemPrice: string;
+  totalItemPrice: string;
+  createdAt: string;
+  updatedAt: string;
+  menuItem: OrderHistoryMenuItem;
+  selectedAddons: OrderHistorySelectedAddon[];
+}
+
+interface OrderHistoryMenuItem {
+  id: string;
+  name: string;
+  imageUrl: string;
+  isVegetarian: boolean;
+}
+
+interface OrderHistorySelectedAddon {
+  id: string;
+  orderItemId: string;
+  addonId: string;
+  quantity: number;
+  addonPrice: string; // Consider using number
+  addon: OrderHistoryAddons;
+}
+
+interface OrderHistoryAddons {
+  id: string;
+  name: string;
+}
+
 // Export all types
 export type {
   DayOfWeek,
@@ -373,4 +445,13 @@ export type {
   OrderData,
   RestaurantAddressListItemType,
   RestaurantListItemType,
+  OrderHistoryResponse,
+  OrderHistoryData,
+  OrderHistory,
+  OrderHistoryRestaurant,
+  OrderHistoryAddress,
+  OrderHistoryItemTypes,
+  OrderHistoryMenuItem,
+  OrderHistorySelectedAddon,
+  OrderHistoryAddons,
 };

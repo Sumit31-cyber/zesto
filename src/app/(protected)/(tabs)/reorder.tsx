@@ -16,76 +16,8 @@ import { useQuery } from "@tanstack/react-query";
 import { getOrderHistory } from "utils/ApiManager";
 import FullScreenLoadingIndicator from "components/FullScreenLoadingIndicator";
 import OrderHistoryCard from "components/OrderHistoryItem";
-
-export interface OrderHistoryResponse {
-  success: boolean;
-  message: string;
-  data: OrderHistoryData;
-}
-
-export interface OrderHistoryData {
-  orders: OrderHistory[];
-  totalOrders: number;
-}
-
-export interface OrderHistory {
-  id: string;
-  userId: string;
-  restaurantId: string;
-  status: string;
-  total: string;
-  addressId: string;
-  createdAt: string;
-  restaurant: OrderHistoryRestaurant;
-  address: OrderHistoryAddress;
-  items: OrderHistoryItemTypes[];
-}
-
-export interface OrderHistoryRestaurant {
-  id: string;
-  name: string;
-  logoUrl: string;
-  phone: string;
-}
-
-export interface OrderHistoryAddress {
-  id: string;
-  city: string;
-  state: string;
-}
-
-export interface OrderHistoryItemTypes {
-  id: string;
-  orderId: string;
-  menuItemId: string;
-  quantity: number;
-  itemPrice: string;
-  totalItemPrice: string;
-  createdAt: string;
-  updatedAt: string;
-  menuItem: OrderHistoryMenuItem;
-  selectedAddons: OrderHistorySelectedAddon[];
-}
-
-export interface OrderHistoryMenuItem {
-  id: string;
-  name: string;
-  imageUrl: string;
-}
-
-export interface OrderHistorySelectedAddon {
-  id: string;
-  orderItemId: string;
-  addonId: string;
-  quantity: number;
-  addonPrice: string; // Consider using number
-  addon: OrderHistoryAddons;
-}
-
-export interface OrderHistoryAddons {
-  id: string;
-  name: string;
-}
+import { router } from "expo-router";
+import { OrderHistoryResponse } from "types/types";
 
 const Reorder = () => {
   const { orders } = useSelector((state: RootState) => state.orderHistory);
@@ -139,7 +71,14 @@ const Reorder = () => {
           return (
             <OrderHistoryCard
               order={item}
-              onPress={(order) => console.log(order)}
+              onPress={() =>
+                router.navigate({
+                  pathname: "/(protected)/orderHistoryDetailScreen",
+                  params: {
+                    order: JSON.stringify(item),
+                  },
+                })
+              }
             />
           );
         }}

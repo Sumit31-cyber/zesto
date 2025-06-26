@@ -1,9 +1,13 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
-import { OrderHistory } from "@/app/(protected)/(tabs)/reorder";
+
 import { Image } from "expo-image";
 import CustomText from "./customText";
 import { COLORS } from "utils/constants";
+import { RFValue } from "react-native-responsive-fontsize";
+import DashedLine from "./DashedLine";
+import { Star } from "lucide-react-native";
+import { OrderHistory } from "types/types";
 
 const OrderHistoryCard = ({
   order,
@@ -124,8 +128,9 @@ const OrderHistoryCard = ({
       </View>
 
       {/* Order Items */}
-      <View style={styles.itemsContainer}>{renderOrderItems()}</View>
+      <View>{renderOrderItems()}</View>
 
+      <DashedLine style={{ marginVertical: RFValue(2) }} />
       {/* Footer */}
       <View style={styles.footer}>
         <View style={styles.orderSummary}>
@@ -154,6 +159,40 @@ const OrderHistoryCard = ({
         </View>
       </View>
 
+      <DashedLine style={{ marginVertical: RFValue(2) }} />
+
+      {/* Rate Food */}
+
+      <View style={{ paddingVertical: RFValue(6), gap: 5 }}>
+        <CustomText variant="h7" color={COLORS.darkGray}>
+          Food Rating
+        </CustomText>
+        <View
+          style={{
+            flexDirection: "row",
+            width: "100%",
+            alignItems: "center",
+            gap: RFValue(10),
+          }}
+        >
+          {new Array(5)
+            .fill(0)
+            .map((item, index) => ({ id: index }))
+            .map((item, index) => {
+              return (
+                <View>
+                  <Star
+                    size={RFValue(14)}
+                    fill={COLORS.liteGray}
+                    color={COLORS.liteGray}
+                  />
+                </View>
+              );
+            })}
+        </View>
+      </View>
+
+      <DashedLine style={{ marginVertical: RFValue(2) }} />
       {/* Order Actions */}
       <View style={styles.actions}>
         {order.status === "pending" ? (
@@ -181,21 +220,6 @@ const OrderHistoryCard = ({
               flexDirection: "row",
             }}
           >
-            <TouchableOpacity
-              activeOpacity={0.8}
-              style={[
-                styles.actionButton,
-                { borderWidth: StyleSheet.hairlineWidth },
-              ]}
-            >
-              <CustomText
-                variant="h7"
-                fontFamily="gilroyMedium"
-                style={styles.actionButtonText}
-              >
-                View Details
-              </CustomText>
-            </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.8}
               style={[
@@ -247,8 +271,11 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
+    // alignItems: "center",
     marginBottom: 16,
+    backgroundColor: `${COLORS.grayBackgroundColor}50`,
+    padding: RFValue(8),
+    borderRadius: RFValue(10),
   },
   restaurantInfo: {
     flexDirection: "row",
@@ -275,21 +302,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 6,
     borderRadius: 6,
+    alignSelf: "flex-start",
   },
   statusText: {
     top: 1.5,
   },
-  itemsContainer: {
-    marginBottom: 16,
-  },
+
   orderItem: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 12,
   },
   itemImage: {
-    width: 50,
-    height: 50,
+    width: RFValue(20),
+    height: RFValue(20),
     borderRadius: 8,
     marginRight: 12,
   },
@@ -317,10 +343,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingTop: 16,
-    borderTopWidth: 1,
     borderTopColor: "#eee",
-    marginBottom: 16,
+    marginVertical: RFValue(5),
   },
   orderSummary: {
     flex: 1,
@@ -346,6 +370,7 @@ const styles = StyleSheet.create({
   actions: {
     flexDirection: "row",
     justifyContent: "space-between",
+    marginTop: RFValue(6),
   },
   actionButton: {
     flex: 1,
