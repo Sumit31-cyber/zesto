@@ -385,6 +385,8 @@ interface OrderHistoryAddress {
   city: string;
   state: string;
   addressLine1: string;
+  latitude: string;
+  longitude: string;
 }
 
 interface OrderHistoryItemTypes {

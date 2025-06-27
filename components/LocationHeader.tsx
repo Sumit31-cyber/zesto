@@ -14,6 +14,7 @@ import { useAuth } from "@clerk/clerk-react";
 import { useSelector } from "react-redux";
 import { selectUserAddresses } from "redux/slice/userSlice";
 import { clearAllPersistedData } from "redux/store";
+import { router } from "expo-router";
 
 type Props = {
   titleStyle?: TextStyle;
@@ -79,10 +80,10 @@ const LocationHeader: React.FC<Props> = ({
       </View>
       <TouchableOpacity
         onPress={async () => {
-          clearAllPersistedData();
-          await signOut();
-          // console.log(userId);
-          // emit("event1", { hello: "Name" });
+          // clearAllPersistedData();
+          // await signOut();
+
+          router.navigate("/activeOrderDetailScreen");
         }}
         style={{
           height: 40,

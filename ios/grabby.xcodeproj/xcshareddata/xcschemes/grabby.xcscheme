@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "grabby.app"
-               BlueprintName = "grabby"
-               ReferencedContainer = "container:grabby.xcodeproj">
+               BuildableName = "Grabby.app"
+               BlueprintName = "Grabby"
+               ReferencedContainer = "container:Grabby.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "grabbyTests.xctest"
-               BlueprintName = "grabbyTests"
-               ReferencedContainer = "container:grabby.xcodeproj">
+               BuildableName = "GrabbyTests.xctest"
+               BlueprintName = "GrabbyTests"
+               ReferencedContainer = "container:Grabby.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "grabby.app"
-            BlueprintName = "grabby"
-            ReferencedContainer = "container:grabby.xcodeproj">
+            BuildableName = "Grabby.app"
+            BlueprintName = "Grabby"
+            ReferencedContainer = "container:Grabby.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "grabby.app"
-            BlueprintName = "grabby"
-            ReferencedContainer = "container:grabby.xcodeproj">
+            BuildableName = "Grabby.app"
+            BlueprintName = "Grabby"
+            ReferencedContainer = "container:Grabby.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

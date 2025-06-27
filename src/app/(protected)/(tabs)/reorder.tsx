@@ -71,14 +71,23 @@ const Reorder = () => {
           return (
             <OrderHistoryCard
               order={item}
-              onPress={() =>
-                router.navigate({
-                  pathname: "/(protected)/orderHistoryDetailScreen",
-                  params: {
-                    order: JSON.stringify(item),
-                  },
-                })
-              }
+              onPress={() => {
+                if (item.status == "delivered" || item.status == "cancelled") {
+                  router.navigate({
+                    pathname: "/(protected)/orderHistoryDetailScreen",
+                    params: {
+                      order: JSON.stringify(item),
+                    },
+                  });
+                } else {
+                  router.navigate({
+                    pathname: "/(protected)/activeOrderDetailScreen",
+                    params: {
+                      orderId: item.id,
+                    },
+                  });
+                }
+              }}
             />
           );
         }}

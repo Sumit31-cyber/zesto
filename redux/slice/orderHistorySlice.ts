@@ -1,11 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "redux/store";
 import dayjs from "dayjs";
-import { OrderHistoryState, OrderHistoryType, OrderStatus } from "types/types";
-import {
-  OrderHistory,
-  OrderHistoryItemTypes,
-} from "@/app/(protected)/(tabs)/reorder";
+import { OrderHistoryState } from "types/types";
 
 const initialState: OrderHistoryState = {
   orders: [],
@@ -49,3 +45,5 @@ export const {
 export default orderHistorySlice.reducer;
 
 export const selectOrderHistory = (state: RootState) => state.orderHistory;
+export const selectOrder = (state: RootState, orderId: string) =>
+  state.orderHistory.orders.find((item) => item.id === orderId);
