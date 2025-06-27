@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { headerHeight } from "components/CustomHeader";
 import {
@@ -13,24 +13,74 @@ import { router, useLocalSearchParams } from "expo-router";
 import { AntDesign } from "@expo/vector-icons";
 import CustomText from "components/customText";
 import { LinearGradient } from "expo-linear-gradient";
-import MapView, { Polyline, PROVIDER_GOOGLE, Region } from "react-native-maps";
+import MapView, {
+  Marker,
+  Polyline,
+  PROVIDER_GOOGLE,
+  Region,
+} from "react-native-maps";
 import { useSelector } from "react-redux";
 import { getUserInformation } from "utils/ApiManager";
 import { selectUser } from "redux/slice/userSlice";
-import { Check } from "lucide-react-native";
+import { Check, Home } from "lucide-react-native";
 import { selectOrder, selectOrderHistory } from "redux/slice/orderHistorySlice";
 import { RootState } from "redux/store";
 import { OrderHistory, OrderHistoryItemTypes } from "types/types";
 import dayjs from "dayjs";
 import MapViewDirections from "react-native-maps-directions";
+import { decode } from "@mapbox/polyline";
+import { Image } from "expo-image";
+
+interface Coords {
+  latitude: number;
+  longitude: number;
+}
 
 const ActiveOrderDetailScreen = () => {
   const { top } = useSafeAreaInsets();
   const userInformation = useSelector(selectUser);
+  const [cords, setCords] = useState<Coords[] | null>(null);
   const { orderId } = useLocalSearchParams<{ orderId: string }>();
   const order = useSelector((state: RootState) => selectOrder(state, orderId));
 
-  console.log(JSON.stringify(order, null, 2));
+  const startLoc = [
+    order?.restaurant.address.latitude,
+    order?.restaurant.address.longitude,
+  ];
+  const destinationLoc = [
+    userInformation?.addresses[0].latitude,
+    userInformation?.addresses[0].longitude,
+  ];
+  const getDirections = async (startLoc: any, destinationLoc: any) => {
+    try {
+      const KEY = process.env.EXPO_PUBLIC_GO_MAPS_KEY; //put your API key here.
+      //otherwise, you'll have an 'unauthorized' error.
+      let resp = await fetch(
+        `https://maps.gomaps.pro/maps/api/directions/json?origin=${startLoc}&destination=${destinationLoc}&key=${KEY}`
+      );
+
+      let respJson = await resp.json();
+      console.log(respJson);
+      let points = decode(respJson.routes[0].overview_polyline.points);
+      console.log(points);
+      let coords = points.map((point, index) => {
+        return {
+          latitude: point[0],
+          longitude: point[1],
+        };
+      });
+
+      console.log(coords);
+      setCords(coords);
+      return coords;
+    } catch (error) {
+      return error;
+    }
+  };
+
+  useEffect(() => {
+    getDirections(startLoc, destinationLoc);
+  }, []);
 
   const initialRegion: Region = {
     //@ts-ignore
@@ -132,15 +182,47 @@ const ActiveOrderDetailScreen = () => {
           showsUserLocation
           showsMyLocationButton
           //   provider={PROVIDER_GOOGLE}
-          initialRegion={initialRegion}
+          initialRegion={restaurantCoordinates}
           style={{ flex: 1 }}
           onPress={() => {}}
         >
-          <MapViewDirections
+          <Marker coordinate={restaurantCoordinates}>
+            <Image
+              contentFit="contain"
+              source={require("assets/images/riderImage.png")}
+              style={{
+                height: RFValue(40),
+                aspectRatio: 1,
+              }}
+            />
+          </Marker>
+          <Marker coordinate={userCoordinates}>
+            <View
+              style={{
+                height: RFValue(20),
+                aspectRatio: 1,
+                backgroundColor: COLORS.primary,
+                borderRadius: 100,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Home color={"white"} size={RFValue(12)} />
+            </View>
+          </Marker>
+          {cords && (
+            <Polyline
+              coordinates={cords}
+              strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
+              strokeColors={[COLORS.primary]}
+              strokeWidth={2}
+            />
+          )}
+          {/* <MapViewDirections
             origin={restaurantCoordinates}
             destination={userCoordinates}
             apikey="AIzaSyCtJg3Lgxb8McZf1Ju84Wj5rO-E1d0jwC0"
-          />
+          /> */}
         </MapView>
         <LinearGradient
           colors={[
