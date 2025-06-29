@@ -6,6 +6,7 @@ import CustomText from "./customText";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { RFValue } from "react-native-responsive-fontsize";
 import { ImageBackground } from "expo-image";
+import OfferCarousel from "./OfferCarousal";
 
 const HeaderSection = ({ headerHeight }: { headerHeight: number }) => {
   const { top } = useSafeAreaInsets();
@@ -22,7 +23,8 @@ const HeaderSection = ({ headerHeight }: { headerHeight: number }) => {
         style={StyleSheet.absoluteFill}
         source={require("assets/images/gbg.jpg")}
       />
-      <View
+      <OfferCarousel />
+      {/* <View
         style={{
           flexDirection: "row",
           marginTop: "auto",
@@ -30,8 +32,8 @@ const HeaderSection = ({ headerHeight }: { headerHeight: number }) => {
           justifyContent: "space-evenly",
           top: -10,
         }}
-      >
-        <View
+      > */}
+      {/* <View
           style={{
             height: RFValue(140),
             aspectRatio: 1,
@@ -65,8 +67,8 @@ const HeaderSection = ({ headerHeight }: { headerHeight: number }) => {
             }}
             source={require("assets/animations/saladAnimation.json")}
           />
-        </View>
-        {/* <LottieView
+        </View> */}
+      {/* <LottieView
           autoPlay
           resizeMode="contain"
           // speed={0.3}
@@ -88,7 +90,7 @@ const HeaderSection = ({ headerHeight }: { headerHeight: number }) => {
           }}
           source={require("assets/animations/hAnimation.json")}
         /> */}
-        {/* <LottieView
+      {/* <LottieView
           autoPlay
           resizeMode="cover"
           speed={0.3}
@@ -99,8 +101,8 @@ const HeaderSection = ({ headerHeight }: { headerHeight: number }) => {
           }}
           source={require("assets/diwaliAnimation.json")}
         /> */}
-      </View>
-      <View
+      {/* </View> */}
+      {/* <View
         style={{
           flexDirection: "row",
           alignItems: "center",
@@ -110,7 +112,6 @@ const HeaderSection = ({ headerHeight }: { headerHeight: number }) => {
       >
         <View
           style={{
-            // width: "100%",
             height: BORDER_WIDTH * 2,
             backgroundColor: "#fff",
             flex: 1,
@@ -122,14 +123,13 @@ const HeaderSection = ({ headerHeight }: { headerHeight: number }) => {
         </CustomText>
         <View
           style={{
-            // width: "100%",
             height: BORDER_WIDTH * 2,
             backgroundColor: "#fff",
             flex: 1,
             marginHorizontal: 20,
           }}
         ></View>
-      </View>
+      </View> */}
     </View>
   );
 };

@@ -111,12 +111,12 @@ const Food = () => {
       data: [{}],
       renderItem: () => <HeaderSection headerHeight={headerHeight} />,
     },
-    {
-      id: 1,
-      title: "Offers",
-      data: [{}],
-      renderItem: () => <OfferCarousel />,
-    },
+    // {
+    //   id: 1,
+    //   title: "Offers",
+    //   data: [{}],
+    //   renderItem: () => <OfferCarousel />,
+    // },
     {
       id: 3,
       title: "Sumit, What's on your mind?",

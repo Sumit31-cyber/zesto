@@ -1,6 +1,6 @@
 import { ScrollView, View } from "react-native";
 import React from "react";
-import { COLORS, screenWidth } from "utils/constants";
+import { COLORS, PADDING_HORIZONTAL, screenWidth } from "utils/constants";
 import { foodType } from "utils/dataObject";
 import { Image } from "expo-image";
 import { FoodTypesProps } from "types/types";
@@ -10,7 +10,12 @@ import Divider from "./Divider";
 const _containerHeight = screenWidth * 0.3;
 const FoodTypeSection = () => {
   return (
-    <View style={{ marginVertical: 10 }}>
+    <View
+      style={{
+        marginTop: PADDING_HORIZONTAL * 2,
+        marginBottom: PADDING_HORIZONTAL,
+      }}
+    >
       <View
         style={{
           flexDirection: "row",
@@ -23,7 +28,7 @@ const FoodTypeSection = () => {
         <Divider />
         <CustomText
           variant="h7"
-          color={COLORS.black}
+          color={COLORS.extraDarkGray}
           fontFamily="gilroyMedium"
           style={{ textTransform: "uppercase", letterSpacing: 1.2 }}
         >
