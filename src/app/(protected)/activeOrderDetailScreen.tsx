@@ -52,16 +52,21 @@ const ActiveOrderDetailScreen = () => {
 
   const bottomSheetModalRef = useRef<BottomSheet>(null);
 
-  const startLoc = [
-    order?.restaurant.address.latitude,
-    order?.restaurant.address.longitude,
-  ];
-  const destinationLoc = [
-    userInformation?.addresses[0].latitude,
-    userInformation?.addresses[0].longitude,
-  ];
+  console.log("ORDER ----- ", JSON.stringify(order, null, 2));
+
+  const startLoc = order &&
+    order.address && [
+      order?.restaurant?.address?.latitude,
+      order?.restaurant?.address?.longitude,
+    ];
+  const destinationLoc = userInformation &&
+    userInformation.addresses && [
+      userInformation?.addresses[0].latitude,
+      userInformation?.addresses[0].longitude,
+    ];
   const getDirections = async (startLoc: any, destinationLoc: any) => {
     try {
+      if (!startLoc && destinationLoc) return;
       const KEY = process.env.EXPO_PUBLIC_GO_MAPS_KEY; //put your API key here.
       //otherwise, you'll have an 'unauthorized' error.
       let resp = await fetch(
@@ -187,7 +192,12 @@ const ActiveOrderDetailScreen = () => {
   };
 
   if (!order) {
-    return null;
+    return (
+      <View
+        onTouchEnd={() => router.back()}
+        style={{ flex: 1, backgroundColor: "red" }}
+      ></View>
+    );
   }
 
   return (
@@ -608,7 +618,12 @@ const Header = ({ order }: { order: OrderHistory }) => {
       <TouchableOpacity
         activeOpacity={0.6}
         onPress={() => {
-          router.back();
+          if (router.canGoBack()) {
+            router.back();
+          } else {
+            // Go back to the logical previous screen
+            router.navigate("/(protected)/(tabs)/food");
+          }
         }}
         style={{
           aspectRatio: 1,

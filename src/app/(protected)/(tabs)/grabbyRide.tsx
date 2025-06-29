@@ -1,72 +1,114 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
-import CustomText from "components/customText";
-import { clearAllPersistedData } from "redux/store";
-import LottieView from "lottie-react-native";
-import { COLORS, screenHeight, screenWidth } from "utils/constants";
+import { StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  COLORS,
+  PADDING_HORIZONTAL,
+  screenHeight,
+  screenWidth,
+} from "utils/constants";
+import Animated, {
+  SlideInDown,
+  SlideInUp,
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  withDelay,
+  runOnJS,
+} from "react-native-reanimated";
 import { Image } from "expo-image";
+import CustomText from "components/customText";
+import LottieView from "lottie-react-native";
+import { RFValue } from "react-native-responsive-fontsize";
+import { useFocusEffect } from "@react-navigation/native";
 
 const GrabbyRide = () => {
-  return (
-    <View style={{ flex: 1, backgroundColor: "#fff" }}>
-      <View
-        style={{
-          width: screenWidth,
-          height: screenHeight * 0.3,
-          backgroundColor: "#586376",
-        }}
-      >
-        <LottieView
-          autoPlay
-          resizeMode="cover"
-          style={{
-            flex: 1,
-          }}
-          source={require("assets/animations/raining.json")}
-        />
+  const [animationKey, setAnimationKey] = useState(0);
+  const carTranslateY = useSharedValue(-screenHeight * 0.3);
+  const carOpacity = useSharedValue(0);
+  const textOpacity = useSharedValue(0);
+  const textTranslateY = useSharedValue(50);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      carTranslateY.value = -screenHeight * 0.3;
+      carOpacity.value = 0;
+      textOpacity.value = 0;
+      textTranslateY.value = 50;
+
+      carOpacity.value = withTiming(1, { duration: 800 });
+      carTranslateY.value = withTiming(-screenHeight * 0.2, {
+        duration: 1200,
+      });
+
+      textOpacity.value = withDelay(400, withTiming(1, { duration: 800 }));
+      textTranslateY.value = withDelay(400, withTiming(0, { duration: 800 }));
+
+      setAnimationKey((prev) => prev + 1);
+    }, [])
+  );
+
+  const carAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: carTranslateY.value }],
+    opacity: carOpacity.value,
+  }));
+
+  const textAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: textOpacity.value,
+    transform: [{ translateY: textTranslateY.value }],
+  }));
+
+  return (
+    <View style={{ backgroundColor: "#f1f1f1", flex: 1 }}>
+      <Animated.View
+        style={[
+          {
+            width: screenWidth,
+            height: screenHeight * 0.7,
+            alignItems: "center",
+            justifyContent: "center",
+          },
+          carAnimatedStyle,
+        ]}
+      >
         <Image
           contentFit="cover"
-          source={require("assets/images/cloud2.png")}
-          style={[
-            StyleSheet.absoluteFill,
-            { transform: [{ rotate: "180deg" }], opacity: 0.3 },
-          ]}
-        />
-      </View>
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <TouchableOpacity
-          onPress={() => {
-            clearAllPersistedData();
+          style={{
+            width: "100%",
+            height: "100%",
           }}
-        >
-          <CustomText variant="h1" fontFamily="gilroyExtraBold" color="red">
-            Clear
-          </CustomText>
-        </TouchableOpacity>
-        <CustomText variant="h2" fontFamily="gilroyThin" color="black">
-          Gilroy Thin
+          source={require("assets/images/car2.jpeg")}
+        />
+      </Animated.View>
+
+      <Animated.View
+        style={[
+          {
+            alignItems: "center",
+            top: -screenHeight * 0.2,
+            marginTop: PADDING_HORIZONTAL,
+            gap: 6,
+          },
+          textAnimatedStyle,
+        ]}
+      >
+        <CustomText variant="h1" fontFamily="gilroyMedium">
+          NEVER BE LATE AGAIN
         </CustomText>
-        <CustomText variant="h2" fontFamily="gilroyLight" color="black">
-          Gilroy Light
+        <CustomText variant="h1" style={{ opacity: 0.6 }}>
+          WITH GRABBY RIDE!
         </CustomText>
-        <CustomText variant="h2" color="black">
-          {" "}
-          Gilroy Regular
-        </CustomText>
-        <CustomText variant="h2" fontFamily="gilroyMedium" color="black">
-          Gilroy Medium
-        </CustomText>
-        <CustomText variant="h2" fontFamily="gilroySemiBold" color="black">
-          Gilroy Semibold
-        </CustomText>
-        <CustomText variant="h2" fontFamily="gilroyBold" color="black">
-          Gilroy Bold
-        </CustomText>
-        <CustomText variant="h2" fontFamily="gilroyExtraBold" color="black">
-          Gilroy ExtraBold
-        </CustomText>
-      </View>
+        <LottieView
+          key={animationKey} // This forces the Lottie animation to restart
+          autoPlay
+          loop={true}
+          resizeMode="contain"
+          style={{
+            height: RFValue(200),
+            width: screenWidth,
+          }}
+          source={require("assets/animations/comingsoon.json")}
+        />
+      </Animated.View>
     </View>
   );
 };

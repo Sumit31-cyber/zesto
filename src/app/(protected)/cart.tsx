@@ -174,6 +174,9 @@ const Cart = () => {
 
           router.replace({
             pathname: "/orderPlacedScreen",
+            params: {
+              orderId: response.order.id,
+            },
           });
         }
       } else {

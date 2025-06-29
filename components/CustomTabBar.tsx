@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useState } from "react";
 import {
   DineoutIcon,
   FavoriteIcon,
@@ -8,6 +8,13 @@ import {
 } from "assets/svgs/svgs";
 import { BOTTOM_TAB_HEIGHT, COLORS, screenWidth } from "utils/constants";
 import Animated, {
+  Easing,
+  FadeIn,
+  FadeInUp,
+  FadeOutDown,
+  FadeOutUp,
+  runOnJS,
+  SlideInUp,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
@@ -28,6 +35,17 @@ const CustomTabBar: FC<BottomTabBarProps> = ({
   const activeIndex = useSharedValue(0);
   const { scrollY } = useSharedState();
   // const clampedValue = useSharedValue(0);
+
+  const [showCartFloatingView, setShowCartFloatingView] = useState(true);
+
+  useDerivedValue(() => {
+    if (activeIndex.value === 4) {
+      runOnJS(setShowCartFloatingView)(false);
+    } else {
+      runOnJS(setShowCartFloatingView)(true);
+    }
+    console.log(activeIndex.value);
+  }, []);
 
   const rStyle = useAnimatedStyle(() => {
     return {
@@ -55,7 +73,15 @@ const CustomTabBar: FC<BottomTabBarProps> = ({
   }, [state.index]);
   return (
     <>
-      <Dropdown />
+      {showCartFloatingView && (
+        <Animated.View
+          entering={FadeInUp.duration(300).easing(Easing.out(Easing.cubic))}
+          exiting={FadeOutDown.duration(250).easing(Easing.in(Easing.cubic))}
+        >
+          <Dropdown />
+        </Animated.View>
+      )}
+
       <Animated.View
         style={[
           transitionStyle,

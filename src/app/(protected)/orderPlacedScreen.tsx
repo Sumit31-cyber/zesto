@@ -5,10 +5,17 @@ import { COLORS, screenHeight, screenWidth } from "utils/constants";
 import CustomText from "components/customText";
 import { useSelector } from "react-redux";
 import { selectUser } from "redux/slice/userSlice";
-import { router, useFocusEffect } from "expo-router";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { wait } from "utils/functions";
 const OrderPlacedScreen = () => {
+  const { orderId } = useLocalSearchParams<{ orderId: string }>();
   const userInformation = useSelector(selectUser);
+  const [animationKey, setAnimationKey] = useState(0);
+
+  useEffect(() => {
+    setAnimationKey((prev) => prev + 1);
+  }, []);
+
   //   const animationRef = useRef<LottieView>(null);
 
   return (
@@ -22,6 +29,7 @@ const OrderPlacedScreen = () => {
       }}
     >
       <LottieView
+        key={animationKey}
         // ref={animationRef}
         resizeMode="contain"
         loop={false}
@@ -30,7 +38,12 @@ const OrderPlacedScreen = () => {
         onAnimationFinish={() => {
           console.log("End");
           setTimeout(() => {
-            router.back();
+            router.replace({
+              pathname: "/activeOrderDetailScreen",
+              params: {
+                orderId,
+              },
+            });
           }, 500);
         }}
         style={{

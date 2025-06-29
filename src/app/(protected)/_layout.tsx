@@ -44,6 +44,9 @@ export default function ProtectedLayout() {
       <Stack.Screen name="(tabs)" />
       <Stack.Screen name="restaurant" />
       <Stack.Screen name="cart" />
+      <Stack.Screen name="activeOrderDetailScreen" />
+      <Stack.Screen name="orderPlacedScreen" />
+      <Stack.Screen name="createUserInformationScreen" />
     </Stack>
   );
 }

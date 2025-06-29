@@ -151,7 +151,7 @@ const DropDownItem: React.FC<Props> = ({
             expanded.value = !expanded.value;
             await wait(200); // To make the navigation smoother
           }
-          router.navigate({
+          router.push({
             pathname: "/(protected)/restaurant",
             params: { restaurantId: item.restaurant.id },
           });
@@ -166,6 +166,7 @@ const DropDownItem: React.FC<Props> = ({
         }}
       >
         <Image
+          transition={300}
           source={{ uri: item.restaurant.logoUrl }}
           style={{ height: "85%", aspectRatio: 1, borderRadius: 100 }}
         />
@@ -194,7 +195,7 @@ const DropDownItem: React.FC<Props> = ({
         <TouchableOpacity
           onPress={() => {
             router.navigate({
-              pathname: "/(protected)/cart",
+              pathname: "/cart",
               params: { restaurantId: item.restaurant.id },
             });
           }}
