@@ -37,8 +37,10 @@ import { LinearGradient } from "expo-linear-gradient";
 import { AntDesign } from "@expo/vector-icons";
 import { headerHeight } from "components/CustomHeader";
 import ScaleTouchable from "components/ScaleTouchableOpacity";
+import { BlurView } from "expo-blur";
 
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
+const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
 const DineOut = () => {
   const { top } = useSafeAreaInsets();
@@ -77,18 +79,30 @@ const DineOut = () => {
 
     return {
       transform: [{ translateY: -clampedValue.value }],
-      backgroundColor: `rgba(252, 252, 252,${bg})`,
+      // backgroundColor: `rgba(252, 252, 252,${bg})`,
     };
   });
   const rOpacity = useAnimatedStyle(() => {
-    const bg = interpolate(
+    const opacity = interpolate(
+      clampedValue.value,
+      [0, locationSectionHeight / 2],
+      [1, 0]
+    );
+
+    return {
+      opacity,
+    };
+  });
+  const blurOpacity = useAnimatedStyle(() => {
+    const opacity = interpolate(
       scrollYGlobal.value,
-      [0, (locationSectionHeight + top) / 2],
+      [0, (headerHeight + top) / 2],
       [0, 1]
     );
 
     return {
-      backgroundColor: `rgba(252, 252, 252,${bg})`,
+      opacity,
+      // backgroundColor: `rgba(252, 252, 252,${bg})`,
     };
   });
 
@@ -138,11 +152,12 @@ const DineOut = () => {
           },
         ]}
       >
-        <View
+        <AnimatedBlurView style={[StyleSheet.absoluteFill, blurOpacity]} />
+        <Animated.View
           onLayout={(event) => {
             setLocationSectionHeight(event.nativeEvent.layout.height);
           }}
-          style={{ alignItems: "center" }}
+          style={[rOpacity, { alignItems: "center" }]}
         >
           <LocationHeader
             locationTextStyle={{
@@ -151,7 +166,7 @@ const DineOut = () => {
             titleStyle={{ color: "black" }}
             iconColor={"black"}
           />
-        </View>
+        </Animated.View>
         <SearchBar
           value={""}
           onChangeText={(value) => {
@@ -160,17 +175,17 @@ const DineOut = () => {
           onClosePress={() => {}}
         />
       </Animated.View>
-      <Animated.View
+      {/* <Animated.View
         style={[
           rOpacity,
           {
-            height: top,
+            // height: top,
             width: "100%",
             position: "absolute",
             zIndex: 200,
           },
         ]}
-      ></Animated.View>
+      ></Animated.View> */}
 
       <AnimatedSectionList
         contentContainerStyle={{
@@ -342,9 +357,7 @@ const HeaderSection = () => {
   return (
     <ImageBackground
       onTouchEnd={() => {}}
-      source={{
-        uri: "https://images.unsplash.com/photo-1675950277858-431e1d3fdb51?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fHJlc3RhdXJhbnRzJTIwb3V0ZG9vcnxlbnwwfHwwfHx8MA%3D%3D",
-      }}
+      source={require("assets/images/cloud.jpg")}
       style={{
         height: screenHeight * 0.45,
         width: "100%",

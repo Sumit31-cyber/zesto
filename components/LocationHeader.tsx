@@ -15,6 +15,8 @@ import { useSelector } from "react-redux";
 import { selectUserAddresses } from "redux/slice/userSlice";
 import { clearAllPersistedData } from "redux/store";
 import { router } from "expo-router";
+import { MapPin } from "lucide-react-native";
+import { RFValue } from "react-native-responsive-fontsize";
 
 type Props = {
   titleStyle?: TextStyle;
@@ -41,44 +43,74 @@ const LocationHeader: React.FC<Props> = ({
         <View
           style={{
             flexDirection: "row",
-            alignItems: "flex-end",
+            alignItems: "center",
+            gap: 10,
           }}
         >
           <View
             style={{
               alignSelf: "flex-start",
-            }}
-          >
-            <SendIcon size={40} tint={iconColor} />
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
+              backgroundColor: "rgba(0,0,0,0.3)",
+              borderRadius: 100,
+              height: RFValue(28),
+              aspectRatio: 1,
+              justifyContent: "center",
               alignItems: "center",
-              gap: 5,
             }}
           >
-            <CustomText
-              variant="h3"
-              fontFamily="gilroyBold"
-              color="black"
-              style={titleStyle}
+            <MapPin color={"white"} size={RFValue(12)} />
+          </View>
+          <View style={{ gap: 4 }}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 5,
+              }}
             >
-              Phulwari Sharif
+              <CustomText
+                variant="h4"
+                fontFamily="gilroyBold"
+                color="black"
+                style={titleStyle}
+              >
+                Phulwari Sharif
+              </CustomText>
+              <AntDesign name="down" size={18} color="black" />
+            </View>
+            <CustomText
+              variant="h7"
+              color="black"
+              numberOfLines={1}
+              style={[{ opacity: 0.8, ...locationTextStyle }]}
+            >
+              {userAddress[0]?.addressLine1}
             </CustomText>
-            <AntDesign name="down" size={18} color="black" />
           </View>
         </View>
-        <CustomText
-          variant="h6"
-          color="black"
-          numberOfLines={1}
-          style={[{ opacity: 0.8, ...locationTextStyle }]}
-        >
-          {userAddress[0]?.addressLine1}
-        </CustomText>
       </View>
+
       <TouchableOpacity
+        onPress={async () => {
+          // clearAllPersistedData();
+          // await signOut();
+
+          router.navigate("/activeOrderDetailScreen");
+        }}
+        style={{
+          alignSelf: "flex-start",
+          backgroundColor: "rgba(0,0,0,0.3)",
+          borderRadius: 100,
+          height: RFValue(28),
+          aspectRatio: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <FontAwesome name="user" size={RFValue(12)} color="white" />
+      </TouchableOpacity>
+
+      {/* <TouchableOpacity
         onPress={async () => {
           // clearAllPersistedData();
           // await signOut();
@@ -95,8 +127,8 @@ const LocationHeader: React.FC<Props> = ({
           marginLeft: 14,
         }}
       >
-        <FontAwesome name="user" size={24} color="white" />
-      </TouchableOpacity>
+       
+      </TouchableOpacity> */}
     </View>
   );
 };

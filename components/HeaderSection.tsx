@@ -1,15 +1,16 @@
 import { LinearGradient } from "expo-linear-gradient";
 import LottieView from "lottie-react-native";
-import { View } from "react-native";
-import { BORDER_WIDTH } from "utils/constants";
+import { StyleSheet, View } from "react-native";
+import { BORDER_WIDTH, screenWidth } from "utils/constants";
 import CustomText from "./customText";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { RFValue } from "react-native-responsive-fontsize";
+import { ImageBackground } from "expo-image";
 
 const HeaderSection = ({ headerHeight }: { headerHeight: number }) => {
   const { top } = useSafeAreaInsets();
   return (
-    <LinearGradient
-      colors={["#fdf9ed", "#faedcd", "#f4d893"]}
+    <View
       style={{
         width: "100%",
         paddingTop: headerHeight - top,
@@ -17,27 +18,77 @@ const HeaderSection = ({ headerHeight }: { headerHeight: number }) => {
         borderBottomRightRadius: 30,
       }}
     >
+      <ImageBackground
+        style={StyleSheet.absoluteFill}
+        source={require("assets/images/gbg.jpg")}
+      />
       <View
         style={{
           flexDirection: "row",
           marginTop: "auto",
           alignItems: "flex-end",
-          justifyContent: "space-between",
+          justifyContent: "space-evenly",
           top: -10,
         }}
       >
-        <LottieView
-          autoPlay
-          resizeMode="cover"
-          speed={0.3}
+        <View
           style={{
-            width: 180,
-            height: 100,
+            height: RFValue(140),
+            aspectRatio: 1,
+          }}
+        >
+          <LottieView
+            autoPlay
+            resizeMode="contain"
+            // speed={0.3}
+            style={{
+              flex: 1,
+            }}
+            source={require("assets/animations/hAnimation.json")}
+          />
+        </View>
+        <View
+          style={{
+            marginTop: "auto",
+            height: RFValue(70),
+            aspectRatio: 1,
+            position: "absolute",
+            left: 10,
+          }}
+        >
+          <LottieView
+            autoPlay
+            resizeMode="contain"
+            // speed={0.3}
+            style={{
+              flex: 1,
+            }}
+            source={require("assets/animations/saladAnimation.json")}
+          />
+        </View>
+        {/* <LottieView
+          autoPlay
+          resizeMode="contain"
+          // speed={0.3}
+          style={{
+            width: screenWidth / 2,
+            aspectRatio: 1,
             marginTop: "auto",
           }}
-          source={require("assets/diwaliText.json")}
+          source={require("assets/animations/saladAnimation.json")}
         />
         <LottieView
+          autoPlay
+          resizeMode="contain"
+          // speed={0.3}
+          style={{
+            width: screenWidth / 2,
+            aspectRatio: 1,
+            marginTop: "auto",
+          }}
+          source={require("assets/animations/hAnimation.json")}
+        /> */}
+        {/* <LottieView
           autoPlay
           resizeMode="cover"
           speed={0.3}
@@ -47,7 +98,7 @@ const HeaderSection = ({ headerHeight }: { headerHeight: number }) => {
             marginTop: "auto",
           }}
           source={require("assets/diwaliAnimation.json")}
-        />
+        /> */}
       </View>
       <View
         style={{
@@ -60,26 +111,26 @@ const HeaderSection = ({ headerHeight }: { headerHeight: number }) => {
         <View
           style={{
             // width: "100%",
-            height: BORDER_WIDTH,
-            backgroundColor: "#e3871d",
+            height: BORDER_WIDTH * 2,
+            backgroundColor: "#fff",
             flex: 1,
             marginHorizontal: 20,
           }}
         ></View>
-        <CustomText variant="h7" color={"#e3871d"}>
+        <CustomText variant="h7" fontFamily="gilroyBold" color={"#fff"}>
           Up To 60% OFF
         </CustomText>
         <View
           style={{
             // width: "100%",
-            height: BORDER_WIDTH,
-            backgroundColor: "#e3871d",
+            height: BORDER_WIDTH * 2,
+            backgroundColor: "#fff",
             flex: 1,
             marginHorizontal: 20,
           }}
         ></View>
       </View>
-    </LinearGradient>
+    </View>
   );
 };
 

@@ -63,7 +63,7 @@ const RecommendedRestaurantSection = () => {
   }
 
   return (
-    <View style={{ paddingHorizontal: PADDING_HORIZONTAL }}>
+    <View style={{ paddingHorizontal: PADDING_HORIZONTAL, paddingBottom: 400 }}>
       <CustomText
         variant="h6"
         fontFamily="gilroySemiBold"

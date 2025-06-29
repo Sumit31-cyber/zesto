@@ -35,9 +35,11 @@ import HeaderSection from "components/HeaderSection";
 import FoodTypeSection from "components/FoodTypeSection";
 import FilterBar from "components/FilterBar";
 import RecommendedRestaurantSection from "components/RecommendedRestaurantSection";
+import { BlurView } from "expo-blur";
 
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
 const AnimatedSafeAreaView = Animated.createAnimatedComponent(SafeAreaView);
+const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 const Food = () => {
   const { signOut } = useAuth();
   const [searchText, setSearchText] = useState<string>("");
@@ -76,16 +78,28 @@ const Food = () => {
 
     return {
       transform: [{ translateY: -clampedValue.value }],
-      backgroundColor: `rgba(252, 252, 252,${bg})`,
+      // backgroundColor: `rgba(252, 252, 252,${bg})`,
     };
   });
+  // const blurOpacity = useAnimatedStyle(() => {
+  //   const opacity = interpolate(
+  //     scrollYGlobal.value,
+  //     [0, (headerHeight + top) / 2],
+  //     [1, 1]
+  //   );
+
+  //   return {
+  //     opacity,
+  //     // backgroundColor: `rgba(252, 252, 252,${bg})`,
+  //   };
+  // });
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
       backgroundColor: interpolateColor(
         scrollYGlobal.value,
         [0, (headerHeight + top) / 2],
-        ["#fdf9ed", "#ffff"]
+        ["#9bcfa3", "#ffff"]
       ),
     };
   });
@@ -133,17 +147,10 @@ const Food = () => {
             paddingTop: top,
             paddingHorizontal: 14,
             zIndex: 100,
-            shadowColor: COLORS.black,
-            shadowOffset: {
-              width: 0,
-              height: 1,
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
-            elevation: 5,
           },
         ]}
       >
+        <AnimatedBlurView style={[StyleSheet.absoluteFill]} intensity={30} />
         <LocationHeader />
         <SearchBar
           value={searchText}
