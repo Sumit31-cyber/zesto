@@ -49,49 +49,54 @@ const Reorder = () => {
     },
   });
 
-  if (isLoading) {
-    return <FullScreenLoadingIndicator />;
-  }
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.grayBackgroundColor }}>
       <CustomHeader title="Order History" />
-      <Animated.FlatList
-        // bounces={false}
-        onScroll={scrollHandler}
-        scrollEventThrottle={16}
-        data={orders}
-        onRefresh={refetch}
-        refreshing={isRefetching}
-        contentContainerStyle={{
-          padding: PADDING_HORIZONTAL,
-          gap: PADDING_HORIZONTAL,
-          paddingBottom: bottom + 200,
-        }}
-        renderItem={({ item, index }) => {
-          return (
-            <OrderHistoryCard
-              order={item}
-              onPress={() => {
-                if (item.status == "delivered" || item.status == "cancelled") {
-                  router.navigate({
-                    pathname: "/(protected)/orderHistoryDetailScreen",
-                    params: {
-                      order: JSON.stringify(item),
-                    },
-                  });
-                } else {
-                  router.navigate({
-                    pathname: "/(protected)/activeOrderDetailScreen",
-                    params: {
-                      orderId: item.id,
-                    },
-                  });
-                }
-              }}
-            />
-          );
-        }}
-      />
+
+      {isLoading ? (
+        <FullScreenLoadingIndicator />
+      ) : (
+        <Animated.FlatList
+          // bounces={false}
+          onScroll={scrollHandler}
+          scrollEventThrottle={16}
+          data={orders}
+          onRefresh={refetch}
+          refreshing={isRefetching}
+          contentContainerStyle={{
+            padding: PADDING_HORIZONTAL,
+            gap: PADDING_HORIZONTAL,
+            paddingBottom: bottom + 200,
+          }}
+          renderItem={({ item, index }) => {
+            return (
+              <OrderHistoryCard
+                order={item}
+                onPress={() => {
+                  if (
+                    item.status == "delivered" ||
+                    item.status == "cancelled"
+                  ) {
+                    router.navigate({
+                      pathname: "/(protected)/orderHistoryDetailScreen",
+                      params: {
+                        order: JSON.stringify(item),
+                      },
+                    });
+                  } else {
+                    router.navigate({
+                      pathname: "/(protected)/activeOrderDetailScreen",
+                      params: {
+                        orderId: item.id,
+                      },
+                    });
+                  }
+                }}
+              />
+            );
+          }}
+        />
+      )}
     </View>
   );
 };

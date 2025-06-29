@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { headerHeight } from "components/CustomHeader";
@@ -171,6 +171,21 @@ const ActiveOrderDetailScreen = () => {
     );
   };
 
+  const getStatusColor = () => {
+    switch (order?.status.toLowerCase()) {
+      case "pending":
+        return "#FFA500";
+      case "preparing":
+        return "#2196F3";
+      case "delivered":
+        return "#4CAF50";
+      case "cancelled":
+        return "#F44336";
+      default:
+        return "#6d30ef";
+    }
+  };
+
   if (!order) {
     return null;
   }
@@ -291,36 +306,61 @@ const ActiveOrderDetailScreen = () => {
               <View
                 style={{
                   flex: 1,
-                  backgroundColor: "white",
+                  backgroundColor: getStatusColor(),
                   marginHorizontal: PADDING_HORIZONTAL,
                   borderRadius: RFValue(12),
                   padding: PADDING_HORIZONTAL,
                 }}
               >
+                <View
+                  style={[
+                    StyleSheet.absoluteFill,
+                    {
+                      // backgroundColor: "rgba(1,1,1,0.2)",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    },
+                  ]}
+                >
+                  <Text
+                    style={{
+                      fontSize: RFValue(100),
+                      fontWeight: "900",
+                      opacity: 0.08,
+                      textAlign: "center",
+                    }}
+                  >
+                    GRABBY
+                  </Text>
+                </View>
                 <View style={{ flexDirection: "row" }}>
                   <View style={{ flex: 1, gap: 8 }}>
                     <View style={{ flexDirection: "row", gap: 10 }}>
-                      <Check strokeWidth={4} color={COLORS.primary} />
+                      <Check strokeWidth={4} color={"white"} />
                       <CustomText
                         variant="h5"
                         fontFamily="gilroyBold"
-                        color={COLORS.primary}
+                        color={"white"}
                       >
                         ON TIME
                       </CustomText>
                     </View>
-                    <CustomText variant="h5" fontFamily="gilroyBold">
+                    <CustomText
+                      variant="h5"
+                      fontFamily="gilroyBold"
+                      color="white"
+                    >
                       {getCurrentStatusInfo().status}
                     </CustomText>
-                    <CustomText variant="h6" color={COLORS.extraDarkGray}>
+                    <CustomText variant="h6" color={"white"}>
                       {getCurrentStatusInfo().desc}
                     </CustomText>
                   </View>
-                  <View
+                  {/* <View
                     style={{
                       height: RFValue(40),
                       aspectRatio: 1,
-                      backgroundColor: COLORS.primary,
+                      backgroundColor: "white",
                       borderRadius: RFValue(8),
                       alignItems: "center",
                       justifyContent: "center",
@@ -336,7 +376,7 @@ const ActiveOrderDetailScreen = () => {
                     <CustomText variant="h6" color="white">
                       mins
                     </CustomText>
-                  </View>
+                  </View> */}
                 </View>
               </View>
             </LinearGradient>
