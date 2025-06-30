@@ -173,7 +173,7 @@ const Cart = () => {
           });
 
           router.replace({
-            pathname: "/orderPlacedScreen",
+            pathname: "/activeOrderDetailScreen",
             params: {
               orderId: response.order.id,
             },

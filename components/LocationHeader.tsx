@@ -60,7 +60,7 @@ const LocationHeader: React.FC<Props> = ({
           >
             <MapPin color={"white"} size={RFValue(12)} />
           </View>
-          <View style={{ gap: 4 }}>
+          <View style={{ gap: 4, flex: 1 }}>
             <View
               style={{
                 flexDirection: "row",
@@ -92,10 +92,8 @@ const LocationHeader: React.FC<Props> = ({
 
       <TouchableOpacity
         onPress={async () => {
-          // clearAllPersistedData();
-          // await signOut();
-
-          router.navigate("/activeOrderDetailScreen");
+          clearAllPersistedData();
+          await signOut();
         }}
         style={{
           alignSelf: "flex-start",

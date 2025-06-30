@@ -340,7 +340,7 @@ const ActiveOrderDetailScreen = () => {
                       textAlign: "center",
                     }}
                   >
-                    GRABBY
+                    ZESTO
                   </Text>
                 </View>
                 <View style={{ flexDirection: "row" }}>

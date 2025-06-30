@@ -112,6 +112,8 @@ const CustomTabBar: FC<BottomTabBarProps> = ({
         {state.routes.map((route, index) => {
           const isFocused = state.index === index;
 
+          console.log(route.name);
+
           const onPress = () => {
             const event = navigation.emit({
               type: "tabPress",
@@ -144,7 +146,7 @@ const CustomTabBar: FC<BottomTabBarProps> = ({
               {route.name === "reorder" && (
                 <ReorderIcon size={24} tint={iconColor} />
               )}
-              {route.name === "grabbyRide" && (
+              {route.name === "zestoRide" && (
                 <View
                   style={{
                     width: "60%",

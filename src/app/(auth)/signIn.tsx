@@ -20,12 +20,13 @@ import Animated, {
 import { Redirect, router } from "expo-router";
 import CustomButton from "components/CustomButton";
 import { useAuth, useSignIn, useSignUp } from "@clerk/clerk-expo";
+import { BlurView } from "expo-blur";
 
 const topContainerHeight = screenHeight * 0.4;
 const bottomContainerHeight = screenHeight * 0.6;
-const backgroundImageOpacity = 0.5;
+const backgroundImageOpacity = 0.7;
 const SignInScreen = () => {
-  const [isPhoneInputActive, setIsPhoneInputActive] = useState(false);
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -37,16 +38,27 @@ const SignInScreen = () => {
     return {
       transform: [
         {
-          translateY: withTiming(
-            isPhoneInputActive ? -screenHeight * 0.15 : 0,
-            {
-              duration: 300,
-            }
-          ),
+          translateY: withTiming(isKeyboardVisible ? -screenHeight * 0.15 : 0, {
+            duration: 300,
+          }),
         },
       ],
     };
   });
+
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+      setIsKeyboardVisible(true);
+    });
+    const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+      setIsKeyboardVisible(false);
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
 
   const handleSignIn = async () => {
     if (!phoneNumber) {
@@ -142,53 +154,6 @@ const SignInScreen = () => {
     }
   };
 
-  // const handleSignIn = async () => {
-  //   if (!phoneNumber) {
-  //     Alert.alert("Please enter phone number to continue");
-  //     return;
-  //   }
-  //   let phoneNumberWithCOuntryCode = `+91${phoneNumber}`;
-  //   try {
-  //     Keyboard.dismiss();
-  //     setIsLoading(true);
-
-  //     if (!isLoaded) return;
-  //     if (phoneNumber != undefined) {
-  //       const response = await signUp.create({
-  //         phoneNumber: phoneNumberWithCOuntryCode,
-  //       });
-
-  //       if (response.status === "complete") {
-  //         setActive({ session: response.createdSessionId });
-  //         router.replace("/(protected)/(tabs)/food");
-  //       } else {
-  //         Alert.alert("Signin failed");
-  //       }
-
-  //       // const verification = await signUp.preparePhoneNumberVerification({
-  //       //   strategy: "phone_code",
-  //       // });
-
-  //       setIsLoading(false);
-  //       // if (response.status === "complete") {
-  //       //   router.replace("/(protected)");
-  //       // }
-  //       // router.navigate({
-  //       //   pathname: "/(auth)/verification",
-  //       //   params: {
-  //       //     phoneNumber: phoneNumberWithCOuntryCode,
-  //       //   },
-  //       // });
-  //     } else {
-  //       Alert.alert("Please enter correct phone number to continue");
-  //     }
-  //   } catch (error) {
-  //     Alert.alert(error instanceof Error ? error.message : String(error));
-  //     setIsLoading(false);
-  //     console.log(error);
-  //   }
-  // };
-
   if (isSignedIn) {
     return <Redirect href={"/(protected)/(tabs)/food"} />;
   }
@@ -225,20 +190,21 @@ const SignInScreen = () => {
               }}
             >
               <Image
+                contentFit="contain"
                 style={{
-                  height: RFValue(80),
+                  height: RFValue(100),
                   aspectRatio: 1,
-                  borderRadius: RFValue(40),
                 }}
                 transition={300}
-                source={require("assets/images/icon.png")}
+                source={require("assets/images/pngIcon.png")}
               />
               <CustomText
                 variant="h4"
-                color="white"
+                color={COLORS.extraDarkGray}
+                fontFamily="gilroyMedium"
                 style={{ letterSpacing: 0.8 }}
               >
-                Hungry? Let Grabby Handle It!
+                Hungry? Let Zesto Handle It!
               </CustomText>
             </View>
           </Backdrop>
@@ -250,15 +216,14 @@ const SignInScreen = () => {
             {
               height: bottomContainerHeight,
               width: "100%",
-              backgroundColor: "white",
+              // backgroundColor: "white",
               marginTop: "auto",
-              borderTopLeftRadius: 20,
-              borderTopRightRadius: 20,
               padding: RFValue(14),
               zIndex: 100,
             },
           ]}
         >
+          <BlurView style={StyleSheet.absoluteFill} />
           <CustomText
             variant="h4"
             fontFamily="gilroyBold"
@@ -294,12 +259,6 @@ const SignInScreen = () => {
               value={phoneNumber}
               onChangeText={(value) => {
                 setPhoneNumber(value);
-              }}
-              onFocus={() => {
-                setIsPhoneInputActive(true);
-              }}
-              onBlur={() => {
-                setIsPhoneInputActive(false);
               }}
               maxLength={10}
               keyboardType="number-pad"
@@ -404,9 +363,8 @@ const Backdrop = ({ children }: { children: React.ReactNode }) => {
         height: topContainerHeight,
         width: "100%",
         position: "absolute",
-        backgroundColor: COLORS.primary,
-        borderBottomRightRadius: 20,
-        borderBottomLeftRadius: 20,
+        // borderBottomRightRadius: 20,
+        // borderBottomLeftRadius: 20,
         overflow: "hidden",
       }}
     >
@@ -416,7 +374,7 @@ const Backdrop = ({ children }: { children: React.ReactNode }) => {
             height: topContainerHeight + 100,
             width: "100%",
             position: "absolute",
-            backgroundColor: "rgba(0,0,0,0.2)",
+            backgroundColor: "rgba(0,0,0,0.1)",
           },
         ]}
       ></View>

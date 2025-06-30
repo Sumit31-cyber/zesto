@@ -409,7 +409,7 @@ const FeaturedRestaurantsSection = () => {
                 overflow: "hidden",
               }}
             >
-              <View style={{ height: "100%", backgroundColor: "red" }}>
+              <View style={{ height: "100%" }}>
                 <Image style={{ flex: 1 }} source={{ uri: item.image }} />
               </View>
               <LinearGradient

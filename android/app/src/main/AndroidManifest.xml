@@ -27,9 +27,10 @@
         <action android:name="android.intent.action.VIEW"/>
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
-        <data android:scheme="myapp"/>
-        <data android:scheme="com.sumit_bravo.grabby"/>
+        <data android:scheme="zesto"/>
+        <data android:scheme="com.sumit_bravo.zesto"/>
         <data android:scheme="grabby"/>
+        <data android:scheme="com.sumit_bravo.grabby"/>
       </intent-filter>
     </activity>
   </application>

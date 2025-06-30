@@ -41,6 +41,7 @@ import { useSelector } from "react-redux";
 import { selectRestaurantCart } from "redux/slice/cartSlice";
 import { ArrowRight, Scale } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import FullScreenLoadingIndicator from "components/FullScreenLoadingIndicator";
 
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
 const _imageHeaderHeight = RFValue(220);
@@ -107,18 +108,7 @@ const RestaurantScreen = () => {
   });
 
   if (isLoading) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "white",
-        }}
-      >
-        <ActivityIndicator />
-      </View>
-    );
+    return <FullScreenLoadingIndicator />;
   }
   if (!data) {
     return (

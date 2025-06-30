@@ -1,24 +1,25 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
+import Animated, { FadeOutDown, SlideInDown } from "react-native-reanimated";
 import { Image } from "expo-image";
-import { COLORS, FONTS } from "utils/constants";
-import Animated, { SlideInDown } from "react-native-reanimated";
+import { FONTS } from "utils/constants";
 import CustomText from "./customText";
 
 const AnimatedSplashScreen = () => {
   return (
-    <View
+    <Animated.View
+      exiting={FadeOutDown}
       style={{
         flex: 1,
-        backgroundColor: COLORS.primary,
+        backgroundColor: "white",
         alignItems: "center",
         justifyContent: "center",
       }}
     >
       <Image
-        source={require("assets/images/adaptive-icon.png")}
+        source={require("assets/images/adaptiveIcon.png")}
         style={{ height: 300, aspectRatio: 1 }}
-        transition={600}
+        transition={1000}
       />
       <View
         style={{
@@ -29,17 +30,15 @@ const AnimatedSplashScreen = () => {
         }}
       >
         <Animated.View entering={SlideInDown.duration(1000)}>
-          <CustomText variant="h1" fontFamily={FONTS.Bold} color="white">
+          <CustomText variant="h1" fontFamily={"gilroyBold"}>
             Hungry?
           </CustomText>
         </Animated.View>
         <Animated.View entering={SlideInDown.duration(1000).delay(300)}>
-          <CustomText variant="h5" fontFamily={FONTS.Regular} color="white">
-            Let Grabby handle it
-          </CustomText>
+          <CustomText variant="h5">Let Zesto handle it</CustomText>
         </Animated.View>
       </View>
-    </View>
+    </Animated.View>
   );
 };
 

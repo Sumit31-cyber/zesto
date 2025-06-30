@@ -86,9 +86,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.sumit_bravo.grabby'
+    namespace 'com.sumit_bravo.zesto'
     defaultConfig {
-        applicationId 'com.sumit_bravo.grabby'
+        applicationId 'com.sumit_bravo.zesto'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

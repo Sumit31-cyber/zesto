@@ -1,28 +1,33 @@
 {
   "expo": {
-    "name": "Grabby",
-    "slug": "grabby",
+    "name": "Zesto",
+    "slug": "zesto",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "grabby",
+    "scheme": "zesto",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/images/splash-icon.png",
+      "image": "./assets/images/splash-icon-dark.png",
       "resizeMode": "contain",
-      "backgroundColor": "#0fb758"
+      "backgroundColor": "#ffffff"
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.sumit-bravo.grabby"
+      "bundleIdentifier": "com.sumit-bravo.zesto",
+      "icon": {
+        "dark": "./assets/images/ios-dark.png",
+        "light": "./assets/images/ios-light.png",
+        "tinted": "./assets/images/ios-tinted.png"
+      }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#0fb758"
+        "foregroundImage": "./assets/images/adaptiveIcon.png",
+        "backgroundColor": "#ffffff"
       },
-      "package": "com.sumit_bravo.grabby"
+      "package": "com.sumit_bravo.zesto"
     },
     "web": {
       "bundler": "metro",
@@ -41,6 +46,18 @@
         "expo-location",
         {
           "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#ffffff",
+          "image": "./assets/images/splash-icon-dark.png",
+          "dark": {
+            "image": "./assets/images/splash-icon-dark.png",
+            "backgroundColor": "#000000"
+          },
+          "imageWidth": 200
         }
       ],
       "expo-secure-store"
