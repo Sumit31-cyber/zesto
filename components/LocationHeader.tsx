@@ -1,21 +1,28 @@
 import {
+  ActivityIndicator,
+  Alert,
   StyleSheet,
   Text,
   TextStyle,
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { COLORS } from "utils/constants";
 import { SendIcon } from "assets/svgs/svgs";
 import CustomText from "./customText";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { useAuth } from "@clerk/clerk-react";
 import { useSelector } from "react-redux";
-import { selectUserAddresses } from "redux/slice/userSlice";
+import { selectUser, selectUserAddresses } from "redux/slice/userSlice";
 import { clearAllPersistedData } from "redux/store";
 import { router } from "expo-router";
-import { MapPin } from "lucide-react-native";
+import {
+  ChevronDown,
+  MapPin,
+  Power,
+  SquareChevronDown,
+} from "lucide-react-native";
 import { RFValue } from "react-native-responsive-fontsize";
 
 type Props = {
@@ -30,6 +37,34 @@ const LocationHeader: React.FC<Props> = ({
 }) => {
   const { signOut, userId } = useAuth();
   const userAddress = useSelector(selectUserAddresses);
+  const userInformation = useSelector(selectUser);
+  const [signingOut, setSigningOut] = useState(false);
+
+  const handleSignOut = async () => {
+    Alert.alert("Sign Out", "Are you sure you want to sign out?", [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      {
+        text: "OK",
+        onPress: async () => {
+          try {
+            setSigningOut(true);
+            await signOut();
+            clearAllPersistedData();
+            setSigningOut(false);
+          } catch (error) {
+            setSigningOut(false);
+            console.error("Sign out error:", error);
+            Alert.alert("Error", "Something went wrong. Please try again!");
+          }
+        },
+      },
+    ]);
+  };
+
   return (
     <View
       style={{
@@ -69,14 +104,15 @@ const LocationHeader: React.FC<Props> = ({
               }}
             >
               <CustomText
-                variant="h4"
+                variant="h6"
                 fontFamily="gilroyBold"
                 color="black"
                 style={titleStyle}
               >
-                Phulwari Sharif
+                {/* {userInformation?.firstName} {userInformation?.lastName} */}
+                Home
               </CustomText>
-              <AntDesign name="down" size={18} color="black" />
+              <ChevronDown size={RFValue(14)} color="black" />
             </View>
             <CustomText
               variant="h7"
@@ -84,17 +120,14 @@ const LocationHeader: React.FC<Props> = ({
               numberOfLines={1}
               style={[{ opacity: 0.8, ...locationTextStyle }]}
             >
-              {userAddress[0]?.addressLine1}
+              {userAddress[0]?.addressLine1}, {userAddress[0]?.city}{" "}
             </CustomText>
           </View>
         </View>
       </View>
 
       <TouchableOpacity
-        onPress={async () => {
-          clearAllPersistedData();
-          await signOut();
-        }}
+        onPress={handleSignOut}
         style={{
           alignSelf: "flex-start",
           backgroundColor: "rgba(0,0,0,0.3)",
@@ -105,7 +138,11 @@ const LocationHeader: React.FC<Props> = ({
           alignItems: "center",
         }}
       >
-        <FontAwesome name="user" size={RFValue(12)} color="white" />
+        {signingOut ? (
+          <ActivityIndicator color={"white"} />
+        ) : (
+          <Power size={RFValue(12)} color="white" strokeWidth={2.8} />
+        )}
       </TouchableOpacity>
 
       {/* <TouchableOpacity

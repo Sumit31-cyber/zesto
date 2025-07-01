@@ -1,4 +1,10 @@
-import { Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  Pressable,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useMemo } from "react";
 import { COLORS, PADDING_HORIZONTAL } from "utils/constants";
 import Animated, {
@@ -19,8 +25,8 @@ import {
 import { router } from "expo-router";
 import { wait } from "utils/functions";
 import { RFValue } from "react-native-responsive-fontsize";
-import { useDispatch } from "react-redux";
-import { removeAllItemFromRestaurant } from "redux/slice/cartSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { removeAllItemFromRestaurant, selectCart } from "redux/slice/cartSlice";
 import { RestaurantCart } from "types/types";
 
 export type ItemType = {
@@ -40,6 +46,7 @@ const DropDownItem: React.FC<Props> = ({
   expanded,
 }) => {
   const dispatch = useDispatch();
+  const cart = useSelector(selectCart);
   const foodQuantity = useMemo(() => {
     const quantity = item.items.reduce((acc, curr) => acc + curr.quantity, 0);
 
@@ -87,6 +94,24 @@ const DropDownItem: React.FC<Props> = ({
     };
   });
 
+  const handleRemoveItem = () => {
+    Alert.alert("Remove Item", "Are you sure you want to remove this item", [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      {
+        text: "remove",
+        style: "destructive",
+        onPress: () => {
+          dispatch(
+            removeAllItemFromRestaurant({ restaurantId: item.restaurant.id })
+          );
+        },
+      },
+    ]);
+  };
   return (
     <Animated.View
       style={[
@@ -135,7 +160,7 @@ const DropDownItem: React.FC<Props> = ({
           ]}
         >
           <CustomText variant="h7" color="white" fontFamily="gilroyBold">
-            All Carts
+            All Carts ({cart.carts.length})
           </CustomText>
           <AntDesign
             name="caretup"
@@ -218,11 +243,7 @@ const DropDownItem: React.FC<Props> = ({
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={0.8}
-          onPress={() => {
-            dispatch(
-              removeAllItemFromRestaurant({ restaurantId: item.restaurant.id })
-            );
-          }}
+          onPress={handleRemoveItem}
           style={{
             backgroundColor: "#ff5f4d",
             paddingHorizontal: RFValue(3),

@@ -25,6 +25,10 @@ import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { useSharedState } from "context/sharedContext";
 import CartFloatingStack from "./CartFloatingStack";
 import Dropdown from "./Dropdown";
+import CustomText from "./customText";
+import { Image } from "expo-image";
+import { CarFront, Heart } from "lucide-react-native";
+import { RFValue } from "react-native-responsive-fontsize";
 
 const CustomTabBar: FC<BottomTabBarProps> = ({
   state,
@@ -44,7 +48,6 @@ const CustomTabBar: FC<BottomTabBarProps> = ({
     } else {
       runOnJS(setShowCartFloatingView)(true);
     }
-    console.log(activeIndex.value);
   }, []);
 
   const rStyle = useAnimatedStyle(() => {
@@ -112,8 +115,6 @@ const CustomTabBar: FC<BottomTabBarProps> = ({
         {state.routes.map((route, index) => {
           const isFocused = state.index === index;
 
-          console.log(route.name);
-
           const onPress = () => {
             const event = navigation.emit({
               type: "tabPress",
@@ -136,25 +137,35 @@ const CustomTabBar: FC<BottomTabBarProps> = ({
                 alignItems: "center",
               }}
             >
-              {route.name === "food" && <FoodIcon size={28} tint={iconColor} />}
+              {route.name === "food" && (
+                <FoodIcon size={RFValue(20)} tint={iconColor} />
+              )}
               {route.name === "dineout" && (
-                <DineoutIcon size={28} tint={iconColor} />
+                <DineoutIcon size={RFValue(20)} tint={iconColor} />
               )}
               {route.name === "favorite" && (
-                <FavoriteIcon size={24} tint={iconColor} />
+                <Heart size={RFValue(20)} color={iconColor} />
               )}
               {route.name === "reorder" && (
-                <ReorderIcon size={24} tint={iconColor} />
+                <ReorderIcon size={RFValue(18)} tint={iconColor} />
               )}
               {route.name === "zestoRide" && (
                 <View
                   style={{
-                    width: "60%",
-                    height: 30,
-                    backgroundColor: iconColor,
-                    borderRadius: 100,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: 5,
+                    borderRadius: 10,
                   }}
-                ></View>
+                >
+                  <CarFront
+                    color={iconColor}
+                    size={RFValue(21)}
+                    strokeWidth={1.5}
+                  />
+                  {/* <CustomText variant="h7">Zesto</CustomText>
+                  <CustomText variant="h7">Ride</CustomText> */}
+                </View>
               )}
             </Pressable>
           );

@@ -41,8 +41,6 @@ const RecommendedRestaurantSection = () => {
 
   const flatData = data?.pages?.flatMap((page) => page.data) || [];
 
-  console.log(JSON.stringify(flatData, null, 2));
-
   if (isLoading) {
     return (
       <View

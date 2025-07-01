@@ -13,10 +13,6 @@ export default function ProtectedLayout() {
   const { setSocketClient } = useSharedState();
   const dispatch = useDispatch();
 
-  if (!isSignedIn) {
-    return <Redirect href={"/(auth)/signIn"} />;
-  }
-
   useEffect(() => {
     const newSocket = io(SOCKET_URL, {
       transports: ["websocket"],
@@ -39,6 +35,11 @@ export default function ProtectedLayout() {
       newSocket.disconnect();
     };
   }, []);
+
+  if (!isSignedIn) {
+    return <Redirect href={"/(auth)/signIn"} />;
+  }
+
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="(tabs)" />

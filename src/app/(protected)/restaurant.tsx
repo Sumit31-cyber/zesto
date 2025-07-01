@@ -42,6 +42,7 @@ import { selectRestaurantCart } from "redux/slice/cartSlice";
 import { ArrowRight, Scale } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import FullScreenLoadingIndicator from "components/FullScreenLoadingIndicator";
+import { BlurView } from "expo-blur";
 
 const AnimatedSectionList = Animated.createAnimatedComponent(SectionList);
 const _imageHeaderHeight = RFValue(220);

@@ -60,8 +60,9 @@ const SignInScreen = () => {
     };
   }, []);
 
-  const handleSignIn = async () => {
-    if (!phoneNumber) {
+  const handleSignIn = async (): Promise<void> => {
+    // Input validation
+    if (!phoneNumber?.trim()) {
       Alert.alert(
         "Missing Phone Number",
         "Please enter your phone number to continue."
@@ -69,13 +70,16 @@ const SignInScreen = () => {
       return;
     }
 
+    // Service readiness check
     if (!isLoaded) {
       Alert.alert("Please wait", "Authentication service is not ready yet.");
       return;
     }
 
-    // const phoneNumberWithCountryCode = `+91${phoneNumber}`;
-    const phoneNumberWithCountryCode = `+12${phoneNumber}`;
+    // Format phone number with country code
+    const phoneNumberWithCountryCode = `+12${phoneNumber.trim()}`;
+
+    // Dismiss keyboard and start loading
     Keyboard.dismiss();
     setIsLoading(true);
 
@@ -87,15 +91,22 @@ const SignInScreen = () => {
 
       console.log("SignIn status:", signInResponse?.status);
 
+      // Handle complete sign-in
       if (signInResponse?.status === "complete") {
-        setActive({ session: signInResponse.createdSessionId });
-        router.replace("/(protected)/(tabs)/food");
+        if (signInResponse.createdSessionId) {
+          await setActive({ session: signInResponse.createdSessionId });
+          router.replace("/(protected)/(tabs)/food");
+        } else {
+          throw new Error("Session ID not found in sign-in response");
+        }
         return;
       }
 
+      // Handle first factor authentication
       if (signInResponse?.status === "needs_first_factor") {
         console.log("Preparing first factor...");
 
+        // Find phone code factor
         const phoneFactor = signInResponse.supportedFirstFactors?.find(
           (factor) => factor.strategy === "phone_code"
         );
@@ -104,11 +115,13 @@ const SignInScreen = () => {
           throw new Error("Phone code strategy not supported for this number.");
         }
 
+        // Prepare first factor
         await signIn?.prepareFirstFactor({
           strategy: "phone_code",
           phoneNumberId: phoneFactor.phoneNumberId,
         });
 
+        // Attempt first factor with dev code
         const result = await signIn?.attemptFirstFactor({
           strategy: "phone_code",
           code: "424242", // Dev-only code
@@ -116,43 +129,165 @@ const SignInScreen = () => {
 
         console.log("First factor result:", result);
 
+        // Handle successful first factor
         if (result?.status === "complete") {
-          setActive({ session: result.createdSessionId });
-          router.replace("/(protected)/(tabs)/food");
-          return;
+          if (result.createdSessionId) {
+            await setActive({ session: result.createdSessionId });
+            router.replace("/(protected)/(tabs)/food");
+          } else {
+            throw new Error("Session ID not found in first factor result");
+          }
+        } else {
+          throw new Error(
+            `First factor authentication failed with status: ${result?.status}`
+          );
         }
+        return;
       }
+
+      // Handle unexpected sign-in status
+      throw new Error(`Unexpected sign-in status: ${signInResponse?.status}`);
     } catch (signInError) {
       console.warn("SignIn error:", signInError);
       console.log("Phone number not found, attempting registration...");
 
       try {
+        // Attempt sign-up
         const signUpResponse = await signUp?.create({
           phoneNumber: phoneNumberWithCountryCode,
         });
 
+        console.log("SignUp status:", signUpResponse?.status);
+
+        // Handle complete sign-up
         if (signUpResponse?.status === "complete") {
-          setActive({ session: signUpResponse.createdSessionId });
-          router.replace("/(protected)/(tabs)/food");
+          if (signUpResponse.createdSessionId) {
+            await setActive({ session: signUpResponse.createdSessionId });
+            router.replace("/(protected)/(tabs)/food");
+          } else {
+            throw new Error("Session ID not found in sign-up response");
+          }
         } else {
+          // Handle incomplete registration
           Alert.alert(
             "Registration Incomplete",
-            "Please complete the registration."
+            `Please complete the registration. Status: ${
+              signUpResponse?.status || "Unknown"
+            }`
           );
         }
       } catch (signUpError) {
         console.error("SignUp error:", signUpError);
-        Alert.alert(
-          "Registration failed",
+
+        // Enhanced error handling for sign-up
+        const errorMessage =
           signUpError instanceof Error
             ? signUpError.message
-            : String(signUpError)
-        );
+            : typeof signUpError === "string"
+            ? signUpError
+            : "An unexpected error occurred during registration";
+
+        Alert.alert("Registration Failed", errorMessage);
       }
     } finally {
+      // Always reset loading state
       setIsLoading(false);
     }
   };
+
+  // const handleSignIn = async () => {
+  //   if (!phoneNumber) {
+  //     Alert.alert(
+  //       "Missing Phone Number",
+  //       "Please enter your phone number to continue."
+  //     );
+  //     return;
+  //   }
+
+  //   if (!isLoaded) {
+  //     Alert.alert("Please wait", "Authentication service is not ready yet.");
+  //     return;
+  //   }
+
+  //   // const phoneNumberWithCountryCode = `+91${phoneNumber}`;
+  //   const phoneNumberWithCountryCode = `+12${phoneNumber}`;
+  //   Keyboard.dismiss();
+  //   setIsLoading(true);
+
+  //   try {
+  //     // Attempt sign-in
+  //     const signInResponse = await signIn?.create({
+  //       identifier: phoneNumberWithCountryCode,
+  //     });
+
+  //     console.log("SignIn status:", signInResponse?.status);
+
+  //     if (signInResponse?.status === "complete") {
+  //       setActive({ session: signInResponse.createdSessionId });
+  //       router.replace("/(protected)/(tabs)/food");
+  //       return;
+  //     }
+
+  //     if (signInResponse?.status === "needs_first_factor") {
+  //       console.log("Preparing first factor...");
+
+  //       const phoneFactor = signInResponse.supportedFirstFactors?.find(
+  //         (factor) => factor.strategy === "phone_code"
+  //       );
+
+  //       if (!phoneFactor) {
+  //         throw new Error("Phone code strategy not supported for this number.");
+  //       }
+
+  //       await signIn?.prepareFirstFactor({
+  //         strategy: "phone_code",
+  //         phoneNumberId: phoneFactor.phoneNumberId,
+  //       });
+
+  //       const result = await signIn?.attemptFirstFactor({
+  //         strategy: "phone_code",
+  //         code: "424242", // Dev-only code
+  //       });
+
+  //       console.log("First factor result:", result);
+
+  //       if (result?.status === "complete") {
+  //         setActive({ session: result.createdSessionId });
+  //         router.replace("/(protected)/(tabs)/food");
+  //         return;
+  //       }
+  //     }
+  //   } catch (signInError) {
+  //     console.warn("SignIn error:", signInError);
+  //     console.log("Phone number not found, attempting registration...");
+
+  //     try {
+  //       const signUpResponse = await signUp?.create({
+  //         phoneNumber: phoneNumberWithCountryCode,
+  //       });
+
+  //       if (signUpResponse?.status === "complete") {
+  //         setActive({ session: signUpResponse.createdSessionId });
+  //         router.replace("/(protected)/(tabs)/food");
+  //       } else {
+  //         Alert.alert(
+  //           "Registration Incomplete",
+  //           "Please complete the registration."
+  //         );
+  //       }
+  //     } catch (signUpError) {
+  //       console.error("SignUp error:", signUpError);
+  //       Alert.alert(
+  //         "Registration failed",
+  //         signUpError instanceof Error
+  //           ? signUpError.message
+  //           : String(signUpError)
+  //       );
+  //     }
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   if (isSignedIn) {
     return <Redirect href={"/(protected)/(tabs)/food"} />;
@@ -164,7 +299,6 @@ const SignInScreen = () => {
       }}
       style={{ flex: 1 }}
     >
-      <StatusBar barStyle={"light-content"} />
       <View
         style={{
           height: screenHeight,
@@ -363,8 +497,6 @@ const Backdrop = ({ children }: { children: React.ReactNode }) => {
         height: topContainerHeight,
         width: "100%",
         position: "absolute",
-        // borderBottomRightRadius: 20,
-        // borderBottomLeftRadius: 20,
         overflow: "hidden",
       }}
     >
