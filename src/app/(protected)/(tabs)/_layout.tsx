@@ -51,6 +51,12 @@ const TabLayout = () => {
           tabBarIcon: ({ color }) => <ReorderIcon size={24} tint={color} />,
         }}
       />
+      <Tabs.Screen
+        name="zestoRide"
+        options={{
+          tabBarIcon: ({ color }) => <ReorderIcon size={24} tint={color} />,
+        }}
+      />
     </Tabs>
   );
 };

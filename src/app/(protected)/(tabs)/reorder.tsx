@@ -57,7 +57,6 @@ const Reorder = () => {
         <FullScreenLoadingIndicator />
       ) : (
         <Animated.FlatList
-          // bounces={false}
           onScroll={scrollHandler}
           scrollEventThrottle={16}
           data={orders}

@@ -334,10 +334,11 @@ const ActiveOrderDetailScreen = () => {
                 >
                   <Text
                     style={{
-                      fontSize: RFValue(100),
+                      fontSize: RFValue(80),
                       fontWeight: "900",
-                      opacity: 0.08,
+                      opacity: 0.06,
                       textAlign: "center",
+                      marginTop: RFValue(10),
                     }}
                   >
                     ZESTO

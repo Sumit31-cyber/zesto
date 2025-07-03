@@ -2,42 +2,28 @@ import {
   ActivityIndicator,
   Alert,
   StyleSheet,
-  Text,
   TextStyle,
   TouchableOpacity,
   View,
 } from "react-native";
 import React, { useState } from "react";
-import { COLORS } from "utils/constants";
-import { SendIcon } from "assets/svgs/svgs";
 import CustomText from "./customText";
-import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { useAuth } from "@clerk/clerk-react";
 import { useSelector } from "react-redux";
-import { selectUser, selectUserAddresses } from "redux/slice/userSlice";
+import { selectUserAddresses } from "redux/slice/userSlice";
 import { clearAllPersistedData } from "redux/store";
-import { router } from "expo-router";
-import {
-  ChevronDown,
-  MapPin,
-  Power,
-  SquareChevronDown,
-} from "lucide-react-native";
+import { BrainCircuit, ChevronDown, MapPin, Power } from "lucide-react-native";
 import { RFValue } from "react-native-responsive-fontsize";
+import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
 
 type Props = {
   titleStyle?: TextStyle;
   locationTextStyle?: TextStyle;
-  iconColor?: string;
 };
-const LocationHeader: React.FC<Props> = ({
-  titleStyle,
-  locationTextStyle,
-  iconColor = "black",
-}) => {
-  const { signOut, userId } = useAuth();
+const LocationHeader: React.FC<Props> = ({ titleStyle, locationTextStyle }) => {
+  const { signOut } = useAuth();
   const userAddress = useSelector(selectUserAddresses);
-  const userInformation = useSelector(selectUser);
   const [signingOut, setSigningOut] = useState(false);
 
   const handleSignOut = async () => {
@@ -48,7 +34,8 @@ const LocationHeader: React.FC<Props> = ({
         style: "cancel",
       },
       {
-        text: "OK",
+        text: "signout",
+        style: "destructive",
         onPress: async () => {
           try {
             setSigningOut(true);
@@ -109,7 +96,6 @@ const LocationHeader: React.FC<Props> = ({
                 color="black"
                 style={titleStyle}
               >
-                {/* {userInformation?.firstName} {userInformation?.lastName} */}
                 Home
               </CustomText>
               <ChevronDown size={RFValue(14)} color="black" />
@@ -127,6 +113,32 @@ const LocationHeader: React.FC<Props> = ({
       </View>
 
       <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={() => {
+          router.navigate("/(protected)/zAgent");
+        }}
+        style={{
+          alignSelf: "flex-start",
+          backgroundColor: "rgba(0,0,0,0.3)",
+          borderRadius: 100,
+          height: RFValue(28),
+          aspectRatio: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          marginRight: 10,
+          overflow: "hidden",
+        }}
+      >
+        <LinearGradient
+          colors={["#2e466290", `#56cba190`]}
+          style={[StyleSheet.absoluteFill]}
+        ></LinearGradient>
+
+        <BrainCircuit size={RFValue(12)} color="white" strokeWidth={2.8} />
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        activeOpacity={0.8}
         onPress={handleSignOut}
         style={{
           alignSelf: "flex-start",
@@ -144,26 +156,6 @@ const LocationHeader: React.FC<Props> = ({
           <Power size={RFValue(12)} color="white" strokeWidth={2.8} />
         )}
       </TouchableOpacity>
-
-      {/* <TouchableOpacity
-        onPress={async () => {
-          // clearAllPersistedData();
-          // await signOut();
-
-          router.navigate("/activeOrderDetailScreen");
-        }}
-        style={{
-          height: 40,
-          width: 60,
-          backgroundColor: COLORS.black,
-          borderRadius: 100,
-          alignItems: "center",
-          justifyContent: "center",
-          marginLeft: 14,
-        }}
-      >
-       
-      </TouchableOpacity> */}
     </View>
   );
 };

@@ -48,6 +48,7 @@ export default function ProtectedLayout() {
       <Stack.Screen name="activeOrderDetailScreen" />
       <Stack.Screen name="orderPlacedScreen" />
       <Stack.Screen name="createUserInformationScreen" />
+      <Stack.Screen name="zAgent" />
     </Stack>
   );
 }

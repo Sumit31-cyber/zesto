@@ -11,6 +11,7 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { Provider } from "react-redux";
 import { store } from "redux/store";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { KeyboardProvider } from "react-native-keyboard-controller";
 
 export const queryClient = new QueryClient();
 
@@ -42,18 +43,20 @@ export default function RootLayout() {
   }
 
   return (
-    <Provider store={store}>
-      <QueryClientProvider client={queryClient}>
-        <ClerkProvider tokenCache={tokenCache}>
-          <SharedStateProvider>
-            <GestureHandlerRootView>
-              <BottomSheetModalProvider>
-                <Slot />
-              </BottomSheetModalProvider>
-            </GestureHandlerRootView>
-          </SharedStateProvider>
-        </ClerkProvider>
-      </QueryClientProvider>
-    </Provider>
+    <KeyboardProvider>
+      <Provider store={store}>
+        <QueryClientProvider client={queryClient}>
+          <ClerkProvider tokenCache={tokenCache}>
+            <SharedStateProvider>
+              <GestureHandlerRootView>
+                <BottomSheetModalProvider>
+                  <Slot />
+                </BottomSheetModalProvider>
+              </GestureHandlerRootView>
+            </SharedStateProvider>
+          </ClerkProvider>
+        </QueryClientProvider>
+      </Provider>
+    </KeyboardProvider>
   );
 }

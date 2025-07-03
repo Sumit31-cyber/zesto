@@ -35,7 +35,7 @@ const getRestaurantDetail = async (restaurantId: string) => {
   try {
     let formdata = new FormData();
 
-    console.log("Calling");
+    console.log("Calling, ", restaurantId);
 
     formdata.append("restaurantId", String(restaurantId));
 
@@ -102,7 +102,7 @@ const addAddress = async (
 };
 
 const getUserInformation = async (id: string) => {
-  console.log("Getting user");
+  console.log("Getting user ", id);
   try {
     let formdata = new FormData();
 
@@ -208,6 +208,7 @@ const placeOrder = async (orderInfo: OrderData) => {
   }
 };
 const getOrderHistory = async (userId: string) => {
+  console.log("Getting order History --------");
   try {
     let formdata = new FormData();
 
@@ -218,7 +219,6 @@ const getOrderHistory = async (userId: string) => {
       },
     });
 
-    console.log(JSON.stringify(res.data.data.orders, null, 2));
     store.dispatch(setInitialOrders(res.data.data.orders));
     return res.data;
   } catch (err) {
